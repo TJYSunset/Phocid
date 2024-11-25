@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,9 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
@@ -43,7 +42,6 @@ data class CarouselStateBatch<T>(
  *
  * @param content Index is not guaranteed to be valid; this lambda should check for validity itself.
  *
- * TODO: RTL
  * TODO: Animation stutters on rapid consecutive swipes
  */
 @Composable
@@ -87,7 +85,6 @@ inline fun <reified T> TrackCarousel(
     var lastNonadjacentDirection by remember { mutableIntStateOf(-1) }
     var width by remember { mutableIntStateOf(0) }
     val offset = remember { Animatable(0f) }
-    val ltr = LocalLayoutDirection.current == LayoutDirection.Ltr
 
     @Suppress("VARIABLE_WITH_REDUNDANT_INITIALIZER")
     LaunchedEffect(state, key) {
@@ -156,7 +153,7 @@ inline fun <reified T> TrackCarousel(
                 .onSizeChanged { width = it.width }
                 .pointerInput(tapKey) { detectTapGestures { onTap() } }
                 .pointerInput(Unit) { onVerticalDrag() }
-                .pointerInput(ltr) {
+                .pointerInput(Unit) {
                     detectHorizontalDragGestures(
                         onDragStart = {
                             horizontalDragTotal = 0f
@@ -178,7 +175,7 @@ inline fun <reified T> TrackCarousel(
                             isLastAdjacent = true
                         },
                     ) { _, dragAmount ->
-                        horizontalDragTotal += if (ltr) dragAmount else -dragAmount
+                        horizontalDragTotal += dragAmount
                         isLastAdjacent = true
                         coroutineScope.launch { offset.snapTo(horizontalDragTotal / width) }
                     }
@@ -188,7 +185,9 @@ inline fun <reified T> TrackCarousel(
             key(stateBatch.currentIndex) {
                 Box(
                     modifier =
-                        Modifier.offset { IntOffset(((0 + offset.value) * width).roundToInt(), 0) }
+                        Modifier.absoluteOffset {
+                            IntOffset(((0 + offset.value) * width).roundToInt(), 0)
+                        }
                 ) {
                     content(stateBatch.state, stateBatch.currentIndex)
                 }
@@ -198,7 +197,7 @@ inline fun <reified T> TrackCarousel(
                     key(stateBatch.previousIndex!!) {
                         Box(
                             modifier =
-                                Modifier.offset {
+                                Modifier.absoluteOffset {
                                     IntOffset(((-1 + offset.value) * width).roundToInt(), 0)
                                 }
                         ) {
@@ -210,7 +209,7 @@ inline fun <reified T> TrackCarousel(
                     key(stateBatch.nextIndex!!) {
                         Box(
                             modifier =
-                                Modifier.offset {
+                                Modifier.absoluteOffset {
                                     IntOffset(((1 + offset.value) * width).roundToInt(), 0)
                                 }
                         ) {
