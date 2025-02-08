@@ -176,7 +176,7 @@
     <string name="preferences_playlist_io_settings_ignore_location">Ignore file location</string>
     <string name="preferences_playlist_io_settings_remove_invalid">Remove unresolved tracks</string>
     <string name="preferences_pure_background_color">Pure black/white background</string>
-    <string name="preferences_reshuffle_on_repeat">Reshuffle on repeat (experimental)</string>
+    <string name="preferences_reshuffle_on_repeat">Reshuffle on repeat</string>
     <string name="preferences_scrollable_tabs">Scrollable tabs</string>
     <string name="preferences_shape">Artwork shape</string>
     <string name="preferences_shape_circle">Circle</string>

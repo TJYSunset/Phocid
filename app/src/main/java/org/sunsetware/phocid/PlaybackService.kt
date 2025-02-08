@@ -13,11 +13,21 @@ import androidx.annotation.OptIn
 import androidx.core.os.bundleOf
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
+import androidx.media3.common.DeviceInfo
 import androidx.media3.common.ForwardingPlayer
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Metadata
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
+import androidx.media3.common.Timeline
+import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
+import androidx.media3.common.Tracks
+import androidx.media3.common.VideoSize
+import androidx.media3.common.text.Cue
+import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
@@ -38,6 +48,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.sunsetware.phocid.utils.Random
+import org.sunsetware.phocid.utils.wrap
 
 @OptIn(UnstableApi::class)
 class PlaybackService : MediaSessionService() {
@@ -48,8 +59,6 @@ class PlaybackService : MediaSessionService() {
     @Volatile private var timerFinishLastTrack = true
     @Volatile private var playOnOutputDeviceConnection = false
     @Volatile private var audioOffloading = true
-    @Volatile private var lastIndex = null as Int?
-    @Volatile private var reshuffleOnRepeat = false
     private val audioDeviceCallback =
         object : AudioDeviceCallback() {
             override fun onAudioDevicesAdded(addedDevices: Array<out AudioDeviceInfo?>?) {
@@ -124,23 +133,6 @@ class PlaybackService : MediaSessionService() {
                 override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
                     player.updateAudioOffloading(audioOffloading)
                 }
-
-                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                    if (
-                        player.currentMediaItemIndex == 0 &&
-                            lastIndex == player.mediaItemCount - 1 &&
-                            (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO ||
-                                reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK) &&
-                            player.shuffleModeEnabled &&
-                            reshuffleOnRepeat &&
-                            player.mediaItemCount > 2
-                    ) {
-                        player.seekTo(Random.nextInt(0, player.mediaItemCount - 1), 0)
-                        player.disableShuffle()
-                        player.enableShuffle()
-                    }
-                    lastIndex = player.currentMediaItemIndex
-                }
             }
         )
         coroutineScope.launch {
@@ -207,9 +199,9 @@ class PlaybackService : MediaSessionService() {
                                     playOnOutputDeviceConnection =
                                         args.getBoolean(PLAY_ON_OUTPUT_DEVICE_CONNECTION_KEY, false)
                                     audioOffloading = args.getBoolean(AUDIO_OFFLOADING_KEY, true)
-                                    reshuffleOnRepeat =
-                                        args.getBoolean(RESHUFFLE_ON_REPEAT_KEY, false)
                                     player.updateAudioOffloading(audioOffloading)
+                                    player.reshuffleOnRepeat =
+                                        args.getBoolean(RESHUFFLE_ON_REPEAT_KEY, false)
                                     return Futures.immediateFuture(
                                         SessionResult(SessionResult.RESULT_SUCCESS)
                                     )
@@ -297,19 +289,44 @@ class PlaybackService : MediaSessionService() {
     }
 }
 
+/** https://github.com/androidx/media/issues/1708 */
 @UnstableApi
 private class CustomizedPlayer(val inner: ExoPlayer) : ForwardingPlayer(inner) {
-    private val listeners = mutableListOf<Player.Listener>()
+    var reshuffleOnRepeat = false
+
+    private val listeners = mutableMapOf<Player.Listener, ForwardingListener>()
     private var shuffle = false
 
+    init {
+        inner.addListener(
+            object : Player.Listener {
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    if (
+                        currentMediaItemIndex == 0 &&
+                            reason == MEDIA_ITEM_TRANSITION_REASON_AUTO &&
+                            shuffle &&
+                            reshuffleOnRepeat &&
+                            mediaItemCount > 2
+                    ) {
+                        seekTo(Random.nextInt(0, mediaItemCount - 1), 0)
+                        disableShuffle()
+                        enableShuffle()
+                    }
+                }
+            }
+        )
+    }
+
     override fun addListener(listener: Player.Listener) {
-        listeners.add(listener)
-        super.addListener(listener)
+        if (listeners.containsKey(listener)) return
+        val forwardingListener = ForwardingListener(this, listener)
+        listeners[listener] = forwardingListener
+        inner.addListener(forwardingListener)
     }
 
     override fun removeListener(listener: Player.Listener) {
-        listeners.remove(listener)
-        super.removeListener(listener)
+        val forwardingListener = listeners.remove(listener)
+        forwardingListener?.let { inner.removeListener(it) }
     }
 
     override fun getShuffleModeEnabled(): Boolean {
@@ -329,10 +346,81 @@ private class CustomizedPlayer(val inner: ExoPlayer) : ForwardingPlayer(inner) {
         shuffle = shuffleModeEnabled
 
         if (raiseEvent) {
-            for (listener in listeners) {
+            for (listener in listeners.values) {
                 listener.onShuffleModeEnabledChanged(shuffleModeEnabled)
             }
         }
+    }
+
+    override fun seekToPreviousMediaItem() {
+        if (mediaItemCount <= 0) return
+        val currentIndex = currentMediaItemIndex
+        val previousIndex =
+            (currentIndex - 1).wrap(mediaItemCount, repeatMode != REPEAT_MODE_OFF) ?: currentIndex
+        seekTo(previousIndex, 0)
+    }
+
+    override fun seekToPrevious() {
+        if (mediaItemCount <= 0) return
+        val currentIndex = currentMediaItemIndex
+        val previousIndex =
+            (currentIndex - 1).wrap(mediaItemCount, repeatMode != REPEAT_MODE_OFF).takeIf {
+                currentPosition <= maxSeekToPreviousPosition
+            } ?: currentIndex
+        seekTo(previousIndex, 0)
+    }
+
+    @Deprecated("")
+    override fun seekToPreviousWindow() {
+        seekToPreviousMediaItem()
+    }
+
+    override fun seekToNextMediaItem() {
+        if (mediaItemCount <= 0) return
+        val currentIndex = currentMediaItemIndex
+        if (
+            currentIndex == mediaItemCount - 1 &&
+                shuffle &&
+                reshuffleOnRepeat &&
+                repeatMode != REPEAT_MODE_OFF &&
+                mediaItemCount > 2
+        ) {
+            seekTo(Random.nextInt(0, mediaItemCount - 1), 0)
+            disableShuffle()
+            enableShuffle()
+        } else {
+            val nextIndex =
+                (currentIndex + 1).wrap(mediaItemCount, repeatMode != REPEAT_MODE_OFF)
+                    ?: currentIndex
+            seekTo(nextIndex, 0)
+        }
+    }
+
+    override fun seekToNext() {
+        seekToNextMediaItem()
+    }
+
+    @Deprecated("")
+    override fun seekToNextWindow() {
+        seekToNextMediaItem()
+    }
+
+    override fun getAvailableCommands(): Player.Commands {
+        return inner.availableCommands
+            .buildUpon()
+            .add(COMMAND_SEEK_TO_PREVIOUS)
+            .add(COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM)
+            .add(COMMAND_SEEK_TO_NEXT)
+            .add(COMMAND_SEEK_TO_NEXT_MEDIA_ITEM)
+            .build()
+    }
+
+    override fun hasPreviousMediaItem(): Boolean {
+        return mediaItemCount > 0
+    }
+
+    override fun hasNextMediaItem(): Boolean {
+        return mediaItemCount > 0
     }
 
     fun enableShuffle() {
@@ -388,6 +476,177 @@ private class CustomizedPlayer(val inner: ExoPlayer) : ForwardingPlayer(inner) {
                 unshuffledPlayQueue.subList(0, unshuffledIndex).map { it.setUnshuffledIndex(null) },
             )
         }
+    }
+
+    private class ForwardingListener(val forwardingPlayer: Player, val inner: Player.Listener) :
+        Player.Listener {
+        override fun onEvents(player: Player, events: Player.Events) {
+            inner.onEvents(forwardingPlayer, events)
+        }
+
+        override fun onAvailableCommandsChanged(availableCommands: Player.Commands) {
+            inner.onAvailableCommandsChanged(
+                availableCommands
+                    .buildUpon()
+                    .add(COMMAND_SEEK_TO_PREVIOUS)
+                    .add(COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM)
+                    .add(COMMAND_SEEK_TO_NEXT)
+                    .add(COMMAND_SEEK_TO_NEXT_MEDIA_ITEM)
+                    .build()
+            )
+        }
+
+        // region Forwards
+
+        override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+            inner.onTimelineChanged(timeline, reason)
+        }
+
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            inner.onMediaItemTransition(mediaItem, reason)
+        }
+
+        override fun onTracksChanged(tracks: Tracks) {
+            inner.onTracksChanged(tracks)
+        }
+
+        override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
+            inner.onMediaMetadataChanged(mediaMetadata)
+        }
+
+        override fun onPlaylistMetadataChanged(mediaMetadata: MediaMetadata) {
+            inner.onPlaylistMetadataChanged(mediaMetadata)
+        }
+
+        override fun onIsLoadingChanged(isLoading: Boolean) {
+            inner.onIsLoadingChanged(isLoading)
+        }
+
+        @Deprecated("")
+        override fun onLoadingChanged(isLoading: Boolean) {
+            @Suppress("DEPRECATION") inner.onLoadingChanged(isLoading)
+        }
+
+        override fun onTrackSelectionParametersChanged(parameters: TrackSelectionParameters) {
+            inner.onTrackSelectionParametersChanged(parameters)
+        }
+
+        @Deprecated("")
+        override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+            @Suppress("DEPRECATION") inner.onPlayerStateChanged(playWhenReady, playbackState)
+        }
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            inner.onPlaybackStateChanged(playbackState)
+        }
+
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            inner.onPlayWhenReadyChanged(playWhenReady, reason)
+        }
+
+        override fun onPlaybackSuppressionReasonChanged(playbackSuppressionReason: Int) {
+            inner.onPlaybackSuppressionReasonChanged(playbackSuppressionReason)
+        }
+
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            inner.onIsPlayingChanged(isPlaying)
+        }
+
+        override fun onRepeatModeChanged(repeatMode: Int) {
+            inner.onRepeatModeChanged(repeatMode)
+        }
+
+        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+            inner.onShuffleModeEnabledChanged(shuffleModeEnabled)
+        }
+
+        override fun onPlayerError(error: PlaybackException) {
+            inner.onPlayerError(error)
+        }
+
+        override fun onPlayerErrorChanged(error: PlaybackException?) {
+            inner.onPlayerErrorChanged(error)
+        }
+
+        @Deprecated("")
+        override fun onPositionDiscontinuity(reason: Int) {
+            @Suppress("DEPRECATION") inner.onPositionDiscontinuity(reason)
+        }
+
+        override fun onPositionDiscontinuity(
+            oldPosition: Player.PositionInfo,
+            newPosition: Player.PositionInfo,
+            reason: Int,
+        ) {
+            inner.onPositionDiscontinuity(oldPosition, newPosition, reason)
+        }
+
+        override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
+            inner.onPlaybackParametersChanged(playbackParameters)
+        }
+
+        override fun onSeekBackIncrementChanged(seekBackIncrementMs: Long) {
+            inner.onSeekBackIncrementChanged(seekBackIncrementMs)
+        }
+
+        override fun onSeekForwardIncrementChanged(seekForwardIncrementMs: Long) {
+            inner.onSeekForwardIncrementChanged(seekForwardIncrementMs)
+        }
+
+        override fun onMaxSeekToPreviousPositionChanged(maxSeekToPreviousPositionMs: Long) {
+            inner.onMaxSeekToPreviousPositionChanged(maxSeekToPreviousPositionMs)
+        }
+
+        override fun onAudioSessionIdChanged(audioSessionId: Int) {
+            inner.onAudioSessionIdChanged(audioSessionId)
+        }
+
+        override fun onAudioAttributesChanged(audioAttributes: AudioAttributes) {
+            inner.onAudioAttributesChanged(audioAttributes)
+        }
+
+        override fun onVolumeChanged(volume: Float) {
+            inner.onVolumeChanged(volume)
+        }
+
+        override fun onSkipSilenceEnabledChanged(skipSilenceEnabled: Boolean) {
+            inner.onSkipSilenceEnabledChanged(skipSilenceEnabled)
+        }
+
+        override fun onDeviceInfoChanged(deviceInfo: DeviceInfo) {
+            inner.onDeviceInfoChanged(deviceInfo)
+        }
+
+        override fun onDeviceVolumeChanged(volume: Int, muted: Boolean) {
+            inner.onDeviceVolumeChanged(volume, muted)
+        }
+
+        override fun onVideoSizeChanged(videoSize: VideoSize) {
+            inner.onVideoSizeChanged(videoSize)
+        }
+
+        override fun onSurfaceSizeChanged(width: Int, height: Int) {
+            inner.onSurfaceSizeChanged(width, height)
+        }
+
+        override fun onRenderedFirstFrame() {
+            inner.onRenderedFirstFrame()
+        }
+
+        @Deprecated("")
+        override fun onCues(cues: List<Cue>) {
+            @Suppress("DEPRECATION") inner.onCues(cues)
+        }
+
+        override fun onCues(cueGroup: CueGroup) {
+            inner.onCues(cueGroup)
+        }
+
+        override fun onMetadata(metadata: Metadata) {
+            inner.onMetadata(metadata)
+        }
+
+        // endregion
     }
 }
 

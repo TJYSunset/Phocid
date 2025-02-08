@@ -209,43 +209,21 @@ class PlayerManager : AutoCloseable {
     }
 
     fun seekToPrevious() {
-        val currentIndex = mediaController.currentMediaItemIndex
-        val previousIndex =
-            (currentIndex - 1).wrap(
-                mediaController.mediaItemCount,
-                mediaController.repeatMode != Player.REPEAT_MODE_OFF,
-            ) ?: currentIndex
-        mediaController.seekTo(previousIndex, 0)
+        mediaController.seekToPreviousMediaItem()
         // Force a state emission for UI recomposition.
         updateState()
         mediaController.play()
     }
 
     fun seekToPreviousSmart() {
-        val currentIndex = mediaController.currentMediaItemIndex
-        val previousIndex =
-            (currentIndex - 1)
-                .wrap(
-                    mediaController.mediaItemCount,
-                    mediaController.repeatMode != Player.REPEAT_MODE_OFF,
-                )
-                .takeIf {
-                    mediaController.currentPosition <= mediaController.maxSeekToPreviousPosition
-                } ?: currentIndex
-        mediaController.seekTo(previousIndex, 0)
+        mediaController.seekToPrevious()
         // Force a state emission for UI recomposition.
         updateState()
         mediaController.play()
     }
 
     fun seekToNext() {
-        val currentIndex = mediaController.currentMediaItemIndex
-        val nextIndex =
-            (currentIndex + 1).wrap(
-                mediaController.mediaItemCount,
-                mediaController.repeatMode != Player.REPEAT_MODE_OFF,
-            ) ?: currentIndex
-        mediaController.seekTo(nextIndex, 0)
+        mediaController.seekToNextMediaItem()
         // Force a state emission for UI recomposition.
         updateState()
         mediaController.play()

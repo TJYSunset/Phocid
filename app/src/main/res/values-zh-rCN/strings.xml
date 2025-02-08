@@ -153,7 +153,7 @@
     <string name="preferences_playlist_io_settings_ignore_location">忽略文件位置</string>
     <string name="preferences_playlist_io_settings_remove_invalid">删除未找到的曲目</string>
     <string name="preferences_pure_background_color">纯黑或纯白背景</string>
-    <string name="preferences_reshuffle_on_repeat">循环时重新打乱顺序（实验性）</string>
+    <string name="preferences_reshuffle_on_repeat">循环时重新打乱顺序</string>
     <string name="preferences_scrollable_tabs">允许标签栏滚动</string>
     <string name="preferences_shape">图像形状</string>
     <string name="preferences_shape_circle">圆形</string>
