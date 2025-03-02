@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
@@ -113,7 +114,12 @@ object PlayerScreenLyricsOverlay : PlayerScreenLyrics() {
                             },
                             contentAlignment = Alignment.TopStart,
                         ) { animatedLine ->
-                            Text(animatedLine, style = Typography.bodyLarge, color = contentColor)
+                            Text(
+                                animatedLine,
+                                style = Typography.bodyLarge,
+                                color = contentColor,
+                                textAlign = TextAlign.Center,
+                            )
                         }
                     }
 
@@ -131,6 +137,7 @@ object PlayerScreenLyricsOverlay : PlayerScreenLyrics() {
                                         animatedCurrentLine,
                                         style = Typography.bodyLarge,
                                         color = contentColor,
+                                        textAlign = TextAlign.Center,
                                     )
                                 }
                                 if (animatedNextLine.isNotEmpty()) {
@@ -138,6 +145,7 @@ object PlayerScreenLyricsOverlay : PlayerScreenLyrics() {
                                         animatedNextLine,
                                         style = Typography.bodyLarge,
                                         color = contentColor.copy(alpha = INACTIVE_ALPHA),
+                                        textAlign = TextAlign.Center,
                                     )
                                 }
                             }
