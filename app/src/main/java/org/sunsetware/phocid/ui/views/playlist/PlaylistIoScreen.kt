@@ -92,6 +92,7 @@ import org.sunsetware.phocid.ui.theme.Typography
 import org.sunsetware.phocid.utils.SafFile
 import org.sunsetware.phocid.utils.icuFormat
 import org.sunsetware.phocid.utils.listSafFiles
+import org.sunsetware.phocid.utils.listSafFilesRecursive
 import org.sunsetware.phocid.utils.trimAndNormalize
 
 @Stable
@@ -140,7 +141,7 @@ private constructor(tabType: PlaylistIoScreenTabType, initialExportSelection: Se
                 while (isActive) {
                     m3uFiles =
                         playlistIoDirectoryUri
-                            ?.let { listSafFiles(context, it) }
+                            ?.let { listSafFilesRecursive(context, it) }
                             ?.values
                             ?.filter {
                                 it.name.endsWith(".m3u", true) || it.name.endsWith(".m3u8", true)
