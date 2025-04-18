@@ -139,11 +139,14 @@ private constructor(tabType: PlaylistIoScreenTabType, initialExportSelection: Se
                 while (isActive) {
                     m3uFiles =
                         playlistIoDirectoryUri
-                            ?.let { listSafFiles(context, it, true) }
+                            ?.let {
+                                listSafFiles(context, it, true) {
+                                    it.name.endsWith(".m3u", true) ||
+                                        it.name.endsWith(".m3u8", true)
+                                }
+                            }
                             ?.values
-                            ?.filter {
-                                it.name.endsWith(".m3u", true) || it.name.endsWith(".m3u8", true)
-                            } ?: emptyList()
+                            ?.toList() ?: emptyList()
                     delay(1.seconds)
                 }
             }
@@ -425,7 +428,7 @@ private constructor(tabType: PlaylistIoScreenTabType, initialExportSelection: Se
                     LazyColumn(state = importLazyListState, modifier = Modifier.fillMaxSize()) {
                         items(m3uFiles, { it.uri }) { file ->
                             UtilityCheckBoxListItem(
-                                text = file.name,
+                                text = file.relativePath,
                                 checked = importSelection.contains(file.uri),
                                 onCheckedChange = {
                                     if (it) {
@@ -564,7 +567,9 @@ private constructor(tabType: PlaylistIoScreenTabType, initialExportSelection: Se
                 while (isActive) {
                     files =
                         preferences.playlistIoSyncLocation?.let {
-                            listSafFiles(context, Uri.parse(it), false)
+                            listSafFiles(context, Uri.parse(it), false) {
+                                it.name.endsWith(".m3u", true) || it.name.endsWith(".m3u8", true)
+                            }
                         } ?: emptyMap()
                     delay(1.seconds)
                 }

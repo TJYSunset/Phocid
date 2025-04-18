@@ -199,7 +199,10 @@ class PlaylistManager(
             syncLog.appendLine(Strings[R.string.playlist_io_sync_log_no_persistable_permission])
         }
 
-        val files = listSafFiles(context, uri, false)
+        val files =
+            listSafFiles(context, uri, false) {
+                it.name.endsWith(".m3u", true) || it.name.endsWith(".m3u8", true)
+            }
         if (files == null) {
             error = true
             syncLog.appendLine(Strings[R.string.playlist_io_sync_log_error_listing_files])
@@ -283,7 +286,12 @@ class PlaylistManager(
                         updatePlaylist(
                             key,
                             requireNotNull(
-                                listSafFiles(context, uri, false)?.get(file.name)?.lastModified
+                                listSafFiles(context, uri, false) {
+                                        it.name.endsWith(".m3u", true) ||
+                                            it.name.endsWith(".m3u8", true)
+                                    }
+                                    ?.get(file.relativePath)
+                                    ?.lastModified
                             ),
                             false,
                         ) {

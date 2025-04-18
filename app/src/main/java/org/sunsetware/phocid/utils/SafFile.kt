@@ -7,9 +7,20 @@ import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.core.database.getLongOrNull
 
-@Immutable data class SafFile(val uri: Uri, val name: String, val lastModified: Long?)
+@Immutable
+data class SafFile(
+    val uri: Uri,
+    val name: String,
+    val relativePath: String,
+    val lastModified: Long?,
+)
 
-fun listSafFiles(context: Context, uri: Uri, recursive: Boolean): Map<String, SafFile>? {
+fun listSafFiles(
+    context: Context,
+    uri: Uri,
+    recursive: Boolean,
+    filter: (SafFile) -> Boolean,
+): Map<String, SafFile>? {
     val resolver = context.contentResolver
     val stack = mutableListOf(null as String? to uri)
     val results = mutableMapOf<String, SafFile>()
@@ -53,19 +64,21 @@ fun listSafFiles(context: Context, uri: Uri, recursive: Boolean): Map<String, Sa
                     while (cursor.moveToNext()) {
                         val mimeType = cursor.getString(0)
                         val documentId = cursor.getString(1)
-                        val name =
-                            currentPrefix?.let { "$it/${cursor.getString(2)}" }
-                                ?: cursor.getString(2)
+                        val name = cursor.getString(2)
+                        val relativePath = currentPrefix?.let { "$it/$name" } ?: name
                         val documentUri =
                             DocumentsContract.buildDocumentUriUsingTree(treeUri, documentId)
 
                         if (mimeType == DocumentsContract.Document.MIME_TYPE_DIR) {
                             if (recursive) {
-                                stack.add(name to documentUri)
+                                stack.add(relativePath to documentUri)
                             }
                         } else {
                             val lastModified = cursor.getLongOrNull(3)
-                            results[name] = SafFile(documentUri, name, lastModified)
+                            val file = SafFile(documentUri, name, relativePath, lastModified)
+                            if (filter(file)) {
+                                results[relativePath] = file
+                            }
                         }
                     }
                 }
