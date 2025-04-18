@@ -40,7 +40,14 @@ import org.apache.commons.io.FilenameUtils
 import org.sunsetware.phocid.PLAYLISTS_FILE_NAME
 import org.sunsetware.phocid.R
 import org.sunsetware.phocid.Strings
-import org.sunsetware.phocid.utils.*
+import org.sunsetware.phocid.utils.CaseInsensitiveMap
+import org.sunsetware.phocid.utils.UUIDSerializer
+import org.sunsetware.phocid.utils.combine
+import org.sunsetware.phocid.utils.decodeWithCharsetName
+import org.sunsetware.phocid.utils.icuFormat
+import org.sunsetware.phocid.utils.listSafFiles
+import org.sunsetware.phocid.utils.map
+import org.sunsetware.phocid.utils.trimAndNormalize
 
 enum class SpecialPlaylist(
     /** Version 8 UUID. Guaranteed to not collide with [UUID.randomUUID]. */
@@ -192,7 +199,7 @@ class PlaylistManager(
             syncLog.appendLine(Strings[R.string.playlist_io_sync_log_no_persistable_permission])
         }
 
-        val files = listSafFiles(context, uri)
+        val files = listSafFiles(context, uri, false)
         if (files == null) {
             error = true
             syncLog.appendLine(Strings[R.string.playlist_io_sync_log_error_listing_files])
@@ -276,7 +283,7 @@ class PlaylistManager(
                         updatePlaylist(
                             key,
                             requireNotNull(
-                                listSafFiles(context, uri)?.get(file.name)?.lastModified
+                                listSafFiles(context, uri, false)?.get(file.name)?.lastModified
                             ),
                             false,
                         ) {

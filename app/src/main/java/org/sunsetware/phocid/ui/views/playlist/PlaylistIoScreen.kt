@@ -67,7 +67,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.MimeTypes
 import com.ibm.icu.text.Collator
 import java.util.UUID
-import kotlin.collections.forEach
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -92,7 +91,6 @@ import org.sunsetware.phocid.ui.theme.Typography
 import org.sunsetware.phocid.utils.SafFile
 import org.sunsetware.phocid.utils.icuFormat
 import org.sunsetware.phocid.utils.listSafFiles
-import org.sunsetware.phocid.utils.listSafFilesRecursive
 import org.sunsetware.phocid.utils.trimAndNormalize
 
 @Stable
@@ -141,7 +139,7 @@ private constructor(tabType: PlaylistIoScreenTabType, initialExportSelection: Se
                 while (isActive) {
                     m3uFiles =
                         playlistIoDirectoryUri
-                            ?.let { listSafFilesRecursive(context, it) }
+                            ?.let { listSafFiles(context, it, true) }
                             ?.values
                             ?.filter {
                                 it.name.endsWith(".m3u", true) || it.name.endsWith(".m3u8", true)
@@ -566,7 +564,7 @@ private constructor(tabType: PlaylistIoScreenTabType, initialExportSelection: Se
                 while (isActive) {
                     files =
                         preferences.playlistIoSyncLocation?.let {
-                            listSafFiles(context, Uri.parse(it))
+                            listSafFiles(context, Uri.parse(it), false)
                         } ?: emptyMap()
                     delay(1.seconds)
                 }
