@@ -186,7 +186,7 @@
     <string name="preferences_indexing_rescan_footnote">請進行手動重新掃描來讓變更生效</string>
     <string name="preferences_indexing_select_folder">選擇資料夾</string>
     <string name="preferences_indexing_whitelist">允許清單</string>
-    <string name="preferences_indexing_whitelist_subtitle">{0, plural, one {#}} 個規則</string>
+    <string name="preferences_indexing_whitelist_subtitle">{0, plural, other {#}} 個規則</string>
     <string name="preferences_interface">介面</string>
     <string name="preferences_library_track_click_action">曲目點擊動作</string>
     <string name="preferences_library_track_click_action_open_menu">開啟選單</string>
