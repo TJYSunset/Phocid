@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="commons_add">新增</string>
+    <string name="commons_automatic">自動</string>
+    <string name="commons_back">返回</string>
+    <string name="commons_cancel">取消</string>
+    <!-- Verb, "remove everything" -->
+    <string name="commons_clear">清除</string>
+    <string name="commons_close">關閉</string>
+    <string name="commons_error">錯誤</string>
+    <string name="commons_export">匯出</string>
+    <string name="commons_import">匯入</string>
+    <!-- Alt text of overflow menus -->
+    <string name="commons_more">更多</string>
+    <string name="commons_ok">確定</string>
+    <string name="commons_quit">離開</string>
+    <string name="commons_remove">移除</string>
+    <string name="commons_reset">重設</string>
+    <string name="commons_sync">同步</string>
+
+    <string name="count_album">{0, plural, other {# 張專輯}}</string>
+    <string name="count_folder">{0, plural, other {# 個資料夾}}</string>
+    <string name="count_invalid_track">{0, plural, other {# 首無效曲目}}</string>
+    <string name="count_track">{0, plural, other {# 首曲目}}</string>
+
+    <string name="duration_hours_minutes_seconds">{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
+    <string name="duration_minutes_seconds">{0, number, ::00}:{1, number, ::00}</string>
+    <string name="duration_negative_hours_minutes_seconds">-{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
+    <string name="duration_negative_minutes_seconds">-{0, number, ::00}:{1, number, ::00}</string>
+
+    <string name="library_rescan">重新掃描音樂庫</string>
+
+    <string name="list_empty">空白</string>
+    <string name="list_move_down">下移</string>
+    <string name="list_move_up">上移</string>
+    <!-- Alt text for the check mark displayed on selected items -->
+    <string name="list_multi_select_item_selected">已選</string>
+    <string name="list_multi_select_select_all">全部選取</string>
+    <string name="list_multi_select_select_inverse">反轉選取</string>
+    <string name="list_multi_select_title">已選 {0, plural, other {#}} 個項目</string>
+
+    <!-- The IETF language tag of the current translation, used for formatting -->
+    <string name="locale">zh-Hant</string>
+
+    <string name="permission_dialog_body">本應用程式需要有權限讀取您的音樂與音訊檔案。請允許使用以繼續。</string>
+    <string name="permission_dialog_grant">允許</string>
+    <string name="permission_dialog_title">需要權限</string>
+
+    <string name="player_clear_queue">清除待播清單</string>
+    <string name="player_lyrics">歌詞</string>
+    <string name="player_lyrics_auto_scroll">自動捲動歌詞</string>
+    <string name="player_next">下一首</string>
+    <string name="player_no_lyrics">沒有歌詞</string>
+    <string name="player_now_playing">現正播放</string>
+    <!-- Alt text of the "favorite" button next to the currently playing track -->
+    <string name="player_now_playing_add_favorites">將現正播放加入收藏</string>
+    <!-- Alt text of the "favorite" button next to the currently playing track -->
+    <string name="player_now_playing_remove_favorites">將現正播放從收藏中移除</string>
+    <string name="player_pause">暫停</string>
+    <string name="player_play">播放</string>
+    <string name="player_previous">上一首</string>
+    <string name="player_repeat_mode_all">重複模式：全部</string>
+    <string name="player_repeat_mode_off">重複模式：關閉</string>
+    <string name="player_repeat_mode_one">重複模式：單首</string>
+    <string name="player_save_queue">將待播清單儲存為播放清單</string>
+    <string name="player_shuffle_off">隨機播放：關閉</string>
+    <string name="player_shuffle_on">隨機播放：開啟</string>
+    <string name="player_speed_and_pitch">速度與音高</string>
+    <string name="player_speed_and_pitch_match_pitch_to_speed">讓音高與速度符合</string>
+    <string name="player_speed_and_pitch_pitch">音高</string>
+    <string name="player_speed_and_pitch_pitch_number">{0, number, ::+!}</string>
+    <string name="player_speed_and_pitch_speed">速度</string>
+    <string name="player_speed_and_pitch_speed_number">{0, number, ::.00}×</string>
+    <string name="player_timer">睡眠計時器</string>
+    <string name="player_timer_cancel">取消計時器</string>
+    <string name="player_timer_finish_last_track">結束最後一首曲目</string>
+    <string name="player_timer_set">設定</string>
+    <string name="player_up_next">即將播放</string>
+
+    <string name="playlist_add_to">加入播放清單</string>
+    <string name="playlist_delete">刪除播放清單</string>
+    <string name="playlist_delete_multiple_dialog_body">{0, plural, other {#}} 個播放清單會被永久刪除</string>
+    <string name="playlist_delete_multiple_dialog_title">刪除 {0, plural, other {#}} 個播放清單？</string>
+    <string name="playlist_delete_single_dialog_body">播放清單「{0}」會被永久刪除</string>
+    <string name="playlist_delete_single_dialog_title">刪除播放清單？</string>
+    <string name="playlist_edit">編輯播放清單</string>
+    <string name="playlist_edit_screen_title">編輯播放清單「{0}」</string>
+    <string name="playlist_export">匯出播放清單</string>
+    <string name="playlist_import_export">匯入/匯出播放清單</string>
+    <string name="playlist_io_export_count">匯出 {0, plural, other {#}} 個播放清單</string>
+    <string name="playlist_io_import_count">匯入 {0, plural, other {#}} 個播放清單</string>
+    <string name="playlist_io_location">播放清單位置：{0}</string>
+    <string name="playlist_io_location_not_set">播放清單位置：未設定</string>
+    <string name="playlist_io_select_folder">選擇資料夾</string>
+    <string name="playlist_io_sync">播放清單同步</string>
+    <string name="playlist_io_sync_help">播放清單同步說明</string>
+    <string name="playlist_io_sync_help_body" tools:ignore="TypographyDashes">繼續進行前請先備份到另一個位置並仔細閱讀說明！！！\n\n您可以從頂部列檢視上次同步的日誌來進行問題排解。\n\n同步設定獨立於手動匯入/匯出設定，可以從頂部列進行設定。修改後的同步設定到下次雙方時間戳不同的時候才會生效，而在啟用同步的時候修改設定可能會造成資料毀損。在修改設定前請先備份並手動覆寫較舊的那一側。\n\n由於 Android 的限制，Phocid 無法為您建立缺乏的檔案。您可以先匯出播放清單來建立相對應的檔案。\n\n「同步」會將較舊的那一側覆寫成較新的那一側的內容。這代表：\n• 建立新播放清單然後設定與現有檔案同步會將該檔案覆寫成空的！反之亦然。要加入新的映射，請先用匯入/匯出來建立內容與上次修改時間一樣的播放清單與檔案。\n• 同步依賴檔案的「上次修改」時間戳是正確的。如果檔案由外部修改但時間戳不正確的話會有非預期的行為。\n新建立的播放清單與 Phocid v20250219 之前更新的播放清單的時間戳是初始時間戳（1970-01-01）。匯出的檔案的時間戳會是匯出發生的時間。匯出播放清單也會同時更新該播放清單的時間戳。\n\nPhocid 不會認知到 M3U 註解（包含擴展指令），同步時會跳過它們，使該資訊消失。如果您需要 M3U 註解請不要使用同步。\n\n同步會在應用程式聚焦時、播放清單變更時、與手動觸發時發生。</string>
+    <string name="playlist_io_sync_location">同步位置：{0}</string>
+    <string name="playlist_io_sync_location_not_set">同步位置：未設定</string>
+    <string name="playlist_io_sync_log">播放清單同步日誌</string>
+    <string name="playlist_io_sync_log_conflicting_mappings">多個播放清單與同一個檔案同步。</string>
+    <string name="playlist_io_sync_log_error_listing_files">列出檔案時發生錯誤。</string>
+    <string name="playlist_io_sync_log_export_error">{0} ⇄ {1}：匯出錯誤：{0}</string>
+    <string name="playlist_io_sync_log_export_ok">{0} ⇄ {1}：已匯出。</string>
+    <string name="playlist_io_sync_log_import_error">{0} ⇄ {1}：匯入錯誤：{0}</string>
+    <string name="playlist_io_sync_log_import_ok">{0} ⇄ {1}：已匯入。</string>
+    <string name="playlist_io_sync_log_missing_file">{0} ⇄ {1}：缺乏檔案。</string>
+    <string name="playlist_io_sync_log_missing_playlist">&lt;未知&gt; ⇄ {0}：缺乏播放清單。</string>
+    <string name="playlist_io_sync_log_no_file_timestamp">{0} ⇄ {1}：無法取得檔案的上次修改時間。</string>
+    <string name="playlist_io_sync_log_no_persistable_permission">沒有存取檔案的權限。請重新設定同步位置來修正。</string>
+    <string name="playlist_io_sync_log_skipped_all">由於上方錯誤已跳過同步。</string>
+    <string name="playlist_io_sync_log_up_to_date">{0} ⇄ {1}：已是最新。</string>
+    <string name="playlist_io_sync_now">現在同步</string>
+    <string name="playlist_io_sync_settings">播放清單同步設定</string>
+    <string name="playlist_io_sync_target_file">目標檔案</string>
+    <string name="playlist_io_sync_target_file_conflict">另一個播放清單已與此檔案同步</string>
+    <string name="playlist_io_sync_target_file_nonexistent">檔案不存在</string>
+    <string name="playlist_name">播放清單名稱</string>
+    <string name="playlist_new">新增播放清單</string>
+    <string name="playlist_new_with_tracks">新增有 {0, plural, other {#}} 首曲目的播放清單</string>
+    <string name="playlist_remove_from">從播放清單移除</string>
+    <string name="playlist_remove_from_dialog_body">{0, plural, other {# 首曲目}}將會從播放清單「{1}」中移除</string>
+    <string name="playlist_remove_from_dialog_title">要從播放清單移除 {0, plural, other {#}} 首曲目嗎？</string>
+    <string name="playlist_remove_invalid_tracks">移除無效曲目</string>
+    <string name="playlist_rename">重新命名播放清單</string>
+    <string name="playlist_rename_input_hint">新名稱</string>
+    <string name="playlist_sort">排序播放清單</string>
+    <string name="playlist_sort_screen_title">排序播放清單「{0}」</string>
+    <string name="playlist_special_favorites">收藏</string>
+
+    <string name="preferences">偏好設定</string>
+    <string name="preferences_about">關於</string>
+    <string name="preferences_artwork_color">封面色彩取出</string>
+    <!-- "Muted" as in opposite of vibrant -->
+    <string name="preferences_artwork_color_muted_first">傾向淡色</string>
+    <!-- "Muted" as in opposite of vibrant. This option will forcefully convert vibrant colors to muted ones. -->
+    <string name="preferences_artwork_color_muted_only">僅用淡色</string>
+    <string name="preferences_artwork_color_vibrant_first">傾向鮮豔</string>
+    <string name="preferences_audio_offloading">音訊硬體加速</string>
+    <string name="preferences_audio_offloading_subtitle">會降低電池用量，但可能會造成播放問題。</string>
+    <!-- "Cards" are rectangular list items displayed on the main screen. -->
+    <string name="preferences_colored_cards">依封面色彩為卡片上色</string>
+    <string name="preferences_colored_global_theme">依封面色彩變更主題色</string>
+    <string name="preferences_colored_player">依封面色彩變更播放器畫面</string>
+    <string name="preferences_dark_theme">深色主題</string>
+    <string name="preferences_dark_theme_dark">深色</string>
+    <string name="preferences_dark_theme_light">淺色</string>
+    <string name="preferences_dark_theme_system">跟隨系統</string>
+    <string name="preferences_data">資料</string>
+    <string name="preferences_folder_picker_dialog_title">選擇資料夾</string>
+    <string name="preferences_folder_picker_dialog_up">往上</string>
+    <string name="preferences_folder_tab_root">資料夾分頁起始目錄</string>
+    <string name="preferences_grant_images_permission">授予讀取相片和影片的權限</string>
+    <string name="preferences_grant_images_permission_subtitle">只有在外部封面影像未正常顯示時才會需要</string>
+    <string name="preferences_indexing">索引</string>
+    <string name="preferences_indexing_advanced_metadata_extraction">進階中繼資料取出</string>
+    <string name="preferences_indexing_advanced_metadata_extraction_subtitle">讀取更多標籤與內嵌歌詞，但非常慢。會在手動重新掃描時套用。</string>
+    <string name="preferences_indexing_always_rescan_mediastore">總是重新掃描 MediaStore</string>
+    <string name="preferences_indexing_always_rescan_mediastore_subtitle">新檔案總是不被偵測到的時候可以啟用</string>
+    <string name="preferences_indexing_artist_separator_exceptions">藝人分隔符例外</string>
+    <string name="preferences_indexing_artist_separator_exceptions_subtitle">{0, plural, other {#}} 個例外</string>
+    <string name="preferences_indexing_artist_separators">藝人分隔符</string>
+    <string name="preferences_indexing_artist_separators_subtitle">{0, plural, other {#}} 個分隔符</string>
+    <string name="preferences_indexing_blacklist">封鎖清單</string>
+    <string name="preferences_indexing_blacklist_subtitle">{0, plural, other {# 個規則}}，過濾 {1, plural, other {# 首曲目}}</string>
+    <string name="preferences_indexing_dialog_input_placeholder">新增規則</string>
+    <string name="preferences_indexing_dialog_match_count">{0, plural, other {# 首曲目}}符合這個規則</string>
+    <string name="preferences_indexing_disable_artwork_color_extraction">停用封面色彩取出</string>
+    <string name="preferences_indexing_disable_artwork_color_extraction_subtitle">可能會加快掃描</string>
+    <string name="preferences_indexing_genre_separator_exceptions">曲風分隔符例外</string>
+    <string name="preferences_indexing_genre_separator_exceptions_subtitle">{0, plural, other {#}} 個例外</string>
+    <string name="preferences_indexing_genre_separators">曲風分隔符</string>
+    <string name="preferences_indexing_genre_separators_subtitle">{0, plural, other {#}} 個分隔符</string>
+    <string name="preferences_indexing_help">索引說明</string>
+    <string name="preferences_indexing_help_artist_separator_exceptions_body">這些字串不會經過上面的分隔符處理。舉例來說，將「A &amp; B」加入此處會讓「A &amp; B」無論如何總是被視為一個藝人。</string>
+    <string name="preferences_indexing_help_artist_separator_exceptions_title">藝人分隔符例外</string>
+    <string name="preferences_indexing_help_artist_separators_body">藝人中繼資料會依這些字串分隔開來。舉例來說，加入「&amp;」會讓「A &amp; B」被視為兩個藝人：「A」和「B」。</string>
+    <string name="preferences_indexing_help_artist_separators_title">藝人分隔符</string>
+    <string name="preferences_indexing_help_blacklist_body">符合封鎖清單的曲目會被隱藏。</string>
+    <string name="preferences_indexing_help_blacklist_title">封鎖清單</string>
+    <string name="preferences_indexing_help_syntax_body">過濾規則是不分大小寫的正則表達式，與曲目絕對路徑部分符合時即符合該曲目。\n\n要查看一首曲目的絕對路徑，可以在它的目錄按下「詳細資料」按鈕。\n\n範例：\n\n• 符合名為「範例」的資料夾內的所有檔案：\n/範例/\n\n• 符合所有 MP3 檔案：\n\\.mp3$\n\n• 符合所有名為「範例」的資料夾內的所有 MP3 檔案：\n/範例/.*\\.mp3$\n\n• 符合名為「Example」的資料夾內的所有檔案，但不要符合「example」（區分大小寫）：\n(?-i)/Example/</string>
+    <string name="preferences_indexing_help_syntax_title">封鎖清單/允許清單語法</string>
+    <string name="preferences_indexing_help_whitelist_body">同時符合封鎖清單和允許清單的曲目不會被隱藏。\n\n要只顯示符合允許清單的曲目，請將這個符合任何曲目的規則加入封鎖清單：\n^</string>
+    <string name="preferences_indexing_help_whitelist_title">允許清單</string>
+    <string name="preferences_indexing_invalid_regex">不是有效的正則表達式</string>
+    <string name="preferences_indexing_rescan_footnote">請進行手動重新掃描來讓變更生效</string>
+    <string name="preferences_indexing_select_folder">選擇資料夾</string>
+    <string name="preferences_indexing_whitelist">允許清單</string>
+    <string name="preferences_indexing_whitelist_subtitle">{0, plural, one {#}} 個規則</string>
+    <string name="preferences_interface">介面</string>
+    <string name="preferences_library_track_click_action">曲目點擊動作</string>
+    <string name="preferences_library_track_click_action_open_menu">開啟選單</string>
+    <string name="preferences_license">授權條款</string>
+    <string name="preferences_lyrics_display">歌詞顯示</string>
+    <string name="preferences_lyrics_display_default">預設</string>
+    <string name="preferences_lyrics_display_disabled">已停用</string>
+    <string name="preferences_lyrics_display_two_lines">兩行</string>
+    <string name="preferences_pause_on_focus_loss">無音訊焦點時暫停</string>
+    <string name="preferences_play_on_output_device_connection">連線耳機時播放</string>
+    <string name="preferences_playback">播放</string>
+    <string name="preferences_player_screen_layout">現正播放佈局</string>
+    <string name="preferences_player_screen_layout_default">預設</string>
+    <string name="preferences_player_screen_layout_no_queue">無待播清單</string>
+    <string name="preferences_playlist_io_settings">播放清單輸入輸出設定</string>
+    <string name="preferences_playlist_io_settings_export_relative">匯出相對路徑</string>
+    <string name="preferences_playlist_io_settings_export_relative_base">相對路徑基底</string>
+    <string name="preferences_playlist_io_settings_export_relative_base_hint">提示：預設音樂目錄是 {0}</string>
+    <string name="preferences_playlist_io_settings_ignore_case">忽略檔名大小寫</string>
+    <string name="preferences_playlist_io_settings_ignore_location">忽略檔案位置</string>
+    <string name="preferences_playlist_io_settings_remove_invalid">移除未解析的音軌</string>
+    <string name="preferences_pure_background_color">純黑/純白背景</string>
+    <string name="preferences_reshuffle_on_repeat">重複時重新隨機排列（實驗性）</string>
+    <string name="preferences_scan_progress_timeout">過多久之後顯示掃描進度</string>
+    <string name="preferences_scrollable_tabs">可捲動的分頁</string>
+    <string name="preferences_shape">封面形狀</string>
+    <string name="preferences_shape_circle">圓形</string>
+    <string name="preferences_shape_rounded_square">圓角方形</string>
+    <string name="preferences_shape_square">正方形</string>
+    <string name="preferences_sorting_language">排序語言</string>
+    <string name="preferences_sorting_language_system">系統語言</string>
+    <string name="preferences_swipe_to_remove_from_queue">滑動來從待播清單中移除</string>
+    <string name="preferences_system_equalizer">開啟系統等化器</string>
+    <string name="preferences_tab_style">分頁樣式</string>
+    <string name="preferences_tab_style_icon_only">僅圖示</string>
+    <string name="preferences_tab_style_text_and_icon">文字與圖示</string>
+    <string name="preferences_tab_style_text_only">僅文字</string>
+    <string name="preferences_tabs">主頁分頁</string>
+    <!-- Symbol used to separate list of enabled tabs in preferences screen -->
+    <string name="preferences_tabs_separator">, </string>
+    <string name="preferences_text_encoding">文字編碼</string>
+    <string name="preferences_text_encoding_auto_detect">自動偵測</string>
+    <string name="preferences_theme">Theme</string>
+    <string name="preferences_theme_color">主題色</string>
+    <string name="preferences_theme_color_chroma">色度</string>
+    <string name="preferences_theme_color_chroma_number">{0}%</string>
+    <string name="preferences_theme_color_hue">色相</string>
+    <string name="preferences_theme_color_hue_number">{0}°</string>
+    <string name="preferences_theme_color_source_custom">自訂</string>
+    <string name="preferences_theme_color_source_default">預設</string>
+    <string name="preferences_theme_color_source_material_you">Material You</string>
+    <string name="preferences_third_party_licenses">第三方授權條款</string>
+    <string name="preferences_treat_embedded_lyrics_as_lrc">將內嵌歌詞視為 LRC</string>
+    <string name="preferences_ui_scaling">介面縮放比例</string>
+    <string name="preferences_ui_scaling_number">{0, number, ::.00}×</string>
+    <string name="preferences_version">版本</string>
+    <string name="preferences_website">網站</string>
+
+    <string name="search">搜尋</string>
+    <string name="search_in_list">在清單中搜尋</string>
+    <string name="search_next">下一個結果</string>
+    <string name="search_position_indicator">{0}/{1}</string>
+    <string name="search_previous">上一個結果</string>
+
+    <string name="shortcut_continue_long_label">從上次播放位置繼續</string>
+    <string name="shortcut_continue_short_label">繼續播放</string>
+    <string name="shortcut_shuffle_long_label">隨機播放所有曲目</string>
+    <string name="shortcut_shuffle_short_label">隨機播放全部</string>
+
+    <string name="snackbar_scanning_library">正在掃描音樂庫 ({0}/{1})</string>
+
+    <string name="sorting_album">專輯</string>
+    <string name="sorting_album_artist">專輯藝人</string>
+    <string name="sorting_album_count">專輯數量</string>
+    <string name="sorting_artist">藝人</string>
+    <string name="sorting_ascending">遞增</string>
+    <string name="sorting_custom">自訂</string>
+    <string name="sorting_date_added">新增日期</string>
+    <string name="sorting_date_modified">修改日期</string>
+    <string name="sorting_descending">遞減</string>
+    <string name="sorting_file_name">檔案名稱</string>
+    <string name="sorting_name">名稱</string>
+    <string name="sorting_number">曲目編號</string>
+    <string name="sorting_title">標題</string>
+    <string name="sorting_track_count">曲目數量</string>
+    <string name="sorting_year">年份</string>
+
+    <!-- Symbol used to separate multiple artists of a single track -->
+    <string name="symbol_conjunction">" &amp; "</string>
+    <!-- Symbol used to separate related info placed on the same line -->
+    <string name="symbol_separator">" · "</string>
+
+    <string name="tab_album_artists">專輯藝人</string>
+    <string name="tab_albums">專輯</string>
+    <string name="tab_artists">藝人</string>
+    <string name="tab_folders">資料夾</string>
+    <string name="tab_genres">曲風</string>
+    <string name="tab_playlists">播放清單</string>
+    <string name="tab_tracks">曲目</string>
+
+    <string name="toast_cant_open_system_equalizer">無法開啟系統等化器</string>
+    <string name="toast_crash_saved_to">崩潰日誌已儲存到 {0}</string>
+    <string name="toast_playlist_exported">已匯出 {0, plural, other {# 個播放清單}}</string>
+    <string name="toast_playlist_exported_with_failure">已匯出 {0, plural, other {# 個播放清單}}，{1, plural, other {#}} 個失敗了</string>
+    <string name="toast_playlist_imported">已匯入 {0, plural, other {# 個播放清單}}</string>
+    <string name="toast_playlist_io_sync_error">同步播放清單發生錯誤。請見同步畫面的日誌取得詳細資訊。</string>
+    <string name="toast_timer_canceled">已取消睡眠計時器</string>
+    <string name="toast_timer_set">播放會在約 {0, plural, other {#}} 分鐘後暫停</string>
+    <string name="toast_track_queued">已將 {0, plural, other {#}} 首曲目加入待播清單</string>
+
+    <string name="track_add_to_queue">加入待播清單</string>
+    <string name="track_details">詳細資料</string>
+    <string name="track_details_album">專輯</string>
+    <string name="track_details_album_artist">專輯藝人</string>
+    <string name="track_details_artist">藝人</string>
+    <string name="track_details_bit_depth">位元深度</string>
+    <string name="track_details_bit_rate">位元率</string>
+    <string name="track_details_comment">註解</string>
+    <string name="track_details_date_added">新增日期</string>
+    <string name="track_details_date_modified">修改日期</string>
+    <string name="track_details_format">格式</string>
+    <string name="track_details_genre">曲風</string>
+    <string name="track_details_path">路徑</string>
+    <string name="track_details_sample_rate">取樣率</string>
+    <string name="track_details_size">大小</string>
+    <string name="track_details_title">標題</string>
+    <string name="track_details_track_number">音軌編號</string>
+    <string name="track_details_unsynced_lyrics">未同步的歌詞</string>
+    <string name="track_details_year">年份</string>
+    <string name="track_disc_without_number">{0}-?</string>
+    <string name="track_inferred_album_artist">({0})</string>
+    <string name="track_number_not_available">-</string>
+    <string name="track_number_with_disc">{0}-{1}</string>
+    <string name="track_number_without_disc">{0}</string>
+    <string name="track_play">播放</string>
+    <string name="track_play_all">播放全部</string>
+    <string name="track_play_next">接著播放</string>
+    <string name="track_remove_from_queue">從待播清單中移除</string>
+    <string name="track_share">分享</string>
+    <string name="track_view_album">檢視專輯「{0}」</string>
+    <string name="track_view_artist">檢視藝人「{0}」</string>
+
+    <!-- Settings of how the list is displayed. Unrelated to "view album" etc. -->
+    <string name="view_settings">檢視設定</string>
+    <string name="view_settings_grid_size">格線大小</string>
+    <string name="view_settings_sort_by">排序方式</string>
+</resources>
