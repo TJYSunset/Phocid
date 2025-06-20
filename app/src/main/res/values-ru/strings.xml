@@ -11,7 +11,7 @@
     <string name="commons_export">Экспорт</string>
     <string name="commons_import">Импорт</string>
     <string name="commons_more">Подробнее</string>
-    <string name="commons_ok">Ладно</string>
+    <string name="commons_ok">Хорошо</string>
     <string name="commons_quit">Выйти</string>
     <string name="commons_remove">Убрать</string>
     <string name="commons_reset">Сброс</string>
@@ -19,11 +19,11 @@
     <string name="commons_sync">Синхронизация</string>
     <string name="count_album">{0, plural, one {# альбом} few {# альбома} other {# альбомов}}</string>
     <string name="count_folder">{0, plural, one {# папка} few {# папки} other {# папок}}</string>
-    <string name="count_invalid_track">{0, plural, one {# неправильная песня} few {# неправильных песен} other {# неправильных песен}}</string>
+    <string name="count_invalid_track">{0, plural, one {# неправильная песня} few {# неправильные песни} other {# неправильных песен}}</string>
     <string name="count_track">{0, plural, one {# песня} few {# песен} other {# песен}}</string>
     <string name="duration_hours_minutes_seconds">{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="list_multi_select_item_selected">Выбрано</string>
-    <string name="permission_dialog_body">Разрешение на чтение аудиофайлов необходимо для выполнения основных функций. Пожалуйста, грант, продолжайте.</string>
+    <string name="permission_dialog_body">Разрешение на чтение аудиофайлов необходимо для выполнения основных функций. Пожалуйста, дайте разрешение и продолжите.</string>
     <string name="duration_minutes_seconds">{0, number, ::00}:{1, number, ::00}</string>
     <string name="duration_negative_minutes_seconds">-{0, number, ::00}:{1, number, ::00}</string>
     <string name="library_rescan">Пересканировать библиотеку</string>
@@ -109,7 +109,7 @@
     <string name="track_details_artist">Исполнитель</string>
     <string name="toast_playlist_exported">Экспортировано {0, plural, one {# плейлист} few {# плейлиста} other {# плейлистов}}</string>
     <string name="track_number_without_disc">{0}</string>
-    <string name="preferences_indexing_help_syntax_body">Правила фильтрации — это нечувствительные к регистру регулярные выражения (regex), которые частично соответствуют абсолютным путям треков.\n\nЧтобы просмотреть абсолютный путь трека, нажмите кнопку «Подробности» в его меню.\n\nПримеры:\n\n• Найти все файлы в папке «Example»:\n/Example/\n\n• Найти все файлы MP3:\n\\.mp3$\n\n• Найти все файлы MP3 в папке «Example»:\n/Example/.*\\.mp3$\n\n• Найти файлы в папке «Example», но не «example» (с учётом регистра):\n(?-i)/Example/</string>
+    <string name="preferences_indexing_help_syntax_body">Правила фильтрации — это нечувствительные к регистру регулярные выражения (regex), которые частично соответствуют абсолютным путям файлов песен.\n\nЧтобы просмотреть абсолютный путь песни, нажмите кнопку «Подробности» в его меню.\n\nПримеры:\n\n• Найти все файлы в папке «Example»:\n/Example/\n\n• Найти все файлы MP3:\n\\.mp3$\n\n• Найти все файлы MP3 в папке «Example»:\n/Example/.*\\.mp3$\n\n• Найти файлы в папке «Example», но не «example» (с учётом регистра):\n(?-i)/Example/</string>
     <string name="playlist_io_sync_help_body" tools:ignore="TypographyDashes">СДЕЛАЙТЕ РЕЗЕРВНОЕ КОПИРОВАНИЕ В ДРУГОМ МЕСТОПОЛОЖЕНИИ И ВНИМАТЕЛЬНО ПРОЧИТАЙТЕ ДОКУМЕНТАЦИЮ, ПРЕЖДЕ ЧЕМ ПРОДОЛЖАТЬ!\n\nВы можете просмотреть журналы последней синхронизации на верхней панели для отладки проблем.\n\nНастройки синхронизации не зависят от настроек ручного импорта/экспорта и могут быть установлены на верхней панели. Измененные настройки синхронизации не вступят в силу до следующего раза, когда обе стороны будут иметь разные временные метки, а изменение настроек при включенной синхронизации может повредить ваши данные. Сделайте резервную копию и вручную перезапишите старую сторону перед этим.\n\nИз-за ограничений Android этот плеерPhocid не будет создавать отсутствующие файлы от вашего имени. Вы можете экспортировать плейлисты для создания соответствующих файлов.\n\n«Синхронизация» перезаписывает старую сторону содержимым с новой стороны, что означает:\n• Создание нового плейлиста для синхронизации из существующего файла может перезаписать файл ничем, и наоборот. Чтобы добавить новые сопоставления, используйте импорт/экспорт вместо этого для создания плейлистов и файлов с совпадающими временными метками и содержимым «последнего изменения».\n• Синхронизация зависит от того, имеют ли ваши файлы правильную временную метку «последнего изменения». Ожидайте неожиданного поведения, если файлы изменены извне с неправильными временными метками.\n\nВновь созданные плейлисты и плейлисты, обновленные до Phocid v20250219, имеют временную метку 1970-01-01. Экспортированные файлы будут иметь временную метку, когда произошел экспорт. Экспорт плейлиста также обновит его временную метку.\n\nPhocid не знает о комментариях M3U (и, соответственно, расширенных директивах) и удаляет их при синхронизации. Не используйте синхронизацию, если ваш вариант использования требует комментариев M3U.\n\nСинхронизация происходит, когда приложение получает фокус, изменяется плейлист или запрашивается вручную.</string>
     <string name="player_shuffle_off">Перемешивание: выкл.</string>
     <string name="player_shuffle_on">Перемешивание: вкл.</string>
@@ -163,9 +163,9 @@
     <string name="preferences_colored_cards">Цветовые карты на основе обложки</string>
     <string name="preferences_colored_global_theme">Изменить цвет темы на основе обложки</string>
     <string name="preferences_colored_player">Цветной экран проигрывателя на основе обложки</string>
-    <string name="preferences_dark_theme_dark">Темная</string>
+    <string name="preferences_dark_theme_dark">Тёмная</string>
     <string name="preferences_dark_theme_light">Светлая</string>
-    <string name="preferences_dark_theme_system">Следовать за системой</string>
+    <string name="preferences_dark_theme_system">Как в системе</string>
     <string name="preferences_data">Данные</string>
     <string name="preferences_dump_logcat_subtitle">Путь вывода: {0}</string>
     <string name="preferences_folder_picker_dialog_up">Вверх</string>
@@ -180,7 +180,7 @@
     <string name="preferences_indexing">Индексирование</string>
     <string name="preferences_indexing_advanced_metadata_extraction">Расширенное извлечение метаданных</string>
     <string name="preferences_indexing_advanced_metadata_extraction_subtitle">Читает несколько тегов и встроенные тексты песен, но очень медленно. Применяется после ручного повторного сканирования.</string>
-    <string name="preferences_indexing_always_rescan_mediastore">Всегда повторно сканировать MediaStore</string>
+    <string name="preferences_indexing_always_rescan_mediastore">Всегда повторно сканировать медиабиблиотеку</string>
     <string name="preferences_indexing_always_rescan_mediastore_subtitle">Включить, если новые файлы постоянно не обнаруживаются</string>
     <string name="preferences_indexing_help_blacklist_title">Список блокировки</string>
     <string name="preferences_indexing_dialog_input_placeholder">Добавить правило</string>
