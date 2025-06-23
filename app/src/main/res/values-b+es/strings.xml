@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="commons_add">Añadir</string>
+    <string name="commons_automatic">Automático</string>
+    <string name="commons_back">Volver</string>
+    <string name="commons_cancel">Cancelar</string>
+    <!-- Verb, "remove everything" -->
+    <string name="commons_clear">Limpiar</string>
+    <string name="commons_close">Cerrar</string>
+    <string name="commons_error">Error</string>
+    <string name="commons_export">Exportar</string>
+    <string name="commons_import">Importar</string>
+    <!-- Alt text of overflow menus -->
+    <string name="commons_more">Más</string>
+    <string name="commons_ok">OK</string>
+    <string name="commons_quit">Salir</string>
+    <string name="commons_remove">Eliminar</string>
+    <string name="commons_reset">Reestablecer</string>
+    <!-- Adjective, not noun -->
+    <string name="commons_selected">Seleccionado(s)</string>
+    <string name="commons_sync">Sincronizar</string>
+
+    <string name="count_album">{0, plural, one {# álbum} other {# álbumes}}</string>
+    <string name="count_folder">{0, plural, one {# carpeta} other {# carpetas}}</string>
+    <string name="count_invalid_track">{0, plural, one {# pista no válida} other {# pistas no válidas}}</string>
+    <string name="count_track">{0, plural, one {# pista} other {# pistas}}</string>
+
+    <string name="duration_hours_minutes_seconds">{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
+    <string name="duration_minutes_seconds">{0, number, ::00}:{1, number, ::00}</string>
+    <string name="duration_negative_hours_minutes_seconds">-{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
+    <string name="duration_negative_minutes_seconds">-{0, number, ::00}:{1, number, ::00}</string>
+
+    <string name="library_rescan">Volver a escanear la biblioteca</string>
+    <string name="library_view_root_folder">Ver carpeta raíz de todas las pistas</string>
+
+    <string name="list_empty">Vacía</string>
+    <string name="list_move_down">Mover hacia abajo</string>
+    <string name="list_move_up">Mover hacia arriba</string>
+    <!-- Alt text for the check mark displayed on selected items -->
+    <string name="list_multi_select_item_selected">Seleccionado(s)</string>
+    <string name="list_multi_select_select_all">Seleccionar todo</string>
+    <string name="list_multi_select_select_inverse">Seleccionar inverso</string>
+    <string name="list_multi_select_title">{0, plural, one {# elemento seleccionado} other {# elementos seleccionados}}</string>
+
+    <!-- The IETF language tag of the current translation, used for formatting -->
+    <string name="locale">es</string>
+
+    <string name="permission_dialog_body">Se requiere permiso para leer tus archivos de audio para la funcionalidad básica. Por favor, concédelo para continuar.</string>
+    <string name="permission_dialog_grant">Conceder</string>
+    <string name="permission_dialog_title">Se requiere permiso</string>
+
+    <string name="player_clear_queue">Limpiar fila</string>
+    <string name="player_lyrics">Letra</string>
+    <string name="player_lyrics_auto_scroll">Desplazar letra automáticamente</string>
+    <string name="player_next">Siguiente</string>
+    <string name="player_no_lyrics">Sin letra</string>
+    <string name="player_now_playing">Reproduciendo ahora</string>
+    <!-- Alt text of the "favorite" button next to the currently playing track -->
+    <string name="player_now_playing_add_favorites">Añadir reproducción actual a favoritos</string>
+    <!-- Alt text of the "favorite" button next to the currently playing track -->
+    <string name="player_now_playing_remove_favorites">Eliminar reproducción actual de favoritos</string>
+    <string name="player_pause">Pausar</string>
+    <string name="player_play">Reproducir</string>
+    <string name="player_previous">Anterior</string>
+    <string name="player_repeat_mode_all">Modo de repetición: Todo</string>
+    <string name="player_repeat_mode_off">Modo de repetición: Apagado</string>
+    <string name="player_repeat_mode_one">Modo de repetición: Una</string>
+    <string name="player_save_queue">Guardar fila como lita de reproducción</string>
+    <string name="player_shuffle_off">Modo aleatorio: Apagado</string>
+    <string name="player_shuffle_on">Modo aleatorio: Encendido</string>
+    <string name="player_speed_and_pitch">Velocidad y tono</string>
+    <string name="player_speed_and_pitch_match_pitch_to_speed">Sincronizar tono a velocidad</string>
+    <string name="player_speed_and_pitch_pitch">Tono</string>
+    <string name="player_speed_and_pitch_pitch_number">{0, number, ::+!}</string>
+    <string name="player_speed_and_pitch_speed">Velocidad</string>
+    <string name="player_speed_and_pitch_speed_number">{0, number, ::.00}×</string>
+    <string name="player_timer">Temporizador de sueño</string>
+    <string name="player_timer_cancel">Cancelar temporizador</string>
+    <string name="player_timer_finish_last_track">Terminar última pista</string>
+    <string name="player_timer_set">Establecer</string>
+    <string name="player_up_next">A continuación</string>
+
+    <string name="playlist_add_to">Añadir a lista de reproducción</string>
+    <string name="playlist_delete">Eliminar lista de reproducción</string>
+    <string name="playlist_delete_multiple_dialog_body">{0, plural, one {# lista de reproducción se eliminará} other {# listas de reproducción se eliminarán}} permanentemente</string>
+    <string name="playlist_delete_multiple_dialog_title">¿Eliminar {0, plural, one {# lista de reproducción} other {# listas de reproducción}}?</string>
+    <string name="playlist_delete_single_dialog_body">La lista de reproducción “{0}” se eliminará permanentemente</string>
+    <string name="playlist_delete_single_dialog_title">¿Eliminar lista de reproducción?</string>
+    <string name="playlist_edit">Editar lista de reproducción</string>
+    <string name="playlist_edit_screen_title">Editar lista de reproducción “{0}”</string>
+    <string name="playlist_export">Exportar lista de reproducción</string>
+    <string name="playlist_import_export">Importar/exportar lista de reproducción</string>
+    <string name="playlist_io_export_count">Exportar {0, plural, one {# lista} other {# listas}} de reproducción</string>
+    <string name="playlist_io_import_count">Importar {0, plural, one {# lista} other {# listas}} de reproducción</string>
+    <string name="playlist_io_location">Ubicación de lista de reproducción: {0}</string>
+    <string name="playlist_io_location_not_set">Ubicación de lista de reproducción: no establecida</string>
+    <string name="playlist_io_select_folder">Seleccionar carpeta</string>
+    <string name="playlist_io_sync">Sincronización de lista de reproducción</string>
+    <string name="playlist_io_sync_help">Ayuda sobre sincronización de lista de reproducción</string>
+    <string name="playlist_io_sync_help_body" tools:ignore="TypographyDashes">¡HAZ UNA COPIA DE SEGURIDAD EN OTRA UBICACIÓN Y LEE LA DOCUMENTACIÓN CUIDADOSAMENTE ANTES DE CONTINUAR!\n\nPuedes ver los registros de la última sincronización desde la barra superior para depurar problemas.\n\nLas configuraciones de sincronización son independientes de las configuraciones de importación/exportación manual, y se pueden establecer desde la barra superior. Las configuraciones de sincronización modificadas no tendrán efecto hasta la próxima vez que ambos lados tengan marcas de tiempo diferentes, y modificar configuraciones con la sincronización habilitada podría corromper tus datos. Haz una copia de seguridad y reescribe manualmente el lado más antiguo antes de hacerlo.\n\nDebido a las limitaciones de Android, Phocid no creará archivos faltantes en tu nombre. Puedes exportar las listas de reproducción para crear archivos correspondientes.\n\n“Sincronizar” sobrescribe el lado más antiguo con el contenido del lado más nuevo, lo que significa:\n• Crear una nueva lista de reproducción para sincronizar desde un archivo existente puede sobrescribir el archivo con nada, y viceversa. Para agregar nuevos mapeos, utiliza importación/exportación en su lugar para generar listas de reproducción y archivos que tengan marcas de tiempo y contenido “última modificación” coincidentes.\n• La sincronización depende de que tus archivos tengan una marca de tiempo “última modificación” correcta. Espera un comportamiento inesperado si los archivos se modifican externamente con marcas de tiempo incorrectas.\n\nLas listas de reproducción creadas recientemente y las listas de reproducción actualizadas antes de Phocid v20250219 tienen una marca de tiempo inicial de 1970-01-01. Los archivos exportados tendrán la marca de tiempo de cuando se realiza la exportación. Exportar una lista de reproducción también actualizará su marca de tiempo.\n\nPhocid no es consciente de los comentarios M3U (y, por extensión, de las directivas extendidas), y los eliminará al sincronizar. No utilices la sincronización si tu caso de uso requiere comentarios M3U.\n\nLa sincronización ocurre cuando la aplicación gana enfoque, cambia una lista de reproducción o se solicita manualmente.</string>
+    <string name="playlist_io_sync_location">Ubicación de sincronización: {0}</string>
+    <string name="playlist_io_sync_location_not_set">Ubicación de sincronización: no establecida</string>
+    <string name="playlist_io_sync_log">Registro de sincronización de lista de reproducción</string>
+    <string name="playlist_io_sync_log_conflicting_mappings">Varias listas de reproducción están asignadas al mismo archivo.</string>
+    <string name="playlist_io_sync_log_error_listing_files">Error al listar archivos.</string>
+    <string name="playlist_io_sync_log_export_error">{0} ⇄ {1}: Error de exportación: {2}</string>
+    <string name="playlist_io_sync_log_export_ok">{0} ⇄ {1}: Exportado.</string>
+    <string name="playlist_io_sync_log_import_error">{0} ⇄ {1}: Error de importación: {2}</string>
+    <string name="playlist_io_sync_log_import_ok">{0} ⇄ {1}: Importado.</string>
+    <string name="playlist_io_sync_log_missing_file">{0} ⇄ {1}: Archivo faltante.</string>
+    <string name="playlist_io_sync_log_missing_playlist">&lt;UNKNOWN&gt; ⇄ {0}: Lista de reproducción faltante.</string>
+    <string name="playlist_io_sync_log_no_file_timestamp">{0} ⇄ {1}: No se puede obtener la fecha de la última modificación del archivo.</string>
+    <string name="playlist_io_sync_log_no_persistable_permission">No hay permiso para acceder a los archivos. Vuelve a configurar la ubicación de sincronización para solucionarlo.</string>
+    <string name="playlist_io_sync_log_skipped_all">Sincronización omitida debido a los errores enumerados anteriormente.</string>
+    <string name="playlist_io_sync_log_up_to_date">{0} ⇄ {1}: Actualizado.</string>
+    <string name="playlist_io_sync_now">Sincronizar ahora</string>
+    <string name="playlist_io_sync_settings">Configuración de sincronización de lista de reproducción</string>
+    <string name="playlist_io_sync_target_file">Archivo objetivo</string>
+    <string name="playlist_io_sync_target_file_conflict">Otra lista de reproducción está asignada a este archivo</string>
+    <string name="playlist_io_sync_target_file_nonexistent">El archivo no existe</string>
+    <string name="playlist_name">Nombre de la lista de reproducción</string>
+    <string name="playlist_new">Nueva lista de reproducción</string>
+    <string name="playlist_new_with_tracks">Nueva lista de reproducción con {0, plural, one {# pista} other {# pistas}}</string>
+    <string name="playlist_remove_from">Eliminar de la lista de reproducción</string>
+    <string name="playlist_remove_from_dialog_body">{0, plural, one {# pista se eliminará} other {# psitas se eliminarán}} de la lista de reproducción “{1}”</string>
+    <string name="playlist_remove_from_dialog_title">¿Eliminar {0, plural, one {# pista} other {# pistas}} de la lista de reproducción?</string>
+    <string name="playlist_remove_invalid_tracks">Eliminar pistas inválidas</string>
+    <string name="playlist_rename">Renombrar lista de reproducción</string>
+    <string name="playlist_rename_input_hint">Nuevo nombre</string>
+    <string name="playlist_sort">Ordenar lista de reproducción</string>
+    <string name="playlist_sort_screen_title">Ordenar lista de reproducción “{0}”</string>
+    <string name="playlist_special_favorites">Favoritos</string>
+
+    <string name="preferences">Preferencias</string>
+    <string name="preferences_about">Acerca de</string>
+    <string name="preferences_always_show_hint_on_scroll">Siempre mostrar índice del pulgar al desplazarse</string>
+    <string name="preferences_artwork_color">Extracción de colores de arte</string>
+    <!-- "Muted" as in opposite of vibrant -->
+    <string name="preferences_artwork_color_muted_first">Preferir sombríos</string>
+    <!-- "Muted" as in opposite of vibrant. This option will forcefully convert vibrant colors to muted ones. -->
+    <string name="preferences_artwork_color_muted_only">Solo sombríos</string>
+    <string name="preferences_artwork_color_vibrant_first">Preferir vibrantes</string>
+    <string name="preferences_audio_offloading">Descarga de audio</string>
+    <string name="preferences_audio_offloading_subtitle">Reduce el uso de la batería, pero puede causar problemas de reproducción.</string>
+    <!-- "Cards" are rectangular list items displayed on the main screen. -->
+    <string name="preferences_colored_cards">Tarjetas de colores basadas en arte</string>
+    <string name="preferences_colored_global_theme">Cambiar color del tema según el arte</string>
+    <string name="preferences_colored_player">Pantalla de reproductor de color basada en arte</string>
+    <string name="preferences_dark_theme">Tema oscuro</string>
+    <string name="preferences_dark_theme_dark">Oscuro</string>
+    <string name="preferences_dark_theme_light">Claro</string>
+    <string name="preferences_dark_theme_system">Seguir el sistema</string>
+    <string name="preferences_data">Datos</string>
+    <string name="preferences_dump_logcat">Volcar logcat</string>
+    <string name="preferences_dump_logcat_subtitle">Ruta de salida: {0}</string>
+    <string name="preferences_folder_picker_dialog_title">Seleccionar carpeta</string>
+    <string name="preferences_folder_picker_dialog_up">Arriba</string>
+    <string name="preferences_folder_tab_root">Raíz de la pestaña de carpeta</string>
+    <string name="preferences_grant_images_permission">Condecer permiso para leer imágenes</string>
+    <string name="preferences_grant_images_permission_subtitle">Solo es necesario si las imágenes de arte externas no se muestran correctamente</string>
+    <string name="preferences_high_res_artwork">Cargar arte de alta resolución</string>
+    <string name="preferences_high_res_artwork_always">Siempre</string>
+    <string name="preferences_high_res_artwork_large_only">Solo imágenes grandes</string>
+    <string name="preferences_high_res_artwork_never">Nunca</string>
+    <string name="preferences_high_res_artwork_player_only">Solo en el reproductor</string>
+    <string name="preferences_indexing">Indexación</string>
+    <string name="preferences_indexing_advanced_metadata_extraction">Extracción avanzada de metadatos</string>
+    <string name="preferences_indexing_advanced_metadata_extraction_subtitle">Lee varias etiquetas y letras incrustadas, pero es muy lento. Se aplica después de un reescaneo manual.</string>
+    <string name="preferences_indexing_always_rescan_mediastore">Siempre volver a escanear MediaStore</string>
+    <string name="preferences_indexing_always_rescan_mediastore_subtitle">Habilítalo si no se detectan constantemente los nuevos archivos</string>
+    <string name="preferences_indexing_artist_separator_exceptions">Excepciones de separador de artistas</string>
+    <string name="preferences_indexing_artist_separator_exceptions_subtitle">{0, plural, one {# excepción} other {# excepciones}}</string>
+    <string name="preferences_indexing_artist_separators">Separadores de artistas</string>
+    <string name="preferences_indexing_artist_separators_subtitle">{0, plural, one {# separador} other {# separadores}}</string>
+    <string name="preferences_indexing_blacklist">Lista de bloqueos</string>
+    <string name="preferences_indexing_blacklist_subtitle">{0, plural, one {# regla} other {# reglas}}, {1, plural, one {# pista filtrada} other {# pistas filtradas}}</string>
+    <string name="preferences_indexing_dialog_input_placeholder">Añadir regla</string>
+    <string name="preferences_indexing_dialog_match_count">{0, plural, one {# pista coincide} other {# pistas coinciden}} con esta regla</string>
+    <string name="preferences_indexing_disable_artwork_color_extraction">Deshabilitar extracción de color del arte</string>
+    <string name="preferences_indexing_disable_artwork_color_extraction_subtitle">Podría acelerar el escaneo</string>
+    <string name="preferences_indexing_genre_separator_exceptions">Excepciones de separadores de géneros</string>
+    <string name="preferences_indexing_genre_separator_exceptions_subtitle">{0, plural, one {# excepción} other {# excepciones}}</string>
+    <string name="preferences_indexing_genre_separators">Separadores de géneros</string>
+    <string name="preferences_indexing_genre_separators_subtitle">{0, plural, one {# separador} other {# separadores}}</string>
+    <string name="preferences_indexing_help">Ayuda de indexación</string>
+    <string name="preferences_indexing_help_artist_separator_exceptions_body">Estas cadenas estarán exentas de la separación mencionada. Por ejemplo, añadir "A &amp; B" hará que "A y B" se reconozcan como un solo artista, independientemente de lo que ocurra.</string>
+    <string name="preferences_indexing_help_artist_separator_exceptions_title">Excepciones de separadores de artistas</string>
+    <string name="preferences_indexing_help_artist_separators_body">Los metadatos de los artistas se dividirán según estas cadenas. Por ejemplo, si se añade "&amp;", "A &amp; B" se reconocerán como dos artistas: "A" y "B".</string>
+    <string name="preferences_indexing_help_artist_separators_title">Separadores de artistas</string>
+    <string name="preferences_indexing_help_blacklist_body">Las pistas que coincidan con la lista de bloqueo se ocultarán.</string>
+    <string name="preferences_indexing_help_blacklist_title">Lista de bloqueo</string>
+    <string name="preferences_indexing_help_syntax_body">Las reglas de filtro son expresiones regulares (regex) que no distinguen entre mayúsculas y minúsculas y que coinciden con rutas de pista absolutas de manera parcial.\n\nPara ver la ruta absoluta de una pista, presiona el botón “Detalles” en su menú.\n\nEjemplos:\n\n• Coincidir con todos los archivos en la carpeta “Ejemplo”:\n/Ejemplo/\n\n• Coincidir con todos los archivos MP3:\n\\.mp3$\n\n• Coincidir con todos los archivos MP3 en la carpeta “Ejemplo”:\n/Ejemplo/.*\\.mp3$\n\n• Coincidir con todos los archivos en la carpeta “Ejemplo” pero no “ejemplo” (sensible a mayúsculas y minúsculas):\n(?-i)/Ejemplo/</string>
+    <string name="preferences_indexing_help_syntax_title">Sintaxis de lista de bloqueados/permitidos</string>
+    <string name="preferences_indexing_help_whitelist_body">Las pistas que coincidan tanto con la lista de bloqueo como con la lista de permitidos no se ocultarán.\n\nPara mostrar solo las pistas que coincidan con la lista de permitidos, agrega una regla general a la lista de bloqueo:\n^</string>
+    <string name="preferences_indexing_help_whitelist_title">Lista de permitidos</string>
+    <string name="preferences_indexing_invalid_regex">No es una expresión regular válida</string>
+    <string name="preferences_indexing_rescan_footnote">Realiza un nuevo escaneo manual para que los cambios surtan efecto</string>
+    <string name="preferences_indexing_select_folder">Seleccionar carpeta</string>
+    <string name="preferences_indexing_whitelist">Lista de permitidos</string>
+    <string name="preferences_indexing_whitelist_subtitle">{0, plural, one {# regla} other {# reglas}}</string>
+    <string name="preferences_interface">Interfaz</string>
+    <string name="preferences_library_track_click_action">Rastrear acción del clic</string>
+    <string name="preferences_library_track_click_action_open_menu">Abrir menú</string>
+    <string name="preferences_license">Licencia</string>
+    <string name="preferences_lyrics_display">Visualización de letras</string>
+    <string name="preferences_lyrics_display_default">Por defecto</string>
+    <string name="preferences_lyrics_display_disabled">Deshabilitada</string>
+    <string name="preferences_lyrics_display_two_lines">Dos líneas</string>
+    <string name="preferences_lyrics_scaling">Escala de la letra</string>
+    <string name="preferences_multiplier_number">{0, number, ::.00}×</string>
+    <string name="preferences_pause_on_focus_loss">Pausar en caso de pérdida de enfoque de audio</string>
+    <string name="preferences_play_on_output_device_connection">Reproducir al conectar auriculares</string>
+    <string name="preferences_playback">Reproducción</string>
+    <string name="preferences_player_screen_layout">Diseño de reproducción actual</string>
+    <string name="preferences_player_screen_layout_default">Por defecto</string>
+    <string name="preferences_player_screen_layout_no_queue">Sin fila</string>
+    <string name="preferences_playlist_io_settings">Configuración de E/S de listas de reproducción</string>
+    <string name="preferences_playlist_io_settings_export_relative">Exportar rutas relativas</string>
+    <string name="preferences_playlist_io_settings_export_relative_base">Base de rutas relativas</string>
+    <string name="preferences_playlist_io_settings_export_relative_base_hint">Sugerencia: el directorio de música predeterminado es {0}</string>
+    <string name="preferences_playlist_io_settings_ignore_case">Ignorar mayúsculas y minúsculas en nombres de archivos</string>
+    <string name="preferences_playlist_io_settings_ignore_location">Ignorar ubicación de archivos</string>
+    <string name="preferences_playlist_io_settings_remove_invalid">Eliminar pistas no resueltas</string>
+    <string name="preferences_pure_background_color">Fondo blanco/negro puro</string>
+    <string name="preferences_reshuffle_on_repeat">Barajear en repetición (experimental)</string>
+    <string name="preferences_scan_progress_timeout">Mostrar progreso del escaneo después de</string>
+    <string name="preferences_scrollable_tabs">Pestañas deplazables</string>
+    <string name="preferences_shape">Forma del arte</string>
+    <string name="preferences_shape_circle">Círculo</string>
+    <string name="preferences_shape_rounded_square">Cuadrado redondeado</string>
+    <string name="preferences_shape_square">Cuadrado</string>
+    <string name="preferences_sorting_language">Idioma del ordenamiento</string>
+    <string name="preferences_sorting_language_system">Idioma del sistema</string>
+    <string name="preferences_swipe_threshold">Umbral de deslizamiento</string>
+    <string name="preferences_swipe_to_remove_from_queue">Deslizar para eliminar de la fila</string>
+    <string name="preferences_system_equalizer">Abrir ecualizador del sistema</string>
+    <string name="preferences_tab_style">Estilo de pestañas</string>
+    <string name="preferences_tab_style_icon_only">Solo icono</string>
+    <string name="preferences_tab_style_text_and_icon">Texto e icono</string>
+    <string name="preferences_tab_style_text_only">Solo texto</string>
+    <string name="preferences_tabs">Pestañas de pantalla de inicio</string>
+    <!-- Symbol used to separate list of enabled tabs in preferences screen -->
+    <string name="preferences_tabs_separator">", "</string>
+    <string name="preferences_text_encoding">Codificación del texto</string>
+    <string name="preferences_text_encoding_auto_detect">Detectar automáticamente</string>
+    <string name="preferences_theme">Tema</string>
+    <string name="preferences_theme_color">Color del tema</string>
+    <string name="preferences_theme_color_chroma">Croma</string>
+    <string name="preferences_theme_color_chroma_number">{0}%</string>
+    <string name="preferences_theme_color_hue">Matiz</string>
+    <string name="preferences_theme_color_hue_number">{0}°</string>
+    <string name="preferences_theme_color_source_custom">Personalizado</string>
+    <string name="preferences_theme_color_source_default">Por defecto</string>
+    <string name="preferences_theme_color_source_material_you">Material You</string>
+    <string name="preferences_third_party_licenses">Licencias de terceros</string>
+    <string name="preferences_treat_embedded_lyrics_as_lrc">Tratar letras incrustadas como LRC</string>
+    <string name="preferences_ui_scaling">Escala de interfaz de usuario</string>
+    <string name="preferences_version">Versión</string>
+    <string name="preferences_website">Sitio web</string>
+    <string name="preferences_widget_accent_background">Fondo coloreado</string>
+    <string name="preferences_widget_artwork_background">Fondo con arte</string>
+    <string name="preferences_widget_artwork_resolution_limit">Límite de resolución de arte</string>
+    <string name="preferences_widget_artwork_resolution_limit_subtitle">Disminúyelo si el widget falla; auméntalo para tener una mejor calidad de imagen</string>
+    <string name="preferences_widget_color">Color</string>
+    <string name="preferences_widget_dark_theme">Tema oscuro</string>
+    <string name="preferences_widget_layout">Diseño</string>
+    <string name="preferences_widget_layout_extra_large">Extra grande</string>
+    <string name="preferences_widget_layout_large">Grande</string>
+    <string name="preferences_widget_layout_medium">Mediano</string>
+    <string name="preferences_widget_layout_side_artwork">Arte lateral</string>
+    <string name="preferences_widget_layout_side_artwork_large">Arte lateral (grande)</string>
+    <string name="preferences_widget_layout_small">Pequeño</string>
+    <string name="preferences_widget_settings">Configuración del widget</string>
+
+    <string name="search">Buscar</string>
+    <string name="search_in_list">Buscar en lista</string>
+    <string name="search_next">Siguiente resultado</string>
+    <string name="search_position_indicator">{0}/{1}</string>
+    <string name="search_previous">Resultado anterior</string>
+
+    <string name="shortcut_continue_long_label">Continuar donde lo dejaste</string>
+    <string name="shortcut_continue_short_label">Continuar</string>
+    <string name="shortcut_shuffle_long_label">Barajear todas las pistas</string>
+    <string name="shortcut_shuffle_short_label">Barajear todo</string>
+
+    <string name="snackbar_scanning_library">Escaneando biblioteca ({0}/{1})</string>
+
+    <string name="sorting_album">Álbum</string>
+    <string name="sorting_album_artist">Artista del álbum</string>
+    <string name="sorting_album_count">Conteo de álbum</string>
+    <string name="sorting_artist">Artista</string>
+    <string name="sorting_ascending">Ascendente</string>
+    <string name="sorting_custom">Personalizado</string>
+    <string name="sorting_date_added">Fecha de adición</string>
+    <string name="sorting_date_modified">Fecha de modificación</string>
+    <string name="sorting_descending">Descendiente</string>
+    <string name="sorting_file_name">Nombre del archivo</string>
+    <string name="sorting_name">Nombre</string>
+    <string name="sorting_number">No. de pista</string>
+    <string name="sorting_title">Título</string>
+    <string name="sorting_track_count">Conteo de pista</string>
+    <string name="sorting_year">Año</string>
+
+    <!-- Symbol used to separate multiple artists of a single track -->
+    <string name="symbol_conjunction">" &amp; "</string>
+    <!-- Symbol used to separate related info placed on the same line -->
+    <string name="symbol_separator">" · "</string>
+
+    <string name="tab_album_artists">Artistas del álbum</string>
+    <string name="tab_albums">Álbumes</string>
+    <string name="tab_artists">Artistas</string>
+    <string name="tab_folders">Carpetas</string>
+    <string name="tab_genres">Géneros</string>
+    <string name="tab_playlists">Listas de reproducción</string>
+    <string name="tab_tracks">Pistas</string>
+
+    <string name="toast_cant_open_system_equalizer">No se puede abrir el ecualizador del sistema</string>
+    <string name="toast_crash_saved_to">Registro de fallos guardado en {0}</string>
+    <string name="toast_dump_logcat_failed">Error en el volcado: {0}</string>
+    <string name="toast_dump_logcat_success">Logcat volcado</string>
+    <string name="toast_playlist_exported">Se {0, plural, one {exportó # lista de reproducción} other {exportaron # listas de reproducción}}</string>
+    <string name="toast_playlist_exported_with_failure">Se {0, plural, one {exportó # lista de reproducción} other {exportaron # listas de reproducción}}, {1, plural, one {# falló} other {# fallaron}}</string>
+    <string name="toast_playlist_imported">Se {0, plural, one {importó # lista de reproducción} other {importaron # listas de reproducción}}</string>
+    <string name="toast_playlist_io_sync_error">Error al sincronizar listas de reproducción. Consulta los registros en la pantalla de sincronización para obtener más detalles.</string>
+    <string name="toast_timer_canceled">Temporizador de sueño cancelado</string>
+    <string name="toast_timer_set">La reproducción se pausará después de ~{0, plural, one {# minuto} other {# minutos}}</string>
+    <string name="toast_track_queued">{0, plural, one {# pista añadida} other {# pistas añadidas}} a la fila</string>
+    <string name="toast_view_intent_not_found">Ningún archivo coincidente en la biblioteca</string>
+
+    <string name="track_add_to_queue">Añadir a la fila</string>
+    <string name="track_details">Detalles</string>
+    <string name="track_details_album">Álbum</string>
+    <string name="track_details_album_artist">Artista del álbum</string>
+    <string name="track_details_artist">Artista</string>
+    <string name="track_details_bit_depth">Profundidad de bits</string>
+    <string name="track_details_bit_rate">Tasa de bits</string>
+    <string name="track_details_comment">Comentario</string>
+    <string name="track_details_date_added">Fecha de adición</string>
+    <string name="track_details_date_modified">Fecha de modificación</string>
+    <string name="track_details_format">Formato</string>
+    <string name="track_details_genre">Género</string>
+    <string name="track_details_path">Ruta</string>
+    <string name="track_details_sample_rate">Frecuencia de muestreo</string>
+    <string name="track_details_size">Tamaño</string>
+    <string name="track_details_title">Título</string>
+    <string name="track_details_track_number">No. de pista</string>
+    <string name="track_details_unsynced_lyrics">Letra no sincronizada</string>
+    <string name="track_details_year">Año</string>
+    <string name="track_disc_without_number">{0}-?</string>
+    <string name="track_inferred_album_artist">({0})</string>
+    <string name="track_number_not_available">-</string>
+    <string name="track_number_with_disc">{0}-{1}</string>
+    <string name="track_number_without_disc">{0}</string>
+    <string name="track_play">Reproducir</string>
+    <string name="track_play_all">Reproducir todo</string>
+    <string name="track_play_next">Reproducir siguiente</string>
+    <string name="track_remove_from_queue">Eliminar de la fila</string>
+    <string name="track_share">Compartir</string>
+    <string name="track_view_album">Ver álbum “{0}”</string>
+    <string name="track_view_artist">Ver artista “{0}”</string>
+
+    <!-- Settings of how the list is displayed. Unrelated to "view album" etc. -->
+    <string name="view_settings">Ver configuración</string>
+    <string name="view_settings_grid_size">Tamaño de la cuadrícula</string>
+    <string name="view_settings_sort_by">Ordenar por</string>
+</resources>
