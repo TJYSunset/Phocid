@@ -21,10 +21,10 @@
     <string name="commons_selected">Seleccionado(s)</string>
     <string name="commons_sync">Sincronizar</string>
 
-    <string name="count_album">{0, plural, one {# álbum} other {# álbumes}}</string>
-    <string name="count_folder">{0, plural, one {# carpeta} other {# carpetas}}</string>
-    <string name="count_invalid_track">{0, plural, one {# pista no válida} other {# pistas no válidas}}</string>
-    <string name="count_track">{0, plural, one {# pista} other {# pistas}}</string>
+    <string name="count_album">{0, plural, one {# álbum} many {# de álbumes} other {# álbumes}}</string>
+    <string name="count_folder">{0, plural, one {# carpeta} many {# de carpetas} other {# carpetas}}</string>
+    <string name="count_invalid_track">{0, plural, one {# pista no válida} many {# de pistas no válidas} other {# pistas no válidas}}</string>
+    <string name="count_track">{0, plural, one {# pista} many {# de pistas} other {# pistas}}</string>
 
     <string name="duration_hours_minutes_seconds">{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="duration_minutes_seconds">{0, number, ::00}:{1, number, ::00}</string>
@@ -41,7 +41,7 @@
     <string name="list_multi_select_item_selected">Seleccionado(s)</string>
     <string name="list_multi_select_select_all">Seleccionar todo</string>
     <string name="list_multi_select_select_inverse">Seleccionar inverso</string>
-    <string name="list_multi_select_title">{0, plural, one {# elemento seleccionado} other {# elementos seleccionados}}</string>
+    <string name="list_multi_select_title">{0, plural, one {# elemento seleccionado} many {# de elementos seleccionados} other {# elementos seleccionados}}</string>
 
     <!-- The IETF language tag of the current translation, used for formatting -->
     <string name="locale">es</string>
@@ -83,16 +83,16 @@
 
     <string name="playlist_add_to">Añadir a lista de reproducción</string>
     <string name="playlist_delete">Eliminar lista de reproducción</string>
-    <string name="playlist_delete_multiple_dialog_body">{0, plural, one {# lista de reproducción se eliminará} other {# listas de reproducción se eliminarán}} permanentemente</string>
-    <string name="playlist_delete_multiple_dialog_title">¿Eliminar {0, plural, one {# lista de reproducción} other {# listas de reproducción}}?</string>
+    <string name="playlist_delete_multiple_dialog_body">{0, plural, one {# lista de reproducción se eliminará} many {# de listas de reproducción se eliminarán} other {# listas de reproducción se eliminarán}} permanentemente</string>
+    <string name="playlist_delete_multiple_dialog_title">¿Eliminar {0, plural, one {# lista de reproducción} many {# de listas de reproducción} other {# listas de reproducción}}?</string>
     <string name="playlist_delete_single_dialog_body">La lista de reproducción “{0}” se eliminará permanentemente</string>
     <string name="playlist_delete_single_dialog_title">¿Eliminar lista de reproducción?</string>
     <string name="playlist_edit">Editar lista de reproducción</string>
     <string name="playlist_edit_screen_title">Editar lista de reproducción “{0}”</string>
     <string name="playlist_export">Exportar lista de reproducción</string>
     <string name="playlist_import_export">Importar/exportar lista de reproducción</string>
-    <string name="playlist_io_export_count">Exportar {0, plural, one {# lista} other {# listas}} de reproducción</string>
-    <string name="playlist_io_import_count">Importar {0, plural, one {# lista} other {# listas}} de reproducción</string>
+    <string name="playlist_io_export_count">Exportar {0, plural, one {# lista} many {# de listas} other {# listas}} de reproducción</string>
+    <string name="playlist_io_import_count">Importar {0, plural, one {# lista} many {# de listas} other {# listas}} de reproducción</string>
     <string name="playlist_io_location">Ubicación de lista de reproducción: {0}</string>
     <string name="playlist_io_location_not_set">Ubicación de lista de reproducción: no establecida</string>
     <string name="playlist_io_select_folder">Seleccionar carpeta</string>
@@ -121,10 +121,10 @@
     <string name="playlist_io_sync_target_file_nonexistent">El archivo no existe</string>
     <string name="playlist_name">Nombre de la lista de reproducción</string>
     <string name="playlist_new">Nueva lista de reproducción</string>
-    <string name="playlist_new_with_tracks">Nueva lista de reproducción con {0, plural, one {# pista} other {# pistas}}</string>
+    <string name="playlist_new_with_tracks">Nueva lista de reproducción con {0, plural, one {# pista} many {# de pistas} other {# pistas}}</string>
     <string name="playlist_remove_from">Eliminar de la lista de reproducción</string>
-    <string name="playlist_remove_from_dialog_body">{0, plural, one {# pista se eliminará} other {# psitas se eliminarán}} de la lista de reproducción “{1}”</string>
-    <string name="playlist_remove_from_dialog_title">¿Eliminar {0, plural, one {# pista} other {# pistas}} de la lista de reproducción?</string>
+    <string name="playlist_remove_from_dialog_body">{0, plural, one {# pista se eliminará} many {# de pistas se eliminarán} other {# pistas se eliminarán}} de la lista de reproducción “{1}”</string>
+    <string name="playlist_remove_from_dialog_title">¿Eliminar {0, plural, one {# pista} many {# de pistas} other {# pistas}} de la lista de reproducción?</string>
     <string name="playlist_remove_invalid_tracks">Eliminar pistas inválidas</string>
     <string name="playlist_rename">Renombrar lista de reproducción</string>
     <string name="playlist_rename_input_hint">Nuevo nombre</string>
@@ -170,19 +170,19 @@
     <string name="preferences_indexing_always_rescan_mediastore">Siempre volver a escanear MediaStore</string>
     <string name="preferences_indexing_always_rescan_mediastore_subtitle">Habilítalo si no se detectan constantemente los nuevos archivos</string>
     <string name="preferences_indexing_artist_separator_exceptions">Excepciones de separador de artistas</string>
-    <string name="preferences_indexing_artist_separator_exceptions_subtitle">{0, plural, one {# excepción} other {# excepciones}}</string>
+    <string name="preferences_indexing_artist_separator_exceptions_subtitle">{0, plural, one {# excepción} many {# de excepciones} other {# excepciones}}</string>
     <string name="preferences_indexing_artist_separators">Separadores de artistas</string>
-    <string name="preferences_indexing_artist_separators_subtitle">{0, plural, one {# separador} other {# separadores}}</string>
+    <string name="preferences_indexing_artist_separators_subtitle">{0, plural, one {# separador} many {# de separadores} other {# separadores}}</string>
     <string name="preferences_indexing_blacklist">Lista de bloqueos</string>
-    <string name="preferences_indexing_blacklist_subtitle">{0, plural, one {# regla} other {# reglas}}, {1, plural, one {# pista filtrada} other {# pistas filtradas}}</string>
+    <string name="preferences_indexing_blacklist_subtitle">{0, plural, one {# regla} many {# de reglas} other {# reglas}}, {1, plural, one {# pista filtrada} many {# de pistas filtradas} other {# pistas filtradas}}</string>
     <string name="preferences_indexing_dialog_input_placeholder">Añadir regla</string>
-    <string name="preferences_indexing_dialog_match_count">{0, plural, one {# pista coincide} other {# pistas coinciden}} con esta regla</string>
+    <string name="preferences_indexing_dialog_match_count">{0, plural, one {# pista coincide} many {# de pistas coinciden} other {# pistas coinciden}} con esta regla</string>
     <string name="preferences_indexing_disable_artwork_color_extraction">Deshabilitar extracción de color del arte</string>
     <string name="preferences_indexing_disable_artwork_color_extraction_subtitle">Podría acelerar el escaneo</string>
     <string name="preferences_indexing_genre_separator_exceptions">Excepciones de separadores de géneros</string>
-    <string name="preferences_indexing_genre_separator_exceptions_subtitle">{0, plural, one {# excepción} other {# excepciones}}</string>
+    <string name="preferences_indexing_genre_separator_exceptions_subtitle">{0, plural, one {# excepción} many {# de excepciones} other {# excepciones}}</string>
     <string name="preferences_indexing_genre_separators">Separadores de géneros</string>
-    <string name="preferences_indexing_genre_separators_subtitle">{0, plural, one {# separador} other {# separadores}}</string>
+    <string name="preferences_indexing_genre_separators_subtitle">{0, plural, one {# separador} many {# de separadores} other {# separadores}}</string>
     <string name="preferences_indexing_help">Ayuda de indexación</string>
     <string name="preferences_indexing_help_artist_separator_exceptions_body">Estas cadenas estarán exentas de la separación mencionada. Por ejemplo, añadir "A &amp; B" hará que "A y B" se reconozcan como un solo artista, independientemente de lo que ocurra.</string>
     <string name="preferences_indexing_help_artist_separator_exceptions_title">Excepciones de separadores de artistas</string>
@@ -198,7 +198,7 @@
     <string name="preferences_indexing_rescan_footnote">Realiza un nuevo escaneo manual para que los cambios surtan efecto</string>
     <string name="preferences_indexing_select_folder">Seleccionar carpeta</string>
     <string name="preferences_indexing_whitelist">Lista de permitidos</string>
-    <string name="preferences_indexing_whitelist_subtitle">{0, plural, one {# regla} other {# reglas}}</string>
+    <string name="preferences_indexing_whitelist_subtitle">{0, plural, one {# regla} many {# de reglas} other {# reglas}}</string>
     <string name="preferences_interface">Interfaz</string>
     <string name="preferences_library_track_click_action">Rastrear acción del clic</string>
     <string name="preferences_library_track_click_action_open_menu">Abrir menú</string>
@@ -319,13 +319,13 @@
     <string name="toast_crash_saved_to">Registro de fallos guardado en {0}</string>
     <string name="toast_dump_logcat_failed">Error en el volcado: {0}</string>
     <string name="toast_dump_logcat_success">Logcat volcado</string>
-    <string name="toast_playlist_exported">Se {0, plural, one {exportó # lista de reproducción} other {exportaron # listas de reproducción}}</string>
-    <string name="toast_playlist_exported_with_failure">Se {0, plural, one {exportó # lista de reproducción} other {exportaron # listas de reproducción}}, {1, plural, one {# falló} other {# fallaron}}</string>
-    <string name="toast_playlist_imported">Se {0, plural, one {importó # lista de reproducción} other {importaron # listas de reproducción}}</string>
+    <string name="toast_playlist_exported">Se {0, plural, one {exportó # lista de reproducción} many {exportó/exportaron # de listas de reproducción} other {exportaron # listas de reproducción}}</string>
+    <string name="toast_playlist_exported_with_failure">Se {0, plural, one {exportó # lista de reproducción} many {exportó/exportaron # de listas de reproducción} other {exportaron # listas de reproducción}}, {1, plural, one {# falló} other {# fallaron}}</string>
+    <string name="toast_playlist_imported">Se {0, plural, one {importó # lista de reproducción} many {importó/importaron # de listas de reproducción} other {importaron # listas de reproducción}}</string>
     <string name="toast_playlist_io_sync_error">Error al sincronizar listas de reproducción. Consulta los registros en la pantalla de sincronización para obtener más detalles.</string>
     <string name="toast_timer_canceled">Temporizador de sueño cancelado</string>
-    <string name="toast_timer_set">La reproducción se pausará después de ~{0, plural, one {# minuto} other {# minutos}}</string>
-    <string name="toast_track_queued">{0, plural, one {# pista añadida} other {# pistas añadidas}} a la fila</string>
+    <string name="toast_timer_set">La reproducción se pausará después de ~{0, plural, one {# minuto} many {# de minutos} other {# minutos}}</string>
+    <string name="toast_track_queued">{0, plural, one {# pista añadida} many {# de pistas añadidas} other {# pistas añadidas}} a la fila</string>
     <string name="toast_view_intent_not_found">Ningún archivo coincidente en la biblioteca</string>
 
     <string name="track_add_to_queue">Añadir a la fila</string>
