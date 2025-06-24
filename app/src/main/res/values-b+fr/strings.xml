@@ -39,13 +39,13 @@
     <string name="library_view_root_folder">Voir le fichier racine de toutes les pistes</string>
 
     <string name="list_empty">Vide</string>
-    <string name="list_move_down">Descendre</string>
-    <string name="list_move_up">Monter</string>
+    <string name="list_move_down">Déplacer vers le bas</string>
+    <string name="list_move_up">Déplacer vers le haut</string>
     <!-- Alt text for the check mark displayed on selected items -->
     <string name="list_multi_select_item_selected">Sélectionné</string>
     <string name="list_multi_select_select_all">Tout sélectionner</string>
     <string name="list_multi_select_select_inverse">Sélection inversée</string>
-    <string name="list_multi_select_title">Sélectionner {0, plural, one {# élément} other {# éléments}}</string>
+    <string name="list_multi_select_title">{0, plural, one {# élément sélectionné} other {# éléments sélectionnés}}</string>
 
     <!-- The IETF language tag of the current translation, used for formatting -->
     <string name="locale">fr</string>
@@ -89,7 +89,7 @@
     <string name="playlist_delete">Supprimer la playlist</string>
     <string name="playlist_delete_multiple_dialog_body">{0, plural, one {# playlist sera supprimée} other {# playlists seront supprimées}} de façon permanente</string>
     <string name="playlist_delete_multiple_dialog_title">Supprimer {0, plural, one {# playlist} other {# playlists}}?</string>
-    <string name="playlist_delete_single_dialog_body">Playlist “{0}” sera supprimée de façon permanente</string>
+    <string name="playlist_delete_single_dialog_body">La playlist “{0}” sera supprimée de façon permanente</string>
     <string name="playlist_delete_single_dialog_title">Supprimer la playlist ?</string>
     <string name="playlist_edit">Modifier la playlist</string>
     <string name="playlist_edit_screen_title">Modifier la playlist “{0}”</string>
@@ -104,14 +104,14 @@
     <string name="playlist_io_sync_help">Aide à la synchronisation de la playlist</string>
     <string name="playlist_io_sync_help_body" tools:ignore="TypographyDashes">FAITES UNE SAUVEGARDE À UN AUTRE EMPLACEMENT ET LISEZ ATTENTIVEMENT LA DOCUMENTATION AVANT DE CONTINUER!\n\nVous pouvez accéder aux journaux de la dernière synchronisation depuis la barre du haut.\n\nLes paramètres de synchronisation sont indépendants des paramètres d'import/export manuel, et peuvent être configurés à partir de la barre du haut. La modification des paramètres ne prendra effet qu'à partir du moment où l'horodatage diffère entre les deux côté d'une playlist synchronisée, et modifier les paramètres durant une synchronisation risque de corrompre vos données. Faites une sauvegarde et éditez manuellement le "côté" le plus ancien avant de les modifier.\n\nÀ cause des limitations d'Android, Phocid ne créera pas de fichiers manquants à votre place. Vous pouvez exporter les playlists afin de créer ces fichiers.\n\n"Synchroniser" écrase le contenu du "côté" le plus ancien avec le contenu du "côté" le plus récent. Cela veut dire que:\n• Créer une nouvelle playlist à synchroniser depuis un fichier existant risque d'écraser le contenu du fichier, et vice versa. Pour ajouter de nouveaux mappings, utilisez plutôt importer/exporter afin de générer des playlists et fichiers dont le contenu et l'horodatage "dernière modification" correspondent.\n• Vous fichiers doivent avoir un horodatage "dernière modification" correct pour que la synchronisation fonctionne correctement. Attendez-vous à des comportements innatendus si les fichiers sont modifiés en externe avec un horodatage incorrect.\n\n Les nouvelles playlists et les playlists crééers avant la version v20250219 de Phocid ont 1970-01-01 comme horodatage initial. Les fichiers exportés ont un horodatage correspondant à la date de leur exportation. Exporter une playlist mettra aussi à jour son horodatage.\n\nPhocid ne prend pas en compte les commentaires M3U (et par extension, des directives étendues), et retirera ceux-ci lors de la synchronisation. N'utilisez pas la synchronisation si vous avez besoin des commentaires M3U.\n\nLa synchronisation s'effectue lorsque l'application prend le focus, une playlist change, ou lors d'une requête manuelle.</string>
     <string name="playlist_io_sync_location">Emplacement de la synchronisation: {0}</string>
-    <string name="playlist_io_sync_location_not_set">Emplacement de la synchronisation: non définie</string>
+    <string name="playlist_io_sync_location_not_set">Emplacement de la synchronisation: non défini</string>
     <string name="playlist_io_sync_log">Journaux synchronisation</string>
     <string name="playlist_io_sync_log_conflicting_mappings">Plusieurs playlists sont associées au même fichier.</string>
     <string name="playlist_io_sync_log_error_listing_files">Erreur dans la liste des fichiers.</string>
     <string name="playlist_io_sync_log_export_error">{0} ⇄ {1}: Erreur d'exportation: {0}</string>
-    <string name="playlist_io_sync_log_export_ok">{0} ⇄ {1}: Exporté.</string>
+    <string name="playlist_io_sync_log_export_ok">{0} ⇄ {1}: Exportée.</string>
     <string name="playlist_io_sync_log_import_error">{0} ⇄ {1}: Erreur d'importation: {0}</string>
-    <string name="playlist_io_sync_log_import_ok">{0} ⇄ {1}: Importé.</string>
+    <string name="playlist_io_sync_log_import_ok">{0} ⇄ {1}: Importée.</string>
     <string name="playlist_io_sync_log_missing_file">{0} ⇄ {1}: Fichier manquant.</string>
     <string name="playlist_io_sync_log_missing_playlist">&lt;UNKNOWN&gt; ⇄ {0}: Playlist manquante.</string>
     <string name="playlist_io_sync_log_no_file_timestamp">{0} ⇄ {1}: Impossible de récupérer la date de dernière modification pour ce fichier.</string>
@@ -178,7 +178,7 @@
     <string name="preferences_indexing_artist_separators">Séparateurs d'artistes</string>
     <string name="preferences_indexing_artist_separators_subtitle">{0, plural, one {# séparateur} other {# séparateurs}}</string>
     <string name="preferences_indexing_blacklist">Liste de blocage</string>
-    <string name="preferences_indexing_blacklist_subtitle">{0, plural, one {# règle} other {# règles}}, {1, plural, one {# piste} other {# pistes}}, {2, plural, one {# filtrée} other {# filtrées}}</string>
+    <string name="preferences_indexing_blacklist_subtitle">{0, plural, one {# règle} other {# règles}}, {1, plural, one {# piste filtrée} other {# pistes filtrées}}</string>
     <string name="preferences_indexing_dialog_input_placeholder">Ajouter une règle</string>
     <string name="preferences_indexing_dialog_match_count">{0, plural, one {# piste correspond} other {# pistes correspondent}} à cette règle</string>
     <string name="preferences_indexing_disable_artwork_color_extraction">Désactiver l'extraction des couleurs depuis l'illustration</string>
