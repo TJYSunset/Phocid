@@ -184,9 +184,9 @@
     <string name="preferences_indexing_genre_separators">Separadores de géneros</string>
     <string name="preferences_indexing_genre_separators_subtitle">{0, plural, one {# separador} many {# de separadores} other {# separadores}}</string>
     <string name="preferences_indexing_help">Ayuda de indexación</string>
-    <string name="preferences_indexing_help_artist_separator_exceptions_body">Estas cadenas estarán exentas de la separación mencionada. Por ejemplo, añadir "A &amp; B" hará que "A y B" se reconozcan como un solo artista, independientemente de lo que ocurra.</string>
+    <string name="preferences_indexing_help_artist_separator_exceptions_body">Estas cadenas estarán exentas de la separación mencionada. Por ejemplo, añadir “A &amp; B” hará que “A y B” se reconozcan como un solo artista, independientemente de lo que ocurra.</string>
     <string name="preferences_indexing_help_artist_separator_exceptions_title">Excepciones de separadores de artistas</string>
-    <string name="preferences_indexing_help_artist_separators_body">Los metadatos de los artistas se dividirán según estas cadenas. Por ejemplo, si se añade "&amp;", "A &amp; B" se reconocerán como dos artistas: "A" y "B".</string>
+    <string name="preferences_indexing_help_artist_separators_body">Los metadatos de los artistas se dividirán según estas cadenas. Por ejemplo, si se añade “&amp;”, “A &amp; B” se reconocerán como dos artistas: “A” y “B”.</string>
     <string name="preferences_indexing_help_artist_separators_title">Separadores de artistas</string>
     <string name="preferences_indexing_help_blacklist_body">Las pistas que coincidan con la lista de bloqueo se ocultarán.</string>
     <string name="preferences_indexing_help_blacklist_title">Lista de bloqueo</string>
