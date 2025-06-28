@@ -266,7 +266,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
             }
 
     val useLyricsView by uiManager.playerScreenUseLyricsView.collectAsStateWithLifecycle()
-    val hideOverlay by uiManager.playerScreenHideOverlay.collectAsStateWithLifecycle()
+    var hideOverlay by remember { mutableStateOf(false) }
     val lyricsViewVisibility by
         animateFloatAsState(if (useLyricsView) 1f else 0f, emphasizedEnter())
     var lyricsViewAutoScroll by rememberSaveable { mutableStateOf(true) }
@@ -424,9 +424,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 },
                                 onPrevious = { playerManager.seekToPrevious() },
                                 onNext = { playerManager.seekToNext() },
-                                onToggleOverlay = {
-                                    uiManager.playerScreenHideOverlay.update { !it }
-                                },
+                                onToggleOverlay = { hideOverlay = !hideOverlay },
                             )
                         }
                         Box {
