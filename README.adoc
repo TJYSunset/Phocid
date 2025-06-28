@@ -1,5 +1,6 @@
 = Phocid
-:toc: preamble
+:note-caption: ℹ️
+:warning-caption: ⚠️
 
 image:metadata/en-US/images/icon.png[Icon,64px]
 image:https://img.shields.io/f-droid/v/org.sunsetware.phocid[F-Droid Version,link=https://f-droid.org/en/packages/org.sunsetware.phocid/]
@@ -17,7 +18,11 @@ A modern offline music player with familiar designs for Android 11+.
 
 This project aims to be a replacement with personal tweaks for the now-defunct https://github.com/kabouzeid/Phonograph[Phonograph] music player, but has no connections with it.
 
-Phocid is not officially available on Google Play or other app stores except https://f-droid.org/en/packages/org.sunsetware.phocid/[F-Droid]. I don't provide support for repackaged versions, and you should report repackagers who violate GPL.
+== Help & FAQ
+
+Please refer to https://sunsetware.org/phocid/help/[the help page on the website.]
+
+If your problem is not covered by this page, you can create an https://github.com/TJYSunset/Phocid/issues[issue] or https://github.com/TJYSunset/Phocid/discussions[discussion] depending on the severity.
 
 == Features
 
@@ -30,9 +35,7 @@ Phocid is not officially available on Google Play or other app stores except htt
 * Optional less-vibrant colors
 * Brand new design based on Material Design 3
 
-== Missing features compared to Phonograph
-
-=== Features that are intentionally left out
+== Missing features that are intentionally left out
 
 * Tag editing
 +
@@ -41,39 +44,7 @@ The best metadata support library I could find is still buggy; I recommend using
 * Deleting files
 * Anything that requires an internet connection
 * Lock screen
-
-=== Features that might be added
-
-These features are hard to implement and/or of no personal interest.
-If you want to see a feature, please https://github.com/TJYSunset/Phocid/issues[file an issue].
-
 * Playback statistics
-* Notification customization
-
-== Known issues
-
-* Expect hangs or crashes when having a large number of tracks queued.
-This is an upstream issue at https://github.com/androidx/media/issues/81.
-* Phocid consumes more system resources than other players, and the UI occasionally stutters.
-
-== Troubleshooting common problems
-
-First of all, please try https://github.com/tjysunset/phocid/releases/latest[the latest release] from GitHub.
-F-Droid updates can lag behind for as long as 7 days.
-GitHub and F-Droid builds have the same signature, which means you don't have to uninstall when switching download source.
-
-=== Playback is misbehaving
-
-Disable "Audio offloading" in preferences.
-
-=== Metadata are incorrect / embedded lyrics not showing
-
-Enable "Advanced metadata extraction" in preferences.
-
-=== Unwanted files are listed
-
-See "Indexing help" in preferences.
-Apparently a lot of people miss that button.
 
 == Reporting a crash
 
