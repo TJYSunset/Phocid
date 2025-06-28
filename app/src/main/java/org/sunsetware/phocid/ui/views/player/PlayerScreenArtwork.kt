@@ -37,6 +37,7 @@ sealed class PlayerScreenArtwork {
         onGetTrackAtIndex: (PlayerState, Int) -> Track,
         onPrevious: () -> Unit,
         onNext: () -> Unit,
+        onToggleOverlay: () -> Unit,
     )
 }
 
@@ -55,6 +56,7 @@ object PlayerScreenArtworkDefault : PlayerScreenArtwork() {
         onGetTrackAtIndex: (PlayerState, Int) -> Track,
         onPrevious: () -> Unit,
         onNext: () -> Unit,
+        onToggleOverlay: () -> Unit,
     ) {
         val density = LocalDensity.current
         TrackCarousel(
@@ -68,7 +70,7 @@ object PlayerScreenArtworkDefault : PlayerScreenArtwork() {
                 if (state.shuffle) state.unshuffledPlayQueueMapping!!.indexOf(index) else index
             },
             tapKey = Unit,
-            onTap = {},
+            onTap = onToggleOverlay,
             onVerticalDrag = {
                 detectVerticalDragGestures(
                     onDragStart = { playerScreenDragState.onDragStart(dragLock) },

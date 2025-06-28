@@ -114,6 +114,8 @@ class UiManager(
 
     val playerScreenUseLyricsView = MutableStateFlow(false)
 
+    val playerScreenHideOverlay = MutableStateFlow(false)
+
     val overrideStatusBarLightColor = MutableStateFlow(null as Boolean?)
 
     val playerTimerSettings = AtomicReference(PlayerTimerSettings())
@@ -164,6 +166,7 @@ class UiManager(
                             PersistentUiState(
                                 libraryScreenHomeViewState.pagerState.currentPage,
                                 playerScreenUseLyricsView.value,
+                                playerScreenHideOverlay.value,
                                 playerTimerSettings.get(),
                                 playlistIoSyncHelpShown.get(),
                             )
@@ -185,6 +188,7 @@ class UiManager(
             )
         }
         playerScreenUseLyricsView.update { persistentState.playerScreenUseLyricsView }
+        playerScreenHideOverlay.update { persistentState.playerScreenHideOverlay }
         playerTimerSettings.set(persistentState.playerTimerSettings)
         playlistIoSyncHelpShown.set(persistentState.playlistIoSyncHelpShown)
     }

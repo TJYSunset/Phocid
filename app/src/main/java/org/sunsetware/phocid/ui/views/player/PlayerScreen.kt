@@ -266,6 +266,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
             }
 
     val useLyricsView by uiManager.playerScreenUseLyricsView.collectAsStateWithLifecycle()
+    val hideOverlay by uiManager.playerScreenHideOverlay.collectAsStateWithLifecycle()
     val lyricsViewVisibility by
         animateFloatAsState(if (useLyricsView) 1f else 0f, emphasizedEnter())
     var lyricsViewAutoScroll by rememberSaveable { mutableStateOf(true) }
@@ -377,6 +378,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                         !lyricsViewAutoScroll &&
                                         currentTrackLyrics is PlayerScreenLyrics.Synced,
                                 lyricsButtonEnabled = useLyricsView || currentTrackLyrics != null,
+                                overlayVisibility = false,
                                 onBack = { uiManager.back() },
                                 onEnableLyricsViewAutoScroll = { lyricsViewAutoScroll = true },
                                 onToggleLyricsView = {
@@ -395,6 +397,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                         !lyricsViewAutoScroll &&
                                         currentTrackLyrics is PlayerScreenLyrics.Synced,
                                 lyricsButtonEnabled = useLyricsView || currentTrackLyrics != null,
+                                overlayVisibility = !hideOverlay || useLyricsView,
                                 onBack = { uiManager.back() },
                                 onEnableLyricsViewAutoScroll = { lyricsViewAutoScroll = true },
                                 onToggleLyricsView = {
@@ -421,6 +424,9 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 },
                                 onPrevious = { playerManager.seekToPrevious() },
                                 onNext = { playerManager.seekToNext() },
+                                onToggleOverlay = {
+                                    uiManager.playerScreenHideOverlay.update { !it }
+                                },
                             )
                         }
                         Box {
