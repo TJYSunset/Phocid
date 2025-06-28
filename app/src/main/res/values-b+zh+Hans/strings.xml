@@ -198,6 +198,11 @@
     <string name="preferences_lyrics_display_two_lines">双行</string>
     <string name="preferences_lyrics_scaling">歌词大小</string>
     <string name="preferences_multiplier_number">{0, number, ::.00}×</string>
+    <string name="preferences_notification_button_favorite">收藏</string>
+    <string name="preferences_notification_button_repeat">循环</string>
+    <string name="preferences_notification_button_shuffle">打乱</string>
+    <string name="preferences_notification_buttons">通知按钮</string>
+    <string name="preferences_notification_buttons_none">无</string>
     <string name="preferences_pause_on_focus_loss">失去音频焦点时暂停</string>
     <string name="preferences_play_on_output_device_connection">连接耳机时播放</string>
     <string name="preferences_playback">播放</string>

@@ -208,6 +208,11 @@
     <string name="preferences_lyrics_display_two_lines">兩行</string>
     <string name="preferences_lyrics_scaling">歌詞縮放比例</string>
     <string name="preferences_multiplier_number">{0, number, ::.00}×</string>
+    <string name="preferences_notification_button_favorite">收藏</string>
+    <string name="preferences_notification_button_repeat">重複</string>
+    <string name="preferences_notification_button_shuffle">隨機</string>
+    <string name="preferences_notification_buttons">通知按鈕</string>
+    <string name="preferences_notification_buttons_none">無</string>
     <string name="preferences_pause_on_focus_loss">無音訊焦點時暫停</string>
     <string name="preferences_play_on_output_device_connection">連線耳機時播放</string>
     <string name="preferences_playback">播放</string>

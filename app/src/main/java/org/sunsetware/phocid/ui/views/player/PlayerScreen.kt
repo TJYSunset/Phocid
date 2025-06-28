@@ -70,9 +70,9 @@ import org.sunsetware.phocid.data.InvalidTrack
 import org.sunsetware.phocid.data.LibraryIndex
 import org.sunsetware.phocid.data.Lyrics
 import org.sunsetware.phocid.data.PlayerManager
-import org.sunsetware.phocid.data.SpecialPlaylist
 import org.sunsetware.phocid.data.Track
 import org.sunsetware.phocid.data.getArtworkColor
+import org.sunsetware.phocid.data.isFavorite
 import org.sunsetware.phocid.data.loadLyrics
 import org.sunsetware.phocid.data.parseLrc
 import org.sunsetware.phocid.globals.Strings
@@ -139,11 +139,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
     val currentTrackIndex = playerState.currentIndex
     val playlists by viewModel.playlistManager.playlists.collectAsStateWithLifecycle()
     val currentTrackIsFavorite =
-        remember(currentTrack, playlists) {
-            playlists[SpecialPlaylist.FAVORITES.key]?.entries?.any {
-                it.track?.id == currentTrack.id
-            } == true
-        }
+        remember(currentTrack, playlists) { playlists.isFavorite(currentTrack) }
     val currentTrackLyrics =
         remember(currentTrack) {
             val cachedLyrics = viewModel.lyricsCache.get()
@@ -478,20 +474,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                     }
                                 },
                                 onToggleCurrentTrackIsFavorite = {
-                                    viewModel.playlistManager.updatePlaylist(
-                                        SpecialPlaylist.FAVORITES.key
-                                    ) { playlist ->
-                                        if (playlist.entries.any { it.path == currentTrack.path }) {
-                                            playlist.copy(
-                                                entries =
-                                                    playlist.entries.filter {
-                                                        it.path != currentTrack.path
-                                                    }
-                                            )
-                                        } else {
-                                            playlist.addTracks(listOf(currentTrack))
-                                        }
-                                    }
+                                    viewModel.playlistManager.toggleFavorite(currentTrack)
                                 },
                             )
                         }

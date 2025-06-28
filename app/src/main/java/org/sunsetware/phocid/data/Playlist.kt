@@ -344,6 +344,21 @@ class PlaylistManager(
             }
         }
     }
+
+    fun toggleFavorite(track: Track) {
+        if (track == InvalidTrack) return
+        updatePlaylist(SpecialPlaylist.FAVORITES.key) { playlist ->
+            if (playlist.entries.any { it.path == track.path }) {
+                playlist.copy(entries = playlist.entries.filter { it.path != track.path })
+            } else {
+                playlist.addTracks(listOf(track))
+            }
+        }
+    }
+}
+
+fun Map<UUID, RealizedPlaylist>.isFavorite(track: Track): Boolean {
+    return this[SpecialPlaylist.FAVORITES.key]?.entries?.any { it.track?.id == track.id } == true
 }
 
 /**

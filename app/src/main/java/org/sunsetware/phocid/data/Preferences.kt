@@ -16,6 +16,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.sunsetware.phocid.R
 import org.sunsetware.phocid.globals.SystemLocale
+import org.sunsetware.phocid.service.NotificationButton
 import org.sunsetware.phocid.ui.theme.GRAY
 import org.sunsetware.phocid.ui.theme.Oklch
 import org.sunsetware.phocid.ui.theme.hashColor
@@ -44,15 +45,15 @@ data class Preferences(
     val folderTabRoot: String? = null,
     val libraryTrackClickAction: LibraryTrackClickAction = LibraryTrackClickAction.PLAY_ALL,
     val alwaysShowHintOnScroll: Boolean = false,
-    val collectionViewSorting: Map<LibraryScreenCollectionType, Pair<String, Boolean>> =
-        LibraryScreenCollectionType.entries.associateWith {
-            Pair(it.sortingOptions.keys.first(), true)
-        },
     val playerScreenLayout: PlayerScreenLayoutType = PlayerScreenLayoutType.DEFAULT,
     val swipeToRemoveFromQueue: Boolean = false,
     val highResArtworkPreference: HighResArtworkPreference = HighResArtworkPreference.PLAYER_ONLY,
     val sortingLocaleLanguageTag: String? = null,
     val lyricsDisplay: LyricsDisplayPreference = LyricsDisplayPreference.DEFAULT,
+    val notificationButtonOrderAndVisibility: List<Pair<NotificationButton, Boolean>> =
+        NotificationButton.entries.map {
+            it to (it == NotificationButton.REPEAT || it == NotificationButton.SHUFFLE)
+        },
     val densityMultiplier: Float = 1f,
     val lyricsSizeMultiplier: Float = 1f,
     val swipeThresholdMultiplier: Float = 1f,
@@ -98,6 +99,11 @@ data class Preferences(
     val widgetDarkTheme: DarkThemePreference = DarkThemePreference.SYSTEM,
     val widgetLayout: WidgetLayout = WidgetLayout.SMALL,
     val widgetArtworkResolutionLimit: Int = 700,
+    // Hidden
+    val collectionViewSorting: Map<LibraryScreenCollectionType, Pair<String, Boolean>> =
+        LibraryScreenCollectionType.entries.associateWith {
+            Pair(it.sortingOptions.keys.first(), true)
+        },
 ) {
     fun upgrade(): Preferences {
         val newTabSettings =
@@ -119,10 +125,19 @@ data class Preferences(
                     .toSet()
                     .minus(collectionViewSorting.keys)
                     .associateWith { Pair(it.sortingOptions.keys.first(), true) }
+        val newNotificationButtonOrderAndVisibility =
+            notificationButtonOrderAndVisibility
+                .filter { NotificationButton.entries.contains(it.first) }
+                .distinctBy { it.first } +
+                NotificationButton.entries
+                    .toSet()
+                    .minus(notificationButtonOrderAndVisibility.map { it.first }.toSet())
+                    .map { it to false }
         return copy(
             tabSettings = newTabSettings,
             tabOrderAndVisibility = newTabOrderAndVisibility,
             collectionViewSorting = newCollectionViewSorting,
+            notificationButtonOrderAndVisibility = newNotificationButtonOrderAndVisibility,
         )
     }
 
@@ -152,6 +167,10 @@ data class Preferences(
             .filter { it.second }
             .mapNotNull { tabSettings[it.first] }
             .takeIf { it.isNotEmpty() } ?: listOf(tabSettings[LibraryScreenTabType.TRACKS]!!)
+
+    @Transient
+    val notificationButtons =
+        notificationButtonOrderAndVisibility.filter { it.second }.map { it.first }
 
     @Transient val sortingLocale = sortingLocaleLanguageTag?.let { Locale.forLanguageTag(it) }
 

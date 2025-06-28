@@ -60,10 +60,12 @@ import org.sunsetware.phocid.data.LyricsDisplayPreference
 import org.sunsetware.phocid.data.ShapePreference
 import org.sunsetware.phocid.data.TabStylePreference
 import org.sunsetware.phocid.globals.Strings
+import org.sunsetware.phocid.service.NotificationButton
 import org.sunsetware.phocid.ui.components.UtilityListHeader
 import org.sunsetware.phocid.ui.components.UtilityListItem
 import org.sunsetware.phocid.ui.components.UtilitySwitchListItem
 import org.sunsetware.phocid.ui.components.negativePadding
+import org.sunsetware.phocid.ui.views.library.LibraryScreenTabType
 import org.sunsetware.phocid.ui.views.library.LibraryTrackClickAction
 import org.sunsetware.phocid.ui.views.player.PlayerScreenLayoutType
 import org.sunsetware.phocid.ui.views.playlist.PlaylistIoScreen
@@ -120,7 +122,18 @@ object PreferencesScreen : TopLevelScreen() {
                                 Strings[it.type.stringId]
                             },
                         modifier =
-                            Modifier.clickable { uiManager.openDialog(PreferencesTabsDialog()) },
+                            Modifier.clickable {
+                                uiManager.openDialog(
+                                    PreferencesOrderAndVisibilityDialog<LibraryScreenTabType>(
+                                        title = Strings[R.string.preferences_tabs],
+                                        itemName = { Strings[it.stringId] },
+                                        value = { it.tabOrderAndVisibility },
+                                        onSetValue = { preferences, value ->
+                                            preferences.copy(tabOrderAndVisibility = value)
+                                        },
+                                    )
+                                )
+                            },
                     )
                     UtilitySwitchListItem(
                         title = Strings[R.string.preferences_scrollable_tabs],
@@ -289,6 +302,30 @@ object PreferencesScreen : TopLevelScreen() {
                                         activeOption = { it.lyricsDisplay },
                                         updatePreferences = { preferences, new ->
                                             preferences.copy(lyricsDisplay = new)
+                                        },
+                                    )
+                                )
+                            },
+                    )
+                    UtilityListItem(
+                        title = Strings[R.string.preferences_notification_buttons],
+                        subtitle =
+                            preferences.notificationButtons
+                                .takeIf { it.isNotEmpty() }
+                                ?.joinToString(Strings[R.string.preferences_tabs_separator]) {
+                                    Strings[it.stringId]
+                                } ?: Strings[R.string.preferences_notification_buttons_none],
+                        modifier =
+                            Modifier.clickable {
+                                uiManager.openDialog(
+                                    PreferencesOrderAndVisibilityDialog<NotificationButton>(
+                                        title = Strings[R.string.preferences_notification_buttons],
+                                        itemName = { Strings[it.stringId] },
+                                        value = { it.notificationButtonOrderAndVisibility },
+                                        onSetValue = { preferences, value ->
+                                            preferences.copy(
+                                                notificationButtonOrderAndVisibility = value
+                                            )
                                         },
                                     )
                                 )

@@ -213,6 +213,11 @@
     <string name="preferences_lyrics_display_two_lines">Two lines</string>
     <string name="preferences_lyrics_scaling">Lyrics scaling</string>
     <string name="preferences_multiplier_number">{0, number, ::.00}×</string>
+    <string name="preferences_notification_button_favorite">Favorite</string>
+    <string name="preferences_notification_button_repeat">Repeat</string>
+    <string name="preferences_notification_button_shuffle">Shuffle</string>
+    <string name="preferences_notification_buttons">Notification buttons</string>
+    <string name="preferences_notification_buttons_none">None</string>
     <string name="preferences_pause_on_focus_loss">Pause on audio focus loss</string>
     <string name="preferences_play_on_output_device_connection">Play on headphones connection</string>
     <string name="preferences_playback">Playback</string>

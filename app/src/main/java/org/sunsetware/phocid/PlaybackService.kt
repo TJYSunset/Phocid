@@ -34,6 +34,8 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
@@ -45,13 +47,13 @@ import org.sunsetware.phocid.data.capturePlayerState
 import org.sunsetware.phocid.data.captureTransientState
 import org.sunsetware.phocid.data.getChildMediaItems
 import org.sunsetware.phocid.data.getMediaItem
+import org.sunsetware.phocid.data.isFavorite
 import org.sunsetware.phocid.data.restorePlayerState
 import org.sunsetware.phocid.data.search
 import org.sunsetware.phocid.data.transformMediaSessionCallbackItems
 import org.sunsetware.phocid.data.transformOnAddTracks
 import org.sunsetware.phocid.data.transformOnSetTracks
 import org.sunsetware.phocid.globals.GlobalData
-import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.service.CustomizedBitmapLoader
 import org.sunsetware.phocid.service.CustomizedPlayer
 import org.sunsetware.phocid.utils.Random
@@ -127,6 +129,17 @@ class PlaybackService : MediaLibraryService() {
                 .setSessionExtras(bundleOf(AUDIO_SESSION_ID_KEY to player.inner.audioSessionId))
                 .setMediaButtonPreferences(commandButtons(player))
                 .build()
+
+        // Update command buttons on global data changes.
+        mainScope.launch {
+            GlobalData.preferences
+                .combine(GlobalData.playlistManager.playlists) { preferences, playlists ->
+                    preferences.notificationButtons to playlists
+                }
+                .distinctUntilChanged()
+                .onEach { mediaSession?.setMediaButtonPreferences(commandButtons(player)) }
+                .collect()
+        }
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? {
@@ -403,39 +416,18 @@ class PlaybackService : MediaLibraryService() {
             SET_TIMER_COMMAND to ::onSetTimer,
             EXTERNAL_REPEAT_COMMAND to ::onExternalRepeat,
             EXTERNAL_SHUFFLE_COMMAND to ::onExternalShuffle,
+            EXTERNAL_FAVORITE_COMMAND to ::onExternalFavorite,
         )
 
     private fun commandButtons(player: Player): List<CommandButton> {
-        return listOf(
-            CommandButton.Builder(
-                    when (player.repeatMode) {
-                        Player.REPEAT_MODE_ALL -> CommandButton.ICON_REPEAT_ALL
-                        Player.REPEAT_MODE_ONE -> CommandButton.ICON_REPEAT_ONE
-                        else -> CommandButton.ICON_REPEAT_OFF
-                    }
-                )
-                .setDisplayName(
-                    when (player.repeatMode) {
-                        Player.REPEAT_MODE_ALL -> Strings[R.string.player_repeat_mode_all]
-                        Player.REPEAT_MODE_ONE -> Strings[R.string.player_repeat_mode_one]
-                        else -> Strings[R.string.player_repeat_mode_off]
-                    }
-                )
-                .setSessionCommand(SessionCommand(EXTERNAL_REPEAT_COMMAND, bundleOf()))
-                .setSlots(CommandButton.SLOT_OVERFLOW)
-                .build(),
-            CommandButton.Builder(
-                    if (player.shuffleModeEnabled) CommandButton.ICON_SHUFFLE_ON
-                    else CommandButton.ICON_SHUFFLE_OFF
-                )
-                .setDisplayName(
-                    if (player.shuffleModeEnabled) Strings[R.string.player_shuffle_on]
-                    else Strings[R.string.player_shuffle_off]
-                )
-                .setSessionCommand(SessionCommand(EXTERNAL_SHUFFLE_COMMAND, bundleOf()))
-                .setSlots(CommandButton.SLOT_OVERFLOW)
-                .build(),
-        )
+        return GlobalData.preferences.value.notificationButtons.map {
+            it.build(
+                player,
+                GlobalData.libraryIndex.value.tracks[
+                        player.currentMediaItem?.mediaId?.toLongOrNull()]
+                    ?.let { GlobalData.playlistManager.playlists.value.isFavorite(it) } == true,
+            )
+        }
     }
 
     private fun newTimerJob(player: Player): Job {
@@ -500,6 +492,16 @@ class PlaybackService : MediaLibraryService() {
         @Suppress("unused") args: Bundle,
     ) {
         player.shuffleModeEnabled = !player.shuffleModeEnabled
+    }
+
+    private fun onExternalFavorite(
+        player: CustomizedPlayer,
+        @Suppress("unused") session: MediaSession,
+        @Suppress("unused") args: Bundle,
+    ) {
+        GlobalData.libraryIndex.value.tracks[player.currentMediaItem?.mediaId?.toLongOrNull()]?.let(
+            GlobalData.playlistManager::toggleFavorite
+        )
     }
 
     // endregion
