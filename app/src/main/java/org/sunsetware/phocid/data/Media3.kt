@@ -82,7 +82,10 @@ fun Player.restorePlayerState(state: PlayerState, unfilteredTrackIndex: Unfilter
 private val transientStateVersion = AtomicLong(0)
 
 fun Player.captureTransientState(): PlayerTransientState {
-    return PlayerTransientState(transientStateVersion.getAndIncrement(), playWhenReady)
+    return PlayerTransientState(
+        transientStateVersion.getAndIncrement(),
+        playWhenReady && playbackState != Player.STATE_ENDED,
+    )
 }
 
 fun transformOnSetTracks(
