@@ -28,6 +28,7 @@
     <string name="duration_negative_minutes_seconds">-{0, number, ::00}:{1, number, ::00}</string>
 
     <string name="library_rescan">Bibliothek neu scannen</string>
+    <string name="library_view_root_folder">Öffne Stamm-Ordner aller Titel</string>
 
     <string name="list_empty">Leer</string>
     <string name="list_move_down">Hinunterbewegen</string>
@@ -192,7 +193,12 @@
     <string name="preferences_lyrics_display_default">Standard</string>
     <string name="preferences_lyrics_display_disabled">Deaktiviert</string>
     <string name="preferences_lyrics_display_two_lines">Zwei Zeilen</string>
+    <string name="preferences_lyrics_scaling">Lyrics-Skalierung</string>
     <string name="preferences_multiplier_number">{0, number, ::.00}×</string>
+    <string name="preferences_notification_button_favorite">Favouriten</string>
+    <string name="preferences_notification_button_repeat">Wiederholen</string>
+    <string name="preferences_notification_button_shuffle">Zufällig</string>
+    <string name="preferences_notification_buttons">Schaltflächen im Miniplayer</string>
     <string name="preferences_pause_on_focus_loss">Bei Fokusverlust pausieren</string>
     <string name="preferences_play_on_output_device_connection">Wiedergabe beim Anschließen von Kopfhörern starten</string>
     <string name="preferences_playback">Wiedergabe</string>
@@ -216,6 +222,7 @@
     <string name="preferences_shape_square">Quadrat</string>
     <string name="preferences_sorting_language">Sortiersprache</string>
     <string name="preferences_sorting_language_system">Systemsprache</string>
+    <string name="preferences_swipe_threshold">Wischgesten-Schwellenwert</string>
     <string name="preferences_swipe_to_remove_from_queue">Wischen um aus Warteschlange zu entfernen</string>
     <string name="preferences_system_equalizer">Systemeigenen Equalizer öffnen</string>
     <string name="preferences_tab_style">Tab-Stil</string>
