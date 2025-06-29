@@ -105,7 +105,8 @@ tasks.preBuild { dependsOn("customSetup") }
 tasks.assembleUnitTest { dependsOn("customSetup") }
 
 composeCompiler {
-    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
+    stabilityConfigurationFiles =
+        listOf(rootProject.layout.projectDirectory.file("stability_config.conf"))
 }
 
 ktfmt { kotlinLangStyle() }
