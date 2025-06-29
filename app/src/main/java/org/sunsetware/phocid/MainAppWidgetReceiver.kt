@@ -10,12 +10,8 @@ import android.os.Build
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.Dp
@@ -58,9 +54,10 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.MoreExecutors
 import java.util.Locale
+import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import org.sunsetware.phocid.data.Track
 import org.sunsetware.phocid.data.WidgetLayout
 import org.sunsetware.phocid.data.getArtworkColor
@@ -79,6 +76,7 @@ import org.sunsetware.phocid.ui.theme.primaryLight
 import org.sunsetware.phocid.ui.theme.surfaceDark
 import org.sunsetware.phocid.ui.theme.surfaceLight
 import org.sunsetware.phocid.ui.theme.toGlanceStyle
+import org.sunsetware.phocid.utils.combine
 
 class MainAppWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget = MainAppWidget()
@@ -91,13 +89,34 @@ class MainAppWidget : GlanceAppWidget() {
         while (!GlobalData.initialized.get()) {
             delay(1)
         }
+        val coroutineScope = CoroutineScope(coroutineContext + Dispatchers.IO)
+        val trackAndArtworkState =
+            GlobalData.libraryIndex.combine(
+                coroutineScope,
+                GlobalData.playerState,
+                GlobalData.preferences,
+            ) { libraryIndex, playerState, preferences ->
+                val track =
+                    libraryIndex.tracks[
+                            playerState.actualPlayQueue.getOrNull(playerState.currentIndex),
+                        ]
+                track to
+                    track?.let {
+                        loadArtwork(
+                            context,
+                            it.id,
+                            it.path,
+                            preferences.highResArtworkPreference.player,
+                            preferences.widgetArtworkResolutionLimit,
+                            preferences.widgetLayout.standaloneArtwork,
+                        )
+                    }
+            }
 
         provideContent {
             val resources = LocalContext.current.resources
 
             val preferences by GlobalData.preferences.collectAsState()
-            val libraryIndex by GlobalData.libraryIndex.collectAsState()
-            val playerState by GlobalData.playerState.collectAsState()
             val playerTransientState by GlobalData.playerTransientState.collectAsState()
 
             val isDarkTheme =
@@ -107,15 +126,9 @@ class MainAppWidget : GlanceAppWidget() {
                     ) == Configuration.UI_MODE_NIGHT_YES)
             val colorPreference = isDarkTheme to preferences.widgetAccentBackground
 
-            val currentTrack =
-                remember(libraryIndex, playerState) {
-                    libraryIndex.tracks[
-                            playerState.actualPlayQueue.getOrNull(playerState.currentIndex),
-                        ]
-                }
-            var stateBatch by remember { mutableStateOf(null as Track? to null as Bitmap?) }
-            val track = stateBatch.first
-            val artwork = stateBatch.second
+            val trackAndArtwork by trackAndArtworkState.collectAsState()
+            val track = trackAndArtwork.first
+            val artwork = trackAndArtwork.second
 
             val artworkColor =
                 track?.getArtworkColor(preferences.artworkColorPreference)?.takeIf {
@@ -157,23 +170,6 @@ class MainAppWidget : GlanceAppWidget() {
                 } else {
                     0.dp
                 }
-
-            LaunchedEffect(currentTrack, preferences.widgetLayout.standaloneArtwork) {
-                withContext(Dispatchers.IO) {
-                    stateBatch =
-                        currentTrack to
-                            currentTrack?.let {
-                                loadArtwork(
-                                    context,
-                                    it.id,
-                                    it.path,
-                                    preferences.highResArtworkPreference.player,
-                                    preferences.widgetArtworkResolutionLimit,
-                                    preferences.widgetLayout.standaloneArtwork,
-                                )
-                            }
-                }
-            }
 
             GlanceTheme {
                 Box(
