@@ -85,7 +85,7 @@
     <string name="playlist_delete_multiple_dialog_body">{0, plural, one {# playlist sera supprimée} many {# de playlists seront supprimées} other {# playlists seront supprimées}} de façon permanente</string>
     <string name="playlist_delete_multiple_dialog_title">Supprimer {0, plural, one {# playlist} many {# de playlists} other {# playlists}}?</string>
     <string name="playlist_delete_single_dialog_body">La playlist “{0}” sera supprimée de façon permanente</string>
-    <string name="playlist_delete_single_dialog_title">Supprimer la playlist ?</string>
+    <string name="playlist_delete_single_dialog_title">Supprimer la playlist?</string>
     <string name="playlist_edit">Modifier la playlist</string>
     <string name="playlist_edit_screen_title">Modifier la playlist “{0}”</string>
     <string name="playlist_export">Exporter la playlist</string>
@@ -103,9 +103,9 @@
     <string name="playlist_io_sync_log">Journaux synchronisation</string>
     <string name="playlist_io_sync_log_conflicting_mappings">Plusieurs playlists sont associées au même fichier.</string>
     <string name="playlist_io_sync_log_error_listing_files">Erreur dans la liste des fichiers.</string>
-    <string name="playlist_io_sync_log_export_error">{0} ⇄ {1}: Erreur d’exportation: {0}</string>
+    <string name="playlist_io_sync_log_export_error">{0} ⇄ {1}: Erreur d’exportation: {2}</string>
     <string name="playlist_io_sync_log_export_ok">{0} ⇄ {1}: Exportée.</string>
-    <string name="playlist_io_sync_log_import_error">{0} ⇄ {1}: Erreur d’importation: {0}</string>
+    <string name="playlist_io_sync_log_import_error">{0} ⇄ {1}: Erreur d’importation: {2}</string>
     <string name="playlist_io_sync_log_import_ok">{0} ⇄ {1}: Importée.</string>
     <string name="playlist_io_sync_log_missing_file">{0} ⇄ {1}: Fichier manquant.</string>
     <string name="playlist_io_sync_log_missing_playlist">&lt;UNKNOWN&gt; ⇄ {0}: Playlist manquante.</string>
