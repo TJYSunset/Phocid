@@ -1,0 +1,14 @@
+L'objectif de ce projet est de remplacer le lecteur de musique abandonné <a href="https://github.com/kabouzeid/Phonograph">Phonograph</a> avec quelque ajustements personnels. Phocid n'a aucune connection avec le lecteur Phonograph.
+
+<strong>Caractéristiques</strong>
+
+<ul>
+<li>Une expérience utilisateur familière</li>
+<li>Une meilleure prise en charge des métadonnées (plusieurs artistes)</li>
+<li>Un meilleur tri quand votre bibliothèque de musique diffère de la langue système</li>
+<li>Une liste de blocage basée sur des expressiosn réglières (regex)</li>
+<li>Contrôl de la hauteur et de la vitesse durant la lecture d'une piste</li>
+<li>Plus de styles de paroles</li>
+<li>Optionellement; des couleurs moins vibrantes</li>
+<li>Nouveau design basé sur Material Design 3</li>
+</ul>
