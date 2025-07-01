@@ -25,7 +25,7 @@
     <string name="commons_selected">Sélectionné</string>
     <string name="commons_sync">Synchroniser</string>
 
-    <string name="count_album">{0, plural, one {# album} many {# d'albums} other {# albums}}</string>
+    <string name="count_album">{0, plural, one {# album} many {# d’albums} other {# albums}}</string>
     <string name="count_folder">{0, plural, one {# dossier} many {# de dossiers} other {# dossiers}}</string>
     <string name="count_invalid_track">{0, plural, one {# piste non valide} many {# de pistes non valides} other {# pistes non valides}}</string>
     <string name="count_track">{0, plural, one {# piste} many {# de pistes} other {# pistes}}</string>
@@ -45,12 +45,12 @@
     <string name="list_multi_select_item_selected">Sélectionné</string>
     <string name="list_multi_select_select_all">Tout sélectionner</string>
     <string name="list_multi_select_select_inverse">Sélection inversée</string>
-    <string name="list_multi_select_title">{0, plural, one {# élément sélectionné} many {# d'éléments sélectionnés} other {# éléments sélectionnés}}</string>
+    <string name="list_multi_select_title">{0, plural, one {# élément sélectionné} many {# d’éléments sélectionnés} other {# éléments sélectionnés}}</string>
 
     <!-- The IETF language tag of the current translation, used for formatting -->
     <string name="locale">fr</string>
 
-    <string name="permission_dialog_body">L'application a besoin d'obtenir l'autorisation de lire vos fichiers audio pour fonctionner. Veuillez accorder l'autorisation pour continuer.</string>
+    <string name="permission_dialog_body">L’application a besoin d’obtenir l’autorisation de lire vos fichiers audio pour fonctionner. Veuillez accorder l’autorisation pour continuer.</string>
     <string name="permission_dialog_grant">Accorder</string>
     <string name="permission_dialog_title">Autorisation exigée</string>
 
@@ -102,27 +102,27 @@
     <string name="playlist_io_select_folder">Sélectionner un dossier</string>
     <string name="playlist_io_sync">Synchronisation de la playlist</string>
     <string name="playlist_io_sync_help">Aide à la synchronisation de la playlist</string>
-    <string name="playlist_io_sync_help_body" tools:ignore="TypographyDashes">FAITES UNE SAUVEGARDE À UN AUTRE EMPLACEMENT ET LISEZ ATTENTIVEMENT LA DOCUMENTATION AVANT DE CONTINUER!\n\nVous pouvez accéder aux journaux de la dernière synchronisation depuis la barre du haut.\n\nLes paramètres de synchronisation sont indépendants des paramètres d'import/export manuel, et peuvent être configurés à partir de la barre du haut. La modification des paramètres ne prendra effet qu'à partir du moment où l'horodatage diffère entre les deux côté d'une playlist synchronisée, et modifier les paramètres durant une synchronisation risque de corrompre vos données. Faites une sauvegarde et éditez manuellement le "côté" le plus ancien avant de les modifier.\n\nÀ cause des limitations d'Android, Phocid ne créera pas de fichiers manquants à votre place. Vous pouvez exporter les playlists afin de créer ces fichiers.\n\n"Synchroniser" écrase le contenu du "côté" le plus ancien avec le contenu du "côté" le plus récent. Cela veut dire que:\n• Créer une nouvelle playlist à synchroniser depuis un fichier existant risque d'écraser le contenu du fichier, et vice versa. Pour ajouter de nouveaux mappings, utilisez plutôt importer/exporter afin de générer des playlists et fichiers dont le contenu et l'horodatage "dernière modification" correspondent.\n• Vous fichiers doivent avoir un horodatage "dernière modification" correct pour que la synchronisation fonctionne correctement. Attendez-vous à des comportements innatendus si les fichiers sont modifiés en externe avec un horodatage incorrect.\n\n Les nouvelles playlists et les playlists crééers avant la version v20250219 de Phocid ont 1970-01-01 comme horodatage initial. Les fichiers exportés ont un horodatage correspondant à la date de leur exportation. Exporter une playlist mettra aussi à jour son horodatage.\n\nPhocid ne prend pas en compte les commentaires M3U (et par extension, des directives étendues), et retirera ceux-ci lors de la synchronisation. N'utilisez pas la synchronisation si vous avez besoin des commentaires M3U.\n\nLa synchronisation s'effectue lorsque l'application prend le focus, une playlist change, ou lors d'une requête manuelle.</string>
+    <string name="playlist_io_sync_help_body" tools:ignore="TypographyDashes">FAITES UNE SAUVEGARDE À UN AUTRE EMPLACEMENT ET LISEZ ATTENTIVEMENT LA DOCUMENTATION AVANT DE CONTINUER!\n\nVous pouvez accéder aux journaux de la dernière synchronisation depuis la barre du haut.\n\nLes paramètres de synchronisation sont indépendants des paramètres d’import/export manuel, et peuvent être configurés à partir de la barre du haut. La modification des paramètres ne prendra effet qu’à partir du moment où l’horodatage diffère entre les deux côté d’une playlist synchronisée, et modifier les paramètres durant une synchronisation risque de corrompre vos données. Faites une sauvegarde et éditez manuellement le "côté" le plus ancien avant de les modifier.\n\nÀ cause des limitations d’Android, Phocid ne créera pas de fichiers manquants à votre place. Vous pouvez exporter les playlists afin de créer ces fichiers.\n\n"Synchroniser" écrase le contenu du "côté" le plus ancien avec le contenu du "côté" le plus récent. Cela veut dire que:\n• Créer une nouvelle playlist à synchroniser depuis un fichier existant risque d’écraser le contenu du fichier, et vice versa. Pour ajouter de nouveaux mappings, utilisez plutôt importer/exporter afin de générer des playlists et fichiers dont le contenu et l’horodatage "dernière modification" correspondent.\n• Vous fichiers doivent avoir un horodatage "dernière modification" correct pour que la synchronisation fonctionne correctement. Attendez-vous à des comportements innatendus si les fichiers sont modifiés en externe avec un horodatage incorrect.\n\n Les nouvelles playlists et les playlists crééers avant la version v20250219 de Phocid ont 1970-01-01 comme horodatage initial. Les fichiers exportés ont un horodatage correspondant à la date de leur exportation. Exporter une playlist mettra aussi à jour son horodatage.\n\nPhocid ne prend pas en compte les commentaires M3U (et par extension, des directives étendues), et retirera ceux-ci lors de la synchronisation. N’utilisez pas la synchronisation si vous avez besoin des commentaires M3U.\n\nLa synchronisation s’effectue lorsque l’application prend le focus, une playlist change, ou lors d’une requête manuelle.</string>
     <string name="playlist_io_sync_location">Emplacement de la synchronisation: {0}</string>
     <string name="playlist_io_sync_location_not_set">Emplacement de la synchronisation: non défini</string>
     <string name="playlist_io_sync_log">Journaux synchronisation</string>
     <string name="playlist_io_sync_log_conflicting_mappings">Plusieurs playlists sont associées au même fichier.</string>
     <string name="playlist_io_sync_log_error_listing_files">Erreur dans la liste des fichiers.</string>
-    <string name="playlist_io_sync_log_export_error">{0} ⇄ {1}: Erreur d'exportation: {0}</string>
+    <string name="playlist_io_sync_log_export_error">{0} ⇄ {1}: Erreur d’exportation: {0}</string>
     <string name="playlist_io_sync_log_export_ok">{0} ⇄ {1}: Exportée.</string>
-    <string name="playlist_io_sync_log_import_error">{0} ⇄ {1}: Erreur d'importation: {0}</string>
+    <string name="playlist_io_sync_log_import_error">{0} ⇄ {1}: Erreur d’importation: {0}</string>
     <string name="playlist_io_sync_log_import_ok">{0} ⇄ {1}: Importée.</string>
     <string name="playlist_io_sync_log_missing_file">{0} ⇄ {1}: Fichier manquant.</string>
     <string name="playlist_io_sync_log_missing_playlist">&lt;UNKNOWN&gt; ⇄ {0}: Playlist manquante.</string>
     <string name="playlist_io_sync_log_no_file_timestamp">{0} ⇄ {1}: Impossible de récupérer la date de dernière modification pour ce fichier.</string>
-    <string name="playlist_io_sync_log_no_persistable_permission">Permission d'accès aux fichiers manquante. Veuillez redéfinir l'emplacement de la synchronisation pour résoudre l'erreur.</string>
+    <string name="playlist_io_sync_log_no_persistable_permission">Permission d’accès aux fichiers manquante. Veuillez redéfinir l’emplacement de la synchronisation pour résoudre l’erreur.</string>
     <string name="playlist_io_sync_log_skipped_all">Synchronisation ignorée à cause des erreurs listées ci-dessus.</string>
     <string name="playlist_io_sync_log_up_to_date">{0} ⇄ {1}: À jour.</string>
     <string name="playlist_io_sync_now">Synchroniser maintenant</string>
     <string name="playlist_io_sync_settings">Paramètres de synchronisation des playlists</string>
     <string name="playlist_io_sync_target_file">Fichier cible</string>
     <string name="playlist_io_sync_target_file_conflict">Une autre playlist est associée à ce fichier</string>
-    <string name="playlist_io_sync_target_file_nonexistent">Le fichier n'existe pas</string>
+    <string name="playlist_io_sync_target_file_nonexistent">Le fichier n’existe pas</string>
     <string name="playlist_name">Nom de la playlist</string>
     <string name="playlist_new">Nouvelle playlist</string>
     <string name="playlist_new_with_tracks">Nouvelle playlist avec {0, plural, one {# piste} many {# de pistes} other {# pistes}}</string>
@@ -138,19 +138,19 @@
 
     <string name="preferences">Préférences</string>
     <string name="preferences_about">À propos</string>
-    <string name="preferences_always_show_hint_on_scroll">Toujours montrer l'onglet lors du défilement</string>
-    <string name="preferences_artwork_color">Extraction des couleurs à partir de l'illustration</string>
+    <string name="preferences_always_show_hint_on_scroll">Toujours montrer l’onglet lors du défilement</string>
+    <string name="preferences_artwork_color">Extraction des couleurs à partir de l’illustration</string>
     <!-- "Muted" as in opposite of vibrant -->
     <string name="preferences_artwork_color_muted_first">Préférer des couleurs atténuées</string>
     <!-- "Muted" as in opposite of vibrant. This option will forcefully convert vibrant colors to muted ones. -->
-    <string name="preferences_artwork_color_muted_only">N'utiliser que des couleurs atténuées</string>
+    <string name="preferences_artwork_color_muted_only">N’utiliser que des couleurs atténuées</string>
     <string name="preferences_artwork_color_vibrant_first">Préférer des couleurs vives</string>
     <string name="preferences_audio_offloading">Déchargement audio</string>
-    <string name="preferences_audio_offloading_subtitle">Réduit l'usage de la batterie, mais peut causer des erreurs durant la lecture.</string>
+    <string name="preferences_audio_offloading_subtitle">Réduit l’usage de la batterie, mais peut causer des erreurs durant la lecture.</string>
     <!-- "Cards" are rectangular list items displayed on the main screen. -->
-    <string name="preferences_colored_cards">Cartes de couleur depuis l'illustration</string>
-    <string name="preferences_colored_global_theme">Changer la couleur du thème selon l'illustration</string>
-    <string name="preferences_colored_player">Changer la couleur de l'écran de lecture selon l'illustration</string>
+    <string name="preferences_colored_cards">Cartes de couleur depuis l’illustration</string>
+    <string name="preferences_colored_global_theme">Changer la couleur du thème selon l’illustration</string>
+    <string name="preferences_colored_player">Changer la couleur de l’écran de lecture selon l’illustration</string>
     <string name="preferences_dark_theme">Thème sombre</string>
     <string name="preferences_dark_theme_dark">Sombre</string>
     <string name="preferences_dark_theme_light">Clair</string>
@@ -161,8 +161,8 @@
     <string name="preferences_folder_picker_dialog_title">Sélectionnez le dossier</string>
     <string name="preferences_folder_picker_dialog_up">Haut</string>
     <string name="preferences_folder_tab_root">Fichier racine</string>
-    <string name="preferences_grant_images_permission">Accorder l'autorisation de lire les images</string>
-    <string name="preferences_grant_images_permission_subtitle">Uniquement si les illustrations externes ne s'affichent pas correctement</string>
+    <string name="preferences_grant_images_permission">Accorder l’autorisation de lire les images</string>
+    <string name="preferences_grant_images_permission_subtitle">Uniquement si les illustrations externes ne s’affichent pas correctement</string>
     <string name="preferences_high_res_artwork">Illustrations en haute résolution</string>
     <string name="preferences_high_res_artwork_always">Toujours</string>
     <string name="preferences_high_res_artwork_large_only">Seulement pour les grandes images</string>
@@ -170,38 +170,38 @@
     <string name="preferences_high_res_artwork_player_only">Seulement dans le lecteur</string>
     <string name="preferences_indexing">Indexation</string>
     <string name="preferences_indexing_advanced_metadata_extraction">Extraction des métadonnées avancée</string>
-    <string name="preferences_indexing_advanced_metadata_extraction_subtitle">Lis tous les tags et les paroles intégrées, mais est très lent. S'applique après un scan manuel.</string>
+    <string name="preferences_indexing_advanced_metadata_extraction_subtitle">Lis tous les tags et les paroles intégrées, mais est très lent. S’applique après un scan manuel.</string>
     <string name="preferences_indexing_always_rescan_mediastore">Toujours rescanner MediaStore</string>
     <string name="preferences_indexing_always_rescan_mediastore_subtitle">Activer si les nouveaux fichiers ne sont constamment pas détectés</string>
-    <string name="preferences_indexing_artist_separator_exceptions">Séparateurs d'artistes en exception</string>
-    <string name="preferences_indexing_artist_separator_exceptions_subtitle">{0, plural, one {# exception} many {# d'exceptions} other {# exceptions}}</string>
-    <string name="preferences_indexing_artist_separators">Séparateurs d'artistes</string>
+    <string name="preferences_indexing_artist_separator_exceptions">Séparateurs d’artistes en exception</string>
+    <string name="preferences_indexing_artist_separator_exceptions_subtitle">{0, plural, one {# exception} many {# d’exceptions} other {# exceptions}}</string>
+    <string name="preferences_indexing_artist_separators">Séparateurs d’artistes</string>
     <string name="preferences_indexing_artist_separators_subtitle">{0, plural, one {# séparateur} many {# de séparateurs} other {# séparateurs}}</string>
     <string name="preferences_indexing_blacklist">Liste de blocage</string>
     <string name="preferences_indexing_blacklist_subtitle">{0, plural, one {# règle} many {# de règles} other {# règles}}, {1, plural, one {# piste filtrée} many {# de pistes filtrées} other {# pistes filtrées}}</string>
     <string name="preferences_indexing_dialog_input_placeholder">Ajouter une règle</string>
     <string name="preferences_indexing_dialog_match_count">{0, plural, one {# piste correspond} many {# de pistes correspondent} other {# pistes correspondent}} à cette règle</string>
-    <string name="preferences_indexing_disable_artwork_color_extraction">Désactiver l'extraction des couleurs depuis l'illustration</string>
+    <string name="preferences_indexing_disable_artwork_color_extraction">Désactiver l’extraction des couleurs depuis l’illustration</string>
     <string name="preferences_indexing_disable_artwork_color_extraction_subtitle">Peut rendre le scan plus rapide</string>
     <string name="preferences_indexing_genre_separator_exceptions">Séparateurs de genre en exception</string>
-    <string name="preferences_indexing_genre_separator_exceptions_subtitle">{0, plural, one {# exception} many {# d'exceptions} other {# exceptions}}</string>
+    <string name="preferences_indexing_genre_separator_exceptions_subtitle">{0, plural, one {# exception} many {# d’exceptions} other {# exceptions}}</string>
     <string name="preferences_indexing_genre_separators">Séparateurs de genre</string>
     <string name="preferences_indexing_genre_separators_subtitle">{0, plural, one {# séparateur} many {# de séparateurs} other {# séparateurs}}</string>
-    <string name="preferences_indexing_help">Aide à l'indexation</string>
-    <string name="preferences_indexing_help_artist_separator_exceptions_body">Ces chaînes de caractères seront exempt de la sépatation susmentionnée. Par exemple, ajouter “A &amp; B” fera en sorte que “A &amp; B” soit reconnu·e en tant qu'un·e seul·e artiste dans tous les cas.</string>
+    <string name="preferences_indexing_help">Aide à l’indexation</string>
+    <string name="preferences_indexing_help_artist_separator_exceptions_body">Ces chaînes de caractères seront exempt de la sépatation susmentionnée. Par exemple, ajouter “A &amp; B” fera en sorte que “A &amp; B” soit reconnu·e en tant qu’un·e seul·e artiste dans tous les cas.</string>
     <string name="preferences_indexing_help_artist_separator_exceptions_title">Artist separator exceptions</string>
     <string name="preferences_indexing_help_artist_separators_body">Artist metadata will be split by these strings. For example, adding “&amp;” will cause “A &amp; B” to be recognized as two artists, “A” and “B”.</string>
-    <string name="preferences_indexing_help_artist_separators_title">Séparateurs d'artistes</string>
+    <string name="preferences_indexing_help_artist_separators_title">Séparateurs d’artistes</string>
     <string name="preferences_indexing_help_blacklist_body">Les pistes correspondant à la liste de blocage seront cachées.</string>
     <string name="preferences_indexing_help_blacklist_title">Liste de blocage</string>
-    <string name="preferences_indexing_help_syntax_body">Les règles de filtrage sont des regex (expressions régulières) insensibles à la casse, qui correspondent à une partie du chemin absolu d'une piste.\n\nPour voir le chemin absolu d'une piste, appuyez sur le bouton "Détails" dans son menu.\n\nExemples:\n\n• Filtrer tous les fichiers du dossier "Exemple":\n/Exemple/\n\n• Filtrer tous les fichiers MP3:\n\\.mp3$\n\n• Filtrer tous les fichiers MP3 du dossier "Exemple":\n/Exemple.*\\.mp3$\n\n• Filtrer tous les fichiers du dossier "Exemple", mais pas ceux du dossier "exemple" (sensible à la casse):\n(?-i)/Exemple/</string>
-    <string name="preferences_indexing_help_syntax_title">Syntaxe des listes de blocage et d'autorisation</string>
-    <string name="preferences_indexing_help_whitelist_body">Les pistes correspondant à la fois à la liste de blocage et à la liste d'autorisation ne seront pas cachées.\n\nPour n'afficher que les pistes correspondant à la liste d'autorisation, ajoutez une règle générale à la liste de blocage\n^</string>
-    <string name="preferences_indexing_help_whitelist_title">Liste d'autorisation</string>
-    <string name="preferences_indexing_invalid_regex">Ce n'est pas une expession régulière valide</string>
+    <string name="preferences_indexing_help_syntax_body">Les règles de filtrage sont des regex (expressions régulières) insensibles à la casse, qui correspondent à une partie du chemin absolu d’une piste.\n\nPour voir le chemin absolu d’une piste, appuyez sur le bouton "Détails" dans son menu.\n\nExemples:\n\n• Filtrer tous les fichiers du dossier "Exemple":\n/Exemple/\n\n• Filtrer tous les fichiers MP3:\n\\.mp3$\n\n• Filtrer tous les fichiers MP3 du dossier "Exemple":\n/Exemple.*\\.mp3$\n\n• Filtrer tous les fichiers du dossier "Exemple", mais pas ceux du dossier "exemple" (sensible à la casse):\n(?-i)/Exemple/</string>
+    <string name="preferences_indexing_help_syntax_title">Syntaxe des listes de blocage et d’autorisation</string>
+    <string name="preferences_indexing_help_whitelist_body">Les pistes correspondant à la fois à la liste de blocage et à la liste d’autorisation ne seront pas cachées.\n\nPour n’afficher que les pistes correspondant à la liste d’autorisation, ajoutez une règle générale à la liste de blocage\n^</string>
+    <string name="preferences_indexing_help_whitelist_title">Liste d’autorisation</string>
+    <string name="preferences_indexing_invalid_regex">Ce n’est pas une expession régulière valide</string>
     <string name="preferences_indexing_rescan_footnote">Effectuez un rescan manuel afin que les changements prennent effet</string>
     <string name="preferences_indexing_select_folder">Sélectionner un dossier</string>
-    <string name="preferences_indexing_whitelist">Liste d'autorisation</string>
+    <string name="preferences_indexing_whitelist">Liste d’autorisation</string>
     <string name="preferences_indexing_whitelist_subtitle">{0, plural, one {# règle} many {# de règles} other {# règles}}</string>
     <string name="preferences_interface">Interface</string>
     <string name="preferences_library_track_click_action">Action lors du clic sur une piste</string>
@@ -211,12 +211,12 @@
     <string name="preferences_lyrics_display_default">Par défaut</string>
     <string name="preferences_lyrics_display_disabled">Désactivé</string>
     <string name="preferences_lyrics_display_two_lines">Deux lignes</string>
-    <string name="preferences_lyrics_scaling">Mise à l'échelle des paroles</string>
+    <string name="preferences_lyrics_scaling">Mise à l’échelle des paroles</string>
     <string name="preferences_multiplier_number">{0, number, ::.00}×</string>
     <string name="preferences_pause_on_focus_loss">Mettre en pause lors de la perte du focus audio</string>
-    <string name="preferences_play_on_output_device_connection">Jouer dès la connection d'un casque audio</string>
+    <string name="preferences_play_on_output_device_connection">Jouer dès la connection d’un casque audio</string>
     <string name="preferences_playback">Lecture</string>
-    <string name="preferences_player_screen_layout">Affichage de l'écran de lecture</string>
+    <string name="preferences_player_screen_layout">Affichage de l’écran de lecture</string>
     <string name="preferences_player_screen_layout_default">Par défaut</string>
     <string name="preferences_player_screen_layout_no_queue">Sans queue</string>
     <string name="preferences_playlist_io_settings">Paramètres entrée/sortie des playlists</string>
@@ -224,13 +224,13 @@
     <string name="preferences_playlist_io_settings_export_relative_base">Base des chemins relatifs</string>
     <string name="preferences_playlist_io_settings_export_relative_base_hint">Indice: le dossier musique par défaut est {0}</string>
     <string name="preferences_playlist_io_settings_ignore_case">Ignorer la casse des noms de fichier</string>
-    <string name="preferences_playlist_io_settings_ignore_location">Ignorer l'emplacement des fichiers</string>
+    <string name="preferences_playlist_io_settings_ignore_location">Ignorer l’emplacement des fichiers</string>
     <string name="preferences_playlist_io_settings_remove_invalid">Retirer les pistes non trouvées</string>
     <string name="preferences_pure_background_color">Arrière-plan noir/blanc pur</string>
     <string name="preferences_reshuffle_on_repeat">Lecture aléatoire à chaque répétition (expérimental)</string>
     <string name="preferences_scan_progress_timeout">Show scan progress after</string>
     <string name="preferences_scrollable_tabs">Faire défiler les onglets</string>
-    <string name="preferences_shape">Forme de l'illustration</string>
+    <string name="preferences_shape">Forme de l’illustration</string>
     <string name="preferences_shape_circle">Cercle</string>
     <string name="preferences_shape_rounded_square">Carré arrondi</string>
     <string name="preferences_shape_square">Carré</string>
@@ -238,12 +238,12 @@
     <string name="preferences_sorting_language_system">Langue système</string>
     <string name="preferences_swipe_threshold">Seuil du glissement</string>
     <string name="preferences_swipe_to_remove_from_queue">Faire glisser pour retirer de la queue</string>
-    <string name="preferences_system_equalizer">Ouvrir l'égaliseur du système</string>
+    <string name="preferences_system_equalizer">Ouvrir l’égaliseur du système</string>
     <string name="preferences_tab_style">Style des onglets</string>
     <string name="preferences_tab_style_icon_only">Incônes uniquement</string>
     <string name="preferences_tab_style_text_and_icon">Texte et icônes</string>
     <string name="preferences_tab_style_text_only">Texte uniquement</string>
-    <string name="preferences_tabs">Onglets de l'écran d'accueil</string>
+    <string name="preferences_tabs">Onglets de l’écran d’accueil</string>
     <!-- Symbol used to separate list of enabled tabs in preferences screen -->
     <string name="preferences_tabs_separator">", "</string>
     <string name="preferences_text_encoding">Encodage du texte</string>
@@ -259,13 +259,13 @@
     <string name="preferences_theme_color_source_material_you">Material You</string>
     <string name="preferences_third_party_licenses">Licenses tierces</string>
     <string name="preferences_treat_embedded_lyrics_as_lrc">Traiter les paroles intégrées en tant que LRC</string>
-    <string name="preferences_ui_scaling">Dimentions de l'interface</string>
+    <string name="preferences_ui_scaling">Dimentions de l’interface</string>
     <string name="preferences_version">Version</string>
     <string name="preferences_website">Site internet</string>
     <string name="preferences_widget_accent_background">Couleur en arrière plan</string>
     <string name="preferences_widget_artwork_background">Illustration en arrière plan</string>
-    <string name="preferences_widget_artwork_resolution_limit">Résolution limite de l'illustration</string>
-    <string name="preferences_widget_artwork_resolution_limit_subtitle">Baisser si le widget plante; augmenter pour avoir une meilleure qualité d'image</string>
+    <string name="preferences_widget_artwork_resolution_limit">Résolution limite de l’illustration</string>
+    <string name="preferences_widget_artwork_resolution_limit_subtitle">Baisser si le widget plante; augmenter pour avoir une meilleure qualité d’image</string>
     <string name="preferences_widget_color">Couleur</string>
     <string name="preferences_widget_dark_theme">Thème foncé</string>
     <string name="preferences_widget_layout">Disposition</string>
@@ -291,12 +291,12 @@
     <string name="snackbar_scanning_library">Scan de la bibliothèque ({0}/{1})</string>
 
     <string name="sorting_album">Album</string>
-    <string name="sorting_album_artist">Artiste de l'album</string>
-    <string name="sorting_album_count">Nombre d'albums</string>
+    <string name="sorting_album_artist">Artiste de l’album</string>
+    <string name="sorting_album_count">Nombre d’albums</string>
     <string name="sorting_artist">Artiste</string>
     <string name="sorting_ascending">Ascendant</string>
     <string name="sorting_custom">Personnalisé</string>
-    <string name="sorting_date_added">Date d'ajout</string>
+    <string name="sorting_date_added">Date d’ajout</string>
     <string name="sorting_date_modified">Date de dernière modification</string>
     <string name="sorting_descending">Descendant</string>
     <string name="sorting_file_name">Nom du fichier</string>
@@ -311,7 +311,7 @@
     <!-- Symbol used to separate related info placed on the same line -->
     <string name="symbol_separator">" · "</string>
 
-    <string name="tab_album_artists">Artistes de l'album</string>
+    <string name="tab_album_artists">Artistes de l’album</string>
     <string name="tab_albums">Albums</string>
     <string name="tab_artists">Artistes</string>
     <string name="tab_folders">Fichiers</string>
@@ -319,9 +319,9 @@
     <string name="tab_playlists">Playlists</string>
     <string name="tab_tracks">Pistes</string>
 
-    <string name="toast_cant_open_system_equalizer">L'égaliseur système ne peut pas être ouvert</string>
+    <string name="toast_cant_open_system_equalizer">L’égaliseur système ne peut pas être ouvert</string>
     <string name="toast_crash_saved_to">Journal de crash sauvegardé à {0}</string>
-    <string name="toast_dump_logcat_failed">Échec de l'enregistrement du journal: {0}</string>
+    <string name="toast_dump_logcat_failed">Échec de l’enregistrement du journal: {0}</string>
     <string name="toast_dump_logcat_success">Journal enregistré</string>
     <string name="toast_playlist_exported">{0, plural, one {# playlist exportée} many {# de playlists exportées} other {# playlists exportées}}</string>
     <string name="toast_playlist_exported_with_failure">{0, plural, one {# playlist exportée} many {# de playlists exportées} other {# playlists exportées}}, {1, plural, other {#}} en échec</string>
@@ -335,17 +335,17 @@
     <string name="track_add_to_queue">Ajouter à la queue</string>
     <string name="track_details">Détails</string>
     <string name="track_details_album">Album</string>
-    <string name="track_details_album_artist">Artiste de l'album</string>
+    <string name="track_details_album_artist">Artiste de l’album</string>
     <string name="track_details_artist">Artiste</string>
     <string name="track_details_bit_depth">Profondeur des bits</string>
     <string name="track_details_bit_rate">Débit binaire</string>
     <string name="track_details_comment">Commentaire</string>
-    <string name="track_details_date_added">Date d'ajout</string>
+    <string name="track_details_date_added">Date d’ajout</string>
     <string name="track_details_date_modified">Date de dernière modification</string>
     <string name="track_details_format">Format</string>
     <string name="track_details_genre">Genre</string>
     <string name="track_details_path">Chemin</string>
-    <string name="track_details_sample_rate">Taux d'échantillonnage</string>
+    <string name="track_details_sample_rate">Taux d’échantillonnage</string>
     <string name="track_details_size">Taille</string>
     <string name="track_details_title">Titre</string>
     <string name="track_details_track_number">Numéro de la piste</string>
@@ -361,8 +361,8 @@
     <string name="track_play_next">Jouer ensuite</string>
     <string name="track_remove_from_queue">Retirer de la queue</string>
     <string name="track_share">Partager</string>
-    <string name="track_view_album">Voir l'album “{0}”</string>
-    <string name="track_view_artist">Voir l'artiste “{0}”</string>
+    <string name="track_view_album">Voir l’album “{0}”</string>
+    <string name="track_view_artist">Voir l’artiste “{0}”</string>
 
     <!-- Settings of how the list is displayed. Unrelated to "view album" etc. -->
     <string name="view_settings">Voir les paramètres</string>
