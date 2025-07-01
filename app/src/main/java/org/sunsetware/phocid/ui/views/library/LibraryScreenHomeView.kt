@@ -402,7 +402,9 @@ class LibraryScreenHomeViewState(
                 ?: libraryIndex.folders[libraryIndex.defaultRootFolder]!!
         val (folders, tracks) =
             if (searchQuery.isNotEmpty()) {
-                rootFolder.childItemsRecursive(libraryIndex.folders)
+                libraryIndex.folders[libraryIndex.defaultRootFolder]!!.childItemsRecursive(
+                    libraryIndex.folders
+                )
             } else {
                 (rootFolder.childFolders.map { libraryIndex.folders[it]!! } to
                     rootFolder.childTracks)
