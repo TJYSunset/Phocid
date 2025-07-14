@@ -4,60 +4,46 @@
     <string name="commons_automatic">Automatique</string>
     <string name="commons_back">Retour</string>
     <string name="commons_cancel">Annuler</string>
-    <!-- Verb, "remove everything" -->
     <string name="commons_clear">Vider</string>
     <string name="commons_close">Fermer</string>
     <string name="commons_error">Erreur</string>
     <string name="commons_export">Exporter</string>
     <string name="commons_import">Importer</string>
-    <!-- Alt text of overflow menus -->
     <string name="commons_more">Plus</string>
     <string name="commons_ok">OK</string>
     <string name="commons_quit">Quitter</string>
     <string name="commons_remove">Retirer</string>
     <string name="commons_reset">Réinitialiser</string>
-    <!-- Adjective, not noun -->
     <string name="commons_selected">Sélectionné</string>
     <string name="commons_sync">Synchroniser</string>
-
     <string name="count_album">{0, plural, one {# album} many {# d’albums} other {# albums}}</string>
     <string name="count_folder">{0, plural, one {# dossier} many {# de dossiers} other {# dossiers}}</string>
     <string name="count_invalid_track">{0, plural, one {# piste non valide} many {# de pistes non valides} other {# pistes non valides}}</string>
     <string name="count_track">{0, plural, one {# piste} many {# de pistes} other {# pistes}}</string>
-
     <string name="duration_hours_minutes_seconds">{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="duration_minutes_seconds">{0, number, ::00}:{1, number, ::00}</string>
     <string name="duration_negative_hours_minutes_seconds">-{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="duration_negative_minutes_seconds">-{0, number, ::00}:{1, number, ::00}</string>
-
     <string name="library_rescan">Scanner la bibliothèque à nouveau</string>
     <string name="library_view_root_folder">Voir le fichier racine de toutes les pistes</string>
-
     <string name="list_empty">Vide</string>
     <string name="list_move_down">Déplacer vers le bas</string>
     <string name="list_move_up">Déplacer vers le haut</string>
-    <!-- Alt text for the check mark displayed on selected items -->
     <string name="list_multi_select_item_selected">Sélectionné</string>
     <string name="list_multi_select_select_all">Tout sélectionner</string>
     <string name="list_multi_select_select_inverse">Sélection inversée</string>
     <string name="list_multi_select_title">{0, plural, one {# élément sélectionné} many {# d’éléments sélectionnés} other {# éléments sélectionnés}}</string>
-
-    <!-- The IETF language tag of the current translation, used for formatting -->
     <string name="locale">fr</string>
-
     <string name="permission_dialog_body">L’application a besoin d’obtenir l’autorisation de lire vos fichiers audio pour fonctionner. Veuillez accorder l’autorisation pour continuer.</string>
     <string name="permission_dialog_grant">Accorder</string>
     <string name="permission_dialog_title">Autorisation exigée</string>
-
     <string name="player_clear_queue">Vider la file</string>
     <string name="player_lyrics">Paroles</string>
     <string name="player_lyrics_auto_scroll">Défilement automatique des paroles</string>
     <string name="player_next">Suivant</string>
     <string name="player_no_lyrics">Pas de paroles</string>
     <string name="player_now_playing">Lecture</string>
-    <!-- Alt text of the "favorite" button next to the currently playing track -->
     <string name="player_now_playing_add_favorites">Ajouter cette piste aux favoris</string>
-    <!-- Alt text of the "favorite" button next to the currently playing track -->
     <string name="player_now_playing_remove_favorites">Retirer cette piste des favoris</string>
     <string name="player_pause">Pause</string>
     <string name="player_play">Jouer</string>
@@ -79,7 +65,6 @@
     <string name="player_timer_finish_last_track">Finir la dernière piste</string>
     <string name="player_timer_set">Programmer</string>
     <string name="player_up_next">Prochaine piste</string>
-
     <string name="playlist_add_to">Ajouter à la playlist</string>
     <string name="playlist_delete">Supprimer la playlist</string>
     <string name="playlist_delete_multiple_dialog_body">{0, plural, one {# playlist sera supprimée} many {# de playlists seront supprimées} other {# playlists seront supprimées}} de façon permanente</string>
@@ -130,19 +115,15 @@
     <string name="playlist_sort">Trier la playlist</string>
     <string name="playlist_sort_screen_title">Trier la playlist “{0}”</string>
     <string name="playlist_special_favorites">Favoris</string>
-
     <string name="preferences">Préférences</string>
     <string name="preferences_about">À propos</string>
     <string name="preferences_always_show_hint_on_scroll">Toujours montrer l’onglet lors du défilement</string>
     <string name="preferences_artwork_color">Extraction des couleurs à partir de l’illustration</string>
-    <!-- "Muted" as in opposite of vibrant -->
     <string name="preferences_artwork_color_muted_first">Préférer des couleurs atténuées</string>
-    <!-- "Muted" as in opposite of vibrant. This option will forcefully convert vibrant colors to muted ones. -->
     <string name="preferences_artwork_color_muted_only">N’utiliser que des couleurs atténuées</string>
     <string name="preferences_artwork_color_vibrant_first">Préférer des couleurs vives</string>
     <string name="preferences_audio_offloading">Déchargement audio</string>
     <string name="preferences_audio_offloading_subtitle">Réduit l’usage de la batterie, mais peut causer des erreurs durant la lecture.</string>
-    <!-- "Cards" are rectangular list items displayed on the main screen. -->
     <string name="preferences_colored_cards">Cartes de couleur depuis l’illustration</string>
     <string name="preferences_colored_global_theme">Changer la couleur du thème selon l’illustration</string>
     <string name="preferences_colored_player">Changer la couleur de l’écran de lecture selon l’illustration</string>
@@ -150,7 +131,6 @@
     <string name="preferences_dark_theme_dark">Sombre</string>
     <string name="preferences_dark_theme_light">Clair</string>
     <string name="preferences_dark_theme_system">Suivre le système</string>
-    <string name="preferences_data">Données</string>
     <string name="preferences_dump_logcat">Copie des journaux (dump logcat)</string>
     <string name="preferences_dump_logcat_subtitle">Chemin de sortie: {0}</string>
     <string name="preferences_folder_picker_dialog_title">Sélectionnez le dossier</string>
@@ -239,11 +219,8 @@
     <string name="preferences_tab_style_text_and_icon">Texte et icônes</string>
     <string name="preferences_tab_style_text_only">Texte uniquement</string>
     <string name="preferences_tabs">Onglets de l’écran d’accueil</string>
-    <!-- Symbol used to separate list of enabled tabs in preferences screen -->
-    <string name="preferences_tabs_separator">", "</string>
     <string name="preferences_text_encoding">Encodage du texte</string>
     <string name="preferences_text_encoding_auto_detect">Détection automatique</string>
-    <string name="preferences_theme">Thème</string>
     <string name="preferences_theme_color">Couleur du thème</string>
     <string name="preferences_theme_color_chroma">Saturation</string>
     <string name="preferences_theme_color_chroma_number">{0}%</string>
@@ -271,20 +248,16 @@
     <string name="preferences_widget_layout_side_artwork_large">Illustration sur le côté (grand)</string>
     <string name="preferences_widget_layout_small">Petit</string>
     <string name="preferences_widget_settings">Paramètres du widget</string>
-
     <string name="search">Chercher</string>
     <string name="search_in_list">Rechercher dans la liste</string>
     <string name="search_next">Résultat suivant</string>
     <string name="search_position_indicator">{0}/{1}</string>
     <string name="search_previous">Résultat précédent</string>
-
     <string name="shortcut_continue_long_label">Reprendre la dernière session</string>
     <string name="shortcut_continue_short_label">Continuer</string>
     <string name="shortcut_shuffle_long_label">Lecture aléatoire de tous les morceaux</string>
     <string name="shortcut_shuffle_short_label">Lecture aléatoire</string>
-
     <string name="snackbar_scanning_library">Scan de la bibliothèque ({0}/{1})</string>
-
     <string name="sorting_album">Album</string>
     <string name="sorting_album_artist">Artiste de l’album</string>
     <string name="sorting_album_count">Nombre d’albums</string>
@@ -300,12 +273,8 @@
     <string name="sorting_title">Titre</string>
     <string name="sorting_track_count">Nombre de pistes</string>
     <string name="sorting_year">Année</string>
-
-    <!-- Symbol used to separate multiple artists of a single track -->
     <string name="symbol_conjunction">" &amp; "</string>
-    <!-- Symbol used to separate related info placed on the same line -->
     <string name="symbol_separator">" · "</string>
-
     <string name="tab_album_artists">Artistes de l’album</string>
     <string name="tab_albums">Albums</string>
     <string name="tab_artists">Artistes</string>
@@ -313,7 +282,6 @@
     <string name="tab_genres">Genres</string>
     <string name="tab_playlists">Playlists</string>
     <string name="tab_tracks">Pistes</string>
-
     <string name="toast_cant_open_system_equalizer">L’égaliseur système ne peut pas être ouvert</string>
     <string name="toast_crash_saved_to">Journal de crash sauvegardé à {0}</string>
     <string name="toast_dump_logcat_failed">Échec de l’enregistrement du journal: {0}</string>
@@ -326,7 +294,6 @@
     <string name="toast_timer_set">La lecture se mettra en apuse après ~{0, plural, one {# minute} many {# de minutes} other {# minutes}}</string>
     <string name="toast_track_queued">{0, plural, one {# piste ajoutée} many {# de pistes ajoutées} other {# pistes ajoutées}} à la queue</string>
     <string name="toast_view_intent_not_found">Aucun fichier ne correspond</string>
-
     <string name="track_add_to_queue">Ajouter à la queue</string>
     <string name="track_details">Détails</string>
     <string name="track_details_album">Album</string>
@@ -358,8 +325,6 @@
     <string name="track_share">Partager</string>
     <string name="track_view_album">Voir l’album “{0}”</string>
     <string name="track_view_artist">Voir l’artiste “{0}”</string>
-
-    <!-- Settings of how the list is displayed. Unrelated to "view album" etc. -->
     <string name="view_settings">Voir les paramètres</string>
     <string name="view_settings_grid_size">Taille de la grille</string>
     <string name="view_settings_sort_by">Trier</string>

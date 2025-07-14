@@ -4,60 +4,46 @@
     <string name="commons_automatic">自動</string>
     <string name="commons_back">返回</string>
     <string name="commons_cancel">取消</string>
-    <!-- Verb, "remove everything" -->
     <string name="commons_clear">清除</string>
     <string name="commons_close">關閉</string>
     <string name="commons_error">錯誤</string>
     <string name="commons_export">匯出</string>
     <string name="commons_import">匯入</string>
-    <!-- Alt text of overflow menus -->
     <string name="commons_more">更多</string>
     <string name="commons_ok">確定</string>
     <string name="commons_quit">離開</string>
     <string name="commons_remove">移除</string>
     <string name="commons_reset">重設</string>
-    <!-- Adjective, not noun -->
     <string name="commons_selected">已選擇</string>
     <string name="commons_sync">同步</string>
-
     <string name="count_album">{0, plural, other {# 張專輯}}</string>
     <string name="count_folder">{0, plural, other {# 個資料夾}}</string>
     <string name="count_invalid_track">{0, plural, other {# 首無效曲目}}</string>
     <string name="count_track">{0, plural, other {# 首曲目}}</string>
-
     <string name="duration_hours_minutes_seconds">{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="duration_minutes_seconds">{0, number, ::00}:{1, number, ::00}</string>
     <string name="duration_negative_hours_minutes_seconds">-{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="duration_negative_minutes_seconds">-{0, number, ::00}:{1, number, ::00}</string>
-
     <string name="library_rescan">重新掃描音樂庫</string>
     <string name="library_view_root_folder">檢視所有曲目的根目錄</string>
-
     <string name="list_empty">空白</string>
     <string name="list_move_down">下移</string>
     <string name="list_move_up">上移</string>
-    <!-- Alt text for the check mark displayed on selected items -->
     <string name="list_multi_select_item_selected">已選</string>
     <string name="list_multi_select_select_all">全部選取</string>
     <string name="list_multi_select_select_inverse">反轉選取</string>
     <string name="list_multi_select_title">已選 {0, plural, other {#}} 個項目</string>
-
-    <!-- The IETF language tag of the current translation, used for formatting -->
     <string name="locale">zh-Hant</string>
-
     <string name="permission_dialog_body">本應用程式需要有權限讀取您的音樂與音訊檔案。請允許使用以繼續。</string>
     <string name="permission_dialog_grant">允許</string>
     <string name="permission_dialog_title">需要權限</string>
-
     <string name="player_clear_queue">清除待播清單</string>
     <string name="player_lyrics">歌詞</string>
     <string name="player_lyrics_auto_scroll">自動捲動歌詞</string>
     <string name="player_next">下一首</string>
     <string name="player_no_lyrics">沒有歌詞</string>
     <string name="player_now_playing">現正播放</string>
-    <!-- Alt text of the "favorite" button next to the currently playing track -->
     <string name="player_now_playing_add_favorites">將現正播放加入收藏</string>
-    <!-- Alt text of the "favorite" button next to the currently playing track -->
     <string name="player_now_playing_remove_favorites">將現正播放從收藏中移除</string>
     <string name="player_pause">暫停</string>
     <string name="player_play">播放</string>
@@ -79,7 +65,6 @@
     <string name="player_timer_finish_last_track">結束最後一首曲目</string>
     <string name="player_timer_set">設定</string>
     <string name="player_up_next">即將播放</string>
-
     <string name="playlist_add_to">加入播放清單</string>
     <string name="playlist_delete">刪除播放清單</string>
     <string name="playlist_delete_multiple_dialog_body">{0, plural, other {#}} 個播放清單會被永久刪除</string>
@@ -130,19 +115,15 @@
     <string name="playlist_sort">排序播放清單</string>
     <string name="playlist_sort_screen_title">排序播放清單「{0}」</string>
     <string name="playlist_special_favorites">收藏</string>
-
     <string name="preferences">偏好設定</string>
     <string name="preferences_about">關於</string>
     <string name="preferences_always_show_hint_on_scroll">捲動時始終顯示索引</string>
     <string name="preferences_artwork_color">封面色彩取出</string>
-    <!-- "Muted" as in opposite of vibrant -->
     <string name="preferences_artwork_color_muted_first">傾向淡色</string>
-    <!-- "Muted" as in opposite of vibrant. This option will forcefully convert vibrant colors to muted ones. -->
     <string name="preferences_artwork_color_muted_only">僅用淡色</string>
     <string name="preferences_artwork_color_vibrant_first">傾向鮮豔</string>
     <string name="preferences_audio_offloading">音訊硬體加速</string>
     <string name="preferences_audio_offloading_subtitle">會降低電池用量，但可能會造成播放問題。</string>
-    <!-- "Cards" are rectangular list items displayed on the main screen. -->
     <string name="preferences_colored_cards">依封面色彩為卡片上色</string>
     <string name="preferences_colored_global_theme">依封面色彩變更主題色</string>
     <string name="preferences_colored_player">依封面色彩變更播放器畫面</string>
@@ -150,7 +131,6 @@
     <string name="preferences_dark_theme_dark">深色</string>
     <string name="preferences_dark_theme_light">淺色</string>
     <string name="preferences_dark_theme_system">跟隨系統</string>
-    <string name="preferences_data">資料</string>
     <string name="preferences_dump_logcat">轉儲 Logcat</string>
     <string name="preferences_dump_logcat_subtitle">儲存路徑：{0}</string>
     <string name="preferences_folder_picker_dialog_title">選擇資料夾</string>
@@ -163,6 +143,7 @@
     <string name="preferences_high_res_artwork_large_only">僅大號封面</string>
     <string name="preferences_high_res_artwork_never">從不</string>
     <string name="preferences_high_res_artwork_player_only">僅播放器</string>
+    <string name="preferences_home_screen">主頁</string>
     <string name="preferences_indexing">索引</string>
     <string name="preferences_indexing_advanced_metadata_extraction">進階中繼資料取出</string>
     <string name="preferences_indexing_advanced_metadata_extraction_subtitle">讀取更多標籤與內嵌歌詞，但非常慢。會在手動重新掃描時套用。</string>
@@ -207,12 +188,14 @@
     <string name="preferences_lyrics_display_disabled">已停用</string>
     <string name="preferences_lyrics_display_two_lines">兩行</string>
     <string name="preferences_lyrics_scaling">歌詞縮放比例</string>
+    <string name="preferences_miscellaneous">雜項</string>
     <string name="preferences_multiplier_number">{0, number, ::.00}×</string>
     <string name="preferences_notification_button_favorite">收藏</string>
     <string name="preferences_notification_button_repeat">重複</string>
     <string name="preferences_notification_button_shuffle">隨機</string>
     <string name="preferences_notification_buttons">通知按鈕</string>
     <string name="preferences_notification_buttons_none">無</string>
+    <string name="preferences_now_playing">現正播放</string>
     <string name="preferences_pause_on_focus_loss">無音訊焦點時暫停</string>
     <string name="preferences_play_on_output_device_connection">連線耳機時播放</string>
     <string name="preferences_playback">播放</string>
@@ -244,11 +227,8 @@
     <string name="preferences_tab_style_text_and_icon">文字與圖示</string>
     <string name="preferences_tab_style_text_only">僅文字</string>
     <string name="preferences_tabs">主頁分頁</string>
-    <!-- Symbol used to separate list of enabled tabs in preferences screen -->
-    <string name="preferences_tabs_separator">, </string>
     <string name="preferences_text_encoding">文字編碼</string>
     <string name="preferences_text_encoding_auto_detect">自動偵測</string>
-    <string name="preferences_theme">主題</string>
     <string name="preferences_theme_color">主題色</string>
     <string name="preferences_theme_color_chroma">色度</string>
     <string name="preferences_theme_color_chroma_number">{0}%</string>
@@ -276,20 +256,16 @@
     <string name="preferences_widget_layout_side_artwork_large">側邊封面（大）</string>
     <string name="preferences_widget_layout_small">小</string>
     <string name="preferences_widget_settings">小工具設置</string>
-
     <string name="search">搜尋</string>
     <string name="search_in_list">在清單中搜尋</string>
     <string name="search_next">下一個結果</string>
     <string name="search_position_indicator">{0}/{1}</string>
     <string name="search_previous">上一個結果</string>
-
     <string name="shortcut_continue_long_label">從上次播放位置繼續</string>
     <string name="shortcut_continue_short_label">繼續播放</string>
     <string name="shortcut_shuffle_long_label">隨機播放所有曲目</string>
     <string name="shortcut_shuffle_short_label">隨機播放全部</string>
-
     <string name="snackbar_scanning_library">正在掃描音樂庫 ({0}/{1})</string>
-
     <string name="sorting_album">專輯</string>
     <string name="sorting_album_artist">專輯藝人</string>
     <string name="sorting_album_count">專輯數量</string>
@@ -305,12 +281,8 @@
     <string name="sorting_title">標題</string>
     <string name="sorting_track_count">曲目數量</string>
     <string name="sorting_year">年份</string>
-
-    <!-- Symbol used to separate multiple artists of a single track -->
     <string name="symbol_conjunction">" &amp; "</string>
-    <!-- Symbol used to separate related info placed on the same line -->
     <string name="symbol_separator">" · "</string>
-
     <string name="tab_album_artists">專輯藝人</string>
     <string name="tab_albums">專輯</string>
     <string name="tab_artists">藝人</string>
@@ -318,7 +290,6 @@
     <string name="tab_genres">曲風</string>
     <string name="tab_playlists">播放清單</string>
     <string name="tab_tracks">曲目</string>
-
     <string name="toast_cant_open_system_equalizer">無法開啟系統等化器</string>
     <string name="toast_crash_saved_to">崩潰日誌已儲存到 {0}</string>
     <string name="toast_dump_logcat_failed">轉儲失敗：{0}</string>
@@ -331,7 +302,6 @@
     <string name="toast_timer_set">播放會在約 {0, plural, other {#}} 分鐘後暫停</string>
     <string name="toast_track_queued">已將 {0, plural, other {#}} 首曲目加入待播清單</string>
     <string name="toast_view_intent_not_found">音樂庫中無對應檔案</string>
-
     <string name="track_add_to_queue">加入待播清單</string>
     <string name="track_details">詳細資料</string>
     <string name="track_details_album">專輯</string>
@@ -363,8 +333,6 @@
     <string name="track_share">分享</string>
     <string name="track_view_album">檢視專輯「{0}」</string>
     <string name="track_view_artist">檢視藝人「{0}」</string>
-
-    <!-- Settings of how the list is displayed. Unrelated to "view album" etc. -->
     <string name="view_settings">檢視設定</string>
     <string name="view_settings_grid_size">格線大小</string>
     <string name="view_settings_sort_by">排序方式</string>

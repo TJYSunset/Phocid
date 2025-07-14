@@ -16,20 +16,16 @@
     <string name="commons_reset">Zurücksetzen</string>
     <string name="commons_selected">Ausgewählt</string>
     <string name="commons_sync">Synchronisieren</string>
-
     <string name="count_album">{0, plural, one {# Album} other {# Alben}}</string>
     <string name="count_folder">{0, plural, one {# Ordner} other {# Ordner}}</string>
     <string name="count_invalid_track">{0, plural, one {# ungültiger Titel} other {# ungültige Titel}}</string>
     <string name="count_track">{0, plural, one {# Titel} other {# Titel}}</string>
-
     <string name="duration_hours_minutes_seconds">{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="duration_minutes_seconds">{0, number, ::00}:{1, number, ::00}</string>
     <string name="duration_negative_hours_minutes_seconds">-{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="duration_negative_minutes_seconds">-{0, number, ::00}:{1, number, ::00}</string>
-
     <string name="library_rescan">Bibliothek neu scannen</string>
     <string name="library_view_root_folder">Öffne Stamm-Ordner aller Titel</string>
-
     <string name="list_empty">Leer</string>
     <string name="list_move_down">Hinunterbewegen</string>
     <string name="list_move_up">Hinaufbewegen</string>
@@ -37,13 +33,10 @@
     <string name="list_multi_select_select_all">Alle auswählen</string>
     <string name="list_multi_select_select_inverse">Auswahl umkehren</string>
     <string name="list_multi_select_title">Ausgewählte(r) {0, plural, one {# Gegenstand} other {# Gegenstände}}</string>
-
     <string name="locale">de</string>
-
     <string name="permission_dialog_body">Lesezugriff auf deine Audiodateien ist zur Nutzung der App zwingend erforderlich. Erlauben um fortzufahren.</string>
     <string name="permission_dialog_grant">Erlauben</string>
     <string name="permission_dialog_title">Berechtigung erforderlich</string>
-
     <string name="player_clear_queue">Warteschlange leeren</string>
     <string name="player_lyrics">Lyrics</string>
     <string name="player_lyrics_auto_scroll">Lyrics automatisch scrollen</string>
@@ -72,7 +65,6 @@
     <string name="player_timer_finish_last_track">Letzten Titel beenden</string>
     <string name="player_timer_set">Einstellen</string>
     <string name="player_up_next">Als nächstes dran</string>
-
     <string name="playlist_add_to">Zu Playlist hinzufügen</string>
     <string name="playlist_delete">Playlist löschen</string>
     <string name="playlist_delete_multiple_dialog_body">{0, plural, one {# Playlist} other {# Playlisten}} wird/werden dauerhaft gelöscht</string>
@@ -123,7 +115,6 @@
     <string name="playlist_sort">Playlist sortieren</string>
     <string name="playlist_sort_screen_title">Playlist “{0}” sortieren</string>
     <string name="playlist_special_favorites">Favoriten</string>
-
     <string name="preferences">Einstellungen</string>
     <string name="preferences_about">Über</string>
     <string name="preferences_artwork_color">Farbe aus Coverbild extrahieren</string>
@@ -139,7 +130,6 @@
     <string name="preferences_dark_theme_dark">Dunkel</string>
     <string name="preferences_dark_theme_light">Hell</string>
     <string name="preferences_dark_theme_system">Systemeinstellungen folgen</string>
-    <string name="preferences_data">Daten</string>
     <string name="preferences_folder_picker_dialog_title">Order auswählen</string>
     <string name="preferences_folder_picker_dialog_up">Hinauf</string>
     <string name="preferences_folder_tab_root">Stammverzeichnis für Ordner</string>
@@ -230,10 +220,8 @@
     <string name="preferences_tab_style_text_and_icon">Text und Icon</string>
     <string name="preferences_tab_style_text_only">Nur Text</string>
     <string name="preferences_tabs">Startbildschirm-Tabs</string>
-    <string name="preferences_tabs_separator">", "</string>
     <string name="preferences_text_encoding">Textkodierung</string>
     <string name="preferences_text_encoding_auto_detect">Automatisch erkennen</string>
-    <string name="preferences_theme">Thema</string>
     <string name="preferences_theme_color">Themenfarbe</string>
     <string name="preferences_theme_color_chroma">Farbsättigung</string>
     <string name="preferences_theme_color_chroma_number">{0}%</string>
@@ -257,20 +245,16 @@
     <string name="preferences_widget_layout_medium">Mittel</string>
     <string name="preferences_widget_layout_small">Klein</string>
     <string name="preferences_widget_settings">Widget-Einstellungen</string>
-
     <string name="search">Suchen</string>
     <string name="search_in_list">In Liste suchen</string>
     <string name="search_next">Nächstes Ergebnis</string>
     <string name="search_position_indicator">{0}/{1}</string>
     <string name="search_previous">Vorheriges Ergebnis</string>
-
     <string name="shortcut_continue_long_label">Fortfahren wo zuletzt aufgehört</string>
     <string name="shortcut_continue_short_label">Fortfahren</string>
     <string name="shortcut_shuffle_long_label">Alle Titel zufällig abspielen</string>
     <string name="shortcut_shuffle_short_label">Alle Titel mischen</string>
-
     <string name="snackbar_scanning_library">Bibliothek scannen ({0}/{1})</string>
-
     <string name="sorting_album">Album</string>
     <string name="sorting_album_artist">Album-Interpret</string>
     <string name="sorting_album_count">Albenzahl</string>
@@ -286,10 +270,8 @@
     <string name="sorting_title">Titel</string>
     <string name="sorting_track_count">Titelanzahl</string>
     <string name="sorting_year">Jahr</string>
-
     <string name="symbol_conjunction">" &amp; "</string>
     <string name="symbol_separator">" · "</string>
-
     <string name="tab_album_artists">Album-Interpret</string>
     <string name="tab_albums">Alben</string>
     <string name="tab_artists">Interpret</string>
@@ -297,7 +279,6 @@
     <string name="tab_genres">Genre</string>
     <string name="tab_playlists">Playlisten</string>
     <string name="tab_tracks">Titel</string>
-
     <string name="toast_cant_open_system_equalizer">Öffnen von systemeigenem Equalizer nicht möglich</string>
     <string name="toast_crash_saved_to">Absturzprotokoll gespeichert unter {0}</string>
     <string name="toast_playlist_exported">Exportierte {0, plural, one {# Playlist} other {# Playlisten}}</string>
@@ -308,7 +289,6 @@
     <string name="toast_timer_set">Wiedergabe nach ~{0, plural, one {# Minute} other {# Minuten}} pausieren</string>
     <string name="toast_track_queued">{0, plural, one {# Titel} other {# Titel}} eingereiht</string>
     <string name="toast_view_intent_not_found">Keine solche Datei in der Bibliothek</string>
-
     <string name="track_add_to_queue">Zu Warteschlange hinzufügen</string>
     <string name="track_details">Details</string>
     <string name="track_details_album">Album</string>
@@ -340,7 +320,6 @@
     <string name="track_share">Teilen</string>
     <string name="track_view_album">Album abrufen “{0}”</string>
     <string name="track_view_artist">Interpret abrufen “{0}”</string>
-
     <string name="view_settings">Sortiereinstellungen</string>
     <string name="view_settings_grid_size">Rastergröße</string>
     <string name="view_settings_sort_by">Sortieren nach</string>

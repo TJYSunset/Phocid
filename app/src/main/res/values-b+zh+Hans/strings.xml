@@ -16,20 +16,16 @@
     <string name="commons_reset">重置</string>
     <string name="commons_selected">已选择</string>
     <string name="commons_sync">同步</string>
-
     <string name="count_album">{0, plural, other {#}} 个专辑</string>
     <string name="count_folder">{0, plural, other {#}} 个文件夹</string>
     <string name="count_invalid_track">{0, plural, other {#}} 首无效曲目</string>
     <string name="count_track">{0, plural, other {#}} 首曲目</string>
-
     <string name="duration_hours_minutes_seconds">{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="duration_minutes_seconds">{0, number, ::00}:{1, number, ::00}</string>
     <string name="duration_negative_hours_minutes_seconds">-{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="duration_negative_minutes_seconds">-{0, number, ::00}:{1, number, ::00}</string>
-
     <string name="library_rescan">重新扫描曲库</string>
     <string name="library_view_root_folder">查看所有曲目的根目录</string>
-
     <string name="list_empty">无内容</string>
     <string name="list_move_down">下移</string>
     <string name="list_move_up">上移</string>
@@ -37,13 +33,10 @@
     <string name="list_multi_select_select_all">全选</string>
     <string name="list_multi_select_select_inverse">反选</string>
     <string name="list_multi_select_title">已选中 {0, plural, other {#}} 项</string>
-
     <string name="locale">zh-Hans</string>
-
     <string name="permission_dialog_body">本应用需要“读取音频文件”权限才能正常工作。请授予以继续。</string>
     <string name="permission_dialog_grant">授予</string>
     <string name="permission_dialog_title">需要授权</string>
-
     <string name="player_clear_queue">清空队列</string>
     <string name="player_lyrics">歌词</string>
     <string name="player_lyrics_auto_scroll">自动滚动歌词</string>
@@ -72,7 +65,6 @@
     <string name="player_timer_finish_last_track">播完最后一首</string>
     <string name="player_timer_set">开始定时</string>
     <string name="player_up_next">剩余队列</string>
-
     <string name="playlist_add_to">添加到播放列表</string>
     <string name="playlist_delete">删除播放列表</string>
     <string name="playlist_delete_multiple_dialog_body">{0, plural, other {#}} 个播放列表将被永久删除</string>
@@ -123,7 +115,6 @@
     <string name="playlist_sort">排序播放列表</string>
     <string name="playlist_sort_screen_title">排序播放列表“{0}”</string>
     <string name="playlist_special_favorites">收藏夹</string>
-
     <string name="preferences">设置</string>
     <string name="preferences_about">关于</string>
     <string name="preferences_always_show_hint_on_scroll">滚动时始终显示索引</string>
@@ -140,7 +131,6 @@
     <string name="preferences_dark_theme_dark">深色</string>
     <string name="preferences_dark_theme_light">浅色</string>
     <string name="preferences_dark_theme_system">跟随系统</string>
-    <string name="preferences_data">数据</string>
     <string name="preferences_dump_logcat">转储 Logcat</string>
     <string name="preferences_dump_logcat_subtitle">保存路径：{0}</string>
     <string name="preferences_folder_picker_dialog_title">选择文件夹</string>
@@ -153,6 +143,7 @@
     <string name="preferences_high_res_artwork_large_only">仅大号图像</string>
     <string name="preferences_high_res_artwork_never">从不</string>
     <string name="preferences_high_res_artwork_player_only">仅播放器</string>
+    <string name="preferences_home_screen">主页</string>
     <string name="preferences_indexing">索引</string>
     <string name="preferences_indexing_advanced_metadata_extraction">高级元数据提取</string>
     <string name="preferences_indexing_advanced_metadata_extraction_subtitle">提取多个标签和内嵌歌词，但是非常慢。手动重新扫描后生效。</string>
@@ -197,12 +188,14 @@
     <string name="preferences_lyrics_display_disabled">关闭</string>
     <string name="preferences_lyrics_display_two_lines">双行</string>
     <string name="preferences_lyrics_scaling">歌词大小</string>
+    <string name="preferences_miscellaneous">杂项</string>
     <string name="preferences_multiplier_number">{0, number, ::.00}×</string>
     <string name="preferences_notification_button_favorite">收藏</string>
     <string name="preferences_notification_button_repeat">循环</string>
     <string name="preferences_notification_button_shuffle">打乱</string>
     <string name="preferences_notification_buttons">通知按钮</string>
     <string name="preferences_notification_buttons_none">无</string>
+    <string name="preferences_now_playing">播放界面</string>
     <string name="preferences_pause_on_focus_loss">失去音频焦点时暂停</string>
     <string name="preferences_play_on_output_device_connection">连接耳机时播放</string>
     <string name="preferences_playback">播放</string>
@@ -233,11 +226,9 @@
     <string name="preferences_tab_style_icon_only">仅图标</string>
     <string name="preferences_tab_style_text_and_icon">文本与图标</string>
     <string name="preferences_tab_style_text_only">仅文本</string>
-    <string name="preferences_tabs">主界面标签页</string>
-    <string name="preferences_tabs_separator">，</string>
+    <string name="preferences_tabs">主页标签页</string>
     <string name="preferences_text_encoding">文本编码</string>
     <string name="preferences_text_encoding_auto_detect">自动检测</string>
-    <string name="preferences_theme">主题</string>
     <string name="preferences_theme_color">主题色</string>
     <string name="preferences_theme_color_chroma">色度</string>
     <string name="preferences_theme_color_chroma_number">{0}%</string>
@@ -265,20 +256,16 @@
     <string name="preferences_widget_layout_side_artwork_large">侧边图像（大）</string>
     <string name="preferences_widget_layout_small">小</string>
     <string name="preferences_widget_settings">小组件设置</string>
-
     <string name="search">搜索</string>
     <string name="search_in_list">在列表中搜索</string>
     <string name="search_next">下一个结果</string>
     <string name="search_position_indicator">{0}/{1}</string>
     <string name="search_previous">上一个结果</string>
-
     <string name="shortcut_continue_long_label">继续播放</string>
     <string name="shortcut_continue_short_label">继续播放</string>
     <string name="shortcut_shuffle_long_label">随机全部</string>
     <string name="shortcut_shuffle_short_label">随机全部</string>
-
     <string name="snackbar_scanning_library">扫描曲库中（{0}/{1}）</string>
-
     <string name="sorting_album">专辑</string>
     <string name="sorting_album_artist">专辑艺术家</string>
     <string name="sorting_album_count">专辑数量</string>
@@ -294,10 +281,8 @@
     <string name="sorting_title">标题</string>
     <string name="sorting_track_count">曲目数量</string>
     <string name="sorting_year">年份</string>
-
     <string name="symbol_conjunction">" &amp; "</string>
     <string name="symbol_separator">" · "</string>
-
     <string name="tab_album_artists">专辑艺术家</string>
     <string name="tab_albums">专辑</string>
     <string name="tab_artists">艺术家</string>
@@ -305,7 +290,6 @@
     <string name="tab_genres">流派</string>
     <string name="tab_playlists">播放列表</string>
     <string name="tab_tracks">曲目</string>
-
     <string name="toast_cant_open_system_equalizer">无法打开系统均衡器</string>
     <string name="toast_crash_saved_to">崩溃日志已保存到{0}</string>
     <string name="toast_dump_logcat_failed">转储失败：{0}</string>
@@ -318,7 +302,6 @@
     <string name="toast_timer_set">将在约 {0, plural, other {#}} 分钟后暂停播放</string>
     <string name="toast_track_queued">已将 {0, plural, other {#}} 首曲目加入队列</string>
     <string name="toast_view_intent_not_found">曲库中无对应文件</string>
-
     <string name="track_add_to_queue">加入队列</string>
     <string name="track_details">详细信息</string>
     <string name="track_details_album">专辑</string>
@@ -350,7 +333,6 @@
     <string name="track_share">分享</string>
     <string name="track_view_album">查看专辑“{0}”</string>
     <string name="track_view_artist">查看艺术家“{0}”</string>
-
     <string name="view_settings">显示设置</string>
     <string name="view_settings_grid_size">网格大小</string>
     <string name="view_settings_sort_by">排序</string>
