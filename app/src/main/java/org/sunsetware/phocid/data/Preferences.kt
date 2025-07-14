@@ -85,7 +85,7 @@ data class Preferences(
     val whitelist: List<String> = emptyList(),
     // Miscellaneous
     val charsetName: String? = null,
-    val treatEmbeddedLyricsAsLrc: Boolean = false,
+    val treatEmbeddedLyricsAsLrc: Boolean = true,
     val playlistIoSettings: PlaylistIoSettings = PlaylistIoSettings(),
     val playlistIoSyncLocation: String? = null,
     val playlistIoSyncSettings: PlaylistIoSettings =
