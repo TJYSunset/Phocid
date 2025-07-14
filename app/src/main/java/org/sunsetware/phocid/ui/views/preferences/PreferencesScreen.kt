@@ -3,20 +3,75 @@
 package org.sunsetware.phocid.ui.views.preferences
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Help
+import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.automirrored.filled.Undo
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.AdsClick
+import androidx.compose.material.icons.filled.AllInbox
+import androidx.compose.material.icons.filled.Attribution
+import androidx.compose.material.icons.filled.Balance
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.BatterySaver
+import androidx.compose.material.icons.filled.Block
+import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ClearAll
+import androidx.compose.material.icons.filled.Colorize
+import androidx.compose.material.icons.filled.Commit
+import androidx.compose.material.icons.filled.Contrast
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.DashboardCustomize
+import androidx.compose.material.icons.filled.DataObject
+import androidx.compose.material.icons.filled.DoNotTouch
+import androidx.compose.material.icons.filled.DocumentScanner
+import androidx.compose.material.icons.filled.FolderSpecial
+import androidx.compose.material.icons.filled.FormatColorFill
+import androidx.compose.material.icons.filled.FormatColorReset
+import androidx.compose.material.icons.filled.Hd
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.HourglassFull
+import androidx.compose.material.icons.filled.ImportExport
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Link
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PermMedia
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PlayCircleOutline
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.RoundedCorner
+import androidx.compose.material.icons.filled.SafetyDivider
+import androidx.compose.material.icons.filled.ShapeLine
+import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.SortByAlpha
+import androidx.compose.material.icons.filled.SpaceDashboard
+import androidx.compose.material.icons.filled.Subtitles
+import androidx.compose.material.icons.filled.Swipe
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Tab
+import androidx.compose.material.icons.filled.ZoomIn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,20 +86,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.ibm.icu.number.Notation
 import com.ibm.icu.number.NumberFormatter
 import com.ibm.icu.number.Precision
+import com.ibm.icu.text.Collator
+import com.ibm.icu.text.ListFormatter
 import com.ibm.icu.util.MeasureUnit
 import java.io.File
 import java.nio.charset.Charset
 import java.util.Locale
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -53,19 +117,22 @@ import org.sunsetware.phocid.BuildConfig
 import org.sunsetware.phocid.MainViewModel
 import org.sunsetware.phocid.R
 import org.sunsetware.phocid.TopLevelScreen
+import org.sunsetware.phocid.UiManager
 import org.sunsetware.phocid.data.ArtworkColorPreference
 import org.sunsetware.phocid.data.DarkThemePreference
 import org.sunsetware.phocid.data.HighResArtworkPreference
 import org.sunsetware.phocid.data.LyricsDisplayPreference
+import org.sunsetware.phocid.data.PlayerManager
+import org.sunsetware.phocid.data.Preferences
 import org.sunsetware.phocid.data.ShapePreference
 import org.sunsetware.phocid.data.TabStylePreference
 import org.sunsetware.phocid.globals.Strings
-import org.sunsetware.phocid.service.NotificationButton
-import org.sunsetware.phocid.ui.components.UtilityListHeader
+import org.sunsetware.phocid.ui.components.Scrollbar
 import org.sunsetware.phocid.ui.components.UtilityListItem
 import org.sunsetware.phocid.ui.components.UtilitySwitchListItem
 import org.sunsetware.phocid.ui.components.negativePadding
-import org.sunsetware.phocid.ui.views.library.LibraryScreenTabType
+import org.sunsetware.phocid.ui.theme.LocalDarkTheme
+import org.sunsetware.phocid.ui.theme.hashColor
 import org.sunsetware.phocid.ui.views.library.LibraryTrackClickAction
 import org.sunsetware.phocid.ui.views.player.PlayerScreenLayoutType
 import org.sunsetware.phocid.ui.views.playlist.PlaylistIoScreen
@@ -76,30 +143,22 @@ import org.sunsetware.phocid.utils.roundToIntOrZero
 
 @Stable
 object PreferencesScreen : TopLevelScreen() {
-    val scrollState: ScrollState = ScrollState(0)
+    private val lazyListState = LazyListState()
+    private val pages =
+        listOf(Interface, HomeScreen, NowPlaying, Playback, Indexing, Miscellaneous, About)
 
     @Composable
     override fun Compose(viewModel: MainViewModel) {
-        val context = LocalContext.current
-        val coroutineScope = rememberCoroutineScope()
-        val uiManager = viewModel.uiManager
-        val preferences by viewModel.preferences.collectAsStateWithLifecycle()
-        val filteredCount by
-            viewModel.unfilteredTrackIndex
-                .combine(coroutineScope, viewModel.libraryIndex) { unfiltered, filtered ->
-                    unfiltered.tracks.size - filtered.tracks.size
-                }
-                .collectAsStateWithLifecycle()
         Scaffold(
             topBar = {
                 key(MaterialTheme.colorScheme) {
                     TopAppBar(
                         title = { Text(Strings[R.string.preferences]) },
                         navigationIcon = {
-                            IconButton(onClick = { uiManager.back() }) {
+                            IconButton(onClick = { viewModel.uiManager.back() }) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = Strings[R.string.commons_back],
+                                    Strings[R.string.commons_back],
                                 )
                             }
                         },
@@ -111,786 +170,873 @@ object PreferencesScreen : TopLevelScreen() {
                 modifier = Modifier.fillMaxSize().padding(scaffoldPadding),
                 color = MaterialTheme.colorScheme.background,
             ) {
-                Column(modifier = Modifier.verticalScroll(scrollState)) {
-                    UtilityListHeader(Strings[R.string.preferences_interface])
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_tabs],
-                        subtitle =
-                            preferences.tabs.joinToString(
-                                Strings[R.string.preferences_tabs_separator]
-                            ) {
-                                Strings[it.type.stringId]
-                            },
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesOrderAndVisibilityDialog<LibraryScreenTabType>(
-                                        title = Strings[R.string.preferences_tabs],
-                                        itemName = { Strings[it.stringId] },
-                                        value = { it.tabOrderAndVisibility },
-                                        onSetValue = { preferences, value ->
-                                            preferences.copy(tabOrderAndVisibility = value)
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_scrollable_tabs],
-                        checked = preferences.scrollableTabs,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences { it.copy(scrollableTabs = checked) }
-                        },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_tab_style],
-                        subtitle = Strings[preferences.tabStyle.stringId],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSingleChoiceDialog<TabStylePreference>(
-                                        title = Strings[R.string.preferences_tab_style],
-                                        options =
-                                            TabStylePreference.entries.map {
-                                                it to Strings[it.stringId]
-                                            },
-                                        activeOption = { it.tabStyle },
-                                        updatePreferences = { preferences, new ->
-                                            preferences.copy(tabStyle = new)
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_folder_tab_root],
-                        subtitle =
-                            preferences.folderTabRoot?.let { "/$it" }
-                                ?: Strings[R.string.commons_automatic],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesFolderPickerDialog(
-                                        unfiltered = false,
-                                        initialPath = preferences.folderTabRoot,
-                                        onConfirmOrDismiss = { path ->
-                                            if (path != null) {
-                                                viewModel.updatePreferences {
-                                                    it.copy(folderTabRoot = path)
-                                                }
-                                            }
-                                        },
-                                    )
-                                )
-                            },
-                        actions = {
-                            IconButton(
-                                onClick = {
-                                    viewModel.updatePreferences { it.copy(folderTabRoot = null) }
-                                },
-                                modifier = Modifier.negativePadding(end = 12.dp),
-                            ) {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.Undo,
-                                    Strings[R.string.commons_reset],
-                                )
-                            }
-                        },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_library_track_click_action],
-                        subtitle = Strings[preferences.libraryTrackClickAction.stringId],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSingleChoiceDialog<LibraryTrackClickAction>(
-                                        title =
-                                            Strings[
-                                                R.string.preferences_library_track_click_action],
-                                        options =
-                                            LibraryTrackClickAction.entries.map {
-                                                it to Strings[it.stringId]
-                                            },
-                                        activeOption = { it.libraryTrackClickAction },
-                                        updatePreferences = { preferences, new ->
-                                            preferences.copy(libraryTrackClickAction = new)
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_always_show_hint_on_scroll],
-                        checked = preferences.alwaysShowHintOnScroll,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences {
-                                it.copy(alwaysShowHintOnScroll = checked)
-                            }
-                        },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_player_screen_layout],
-                        subtitle = Strings[preferences.playerScreenLayout.stringId],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSingleChoiceDialog<PlayerScreenLayoutType>(
-                                        title = Strings[R.string.preferences_player_screen_layout],
-                                        options =
-                                            PlayerScreenLayoutType.entries.map {
-                                                it to Strings[it.stringId]
-                                            },
-                                        activeOption = { it.playerScreenLayout },
-                                        updatePreferences = { preferences, new ->
-                                            preferences.copy(playerScreenLayout = new)
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_swipe_to_remove_from_queue],
-                        checked = preferences.swipeToRemoveFromQueue,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences {
-                                it.copy(swipeToRemoveFromQueue = checked)
-                            }
-                        },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_high_res_artwork],
-                        subtitle = Strings[preferences.highResArtworkPreference.stringId],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSingleChoiceDialog<HighResArtworkPreference>(
-                                        title = Strings[R.string.preferences_high_res_artwork],
-                                        options =
-                                            HighResArtworkPreference.entries.map {
-                                                it to Strings[it.stringId]
-                                            },
-                                        activeOption = { it.highResArtworkPreference },
-                                        updatePreferences = { preferences, new ->
-                                            preferences.copy(highResArtworkPreference = new)
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_sorting_language],
-                        subtitle =
-                            preferences.sortingLocale?.displayName
-                                ?: Strings[R.string.preferences_sorting_language_system],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(PreferencesSortingLocaleDialog())
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_lyrics_display],
-                        subtitle = Strings[preferences.lyricsDisplay.stringId],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSingleChoiceDialog<LyricsDisplayPreference>(
-                                        title = Strings[R.string.preferences_lyrics_display],
-                                        options =
-                                            LyricsDisplayPreference.entries.map {
-                                                it to Strings[it.stringId]
-                                            },
-                                        activeOption = { it.lyricsDisplay },
-                                        updatePreferences = { preferences, new ->
-                                            preferences.copy(lyricsDisplay = new)
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_notification_buttons],
-                        subtitle =
-                            preferences.notificationButtons
-                                .takeIf { it.isNotEmpty() }
-                                ?.joinToString(Strings[R.string.preferences_tabs_separator]) {
-                                    Strings[it.stringId]
-                                } ?: Strings[R.string.preferences_notification_buttons_none],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesOrderAndVisibilityDialog<NotificationButton>(
-                                        title = Strings[R.string.preferences_notification_buttons],
-                                        itemName = { Strings[it.stringId] },
-                                        value = { it.notificationButtonOrderAndVisibility },
-                                        onSetValue = { preferences, value ->
-                                            preferences.copy(
-                                                notificationButtonOrderAndVisibility = value
-                                            )
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_ui_scaling],
-                        subtitle =
-                            Strings[R.string.preferences_multiplier_number].icuFormat(
-                                preferences.densityMultiplier
-                            ),
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSteppedSliderDialog(
-                                        title = Strings[R.string.preferences_ui_scaling],
-                                        initialValue = {
-                                            it.preferences.value.densityMultiplier
-                                                .times(100)
-                                                .roundToIntOrZero()
-                                        },
-                                        defaultValue = 100,
-                                        min = 50,
-                                        max = 200,
-                                        numberFormatter = {
-                                            Strings[R.string.preferences_multiplier_number]
-                                                .icuFormat(it / 100f)
-                                        },
-                                        onSetValue = { viewModel, value ->
-                                            viewModel.updatePreferences { preferences ->
-                                                preferences.copy(densityMultiplier = value / 100f)
-                                            }
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_lyrics_scaling],
-                        subtitle =
-                            Strings[R.string.preferences_multiplier_number].icuFormat(
-                                preferences.lyricsSizeMultiplier
-                            ),
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSteppedSliderDialog(
-                                        title = Strings[R.string.preferences_lyrics_scaling],
-                                        initialValue = {
-                                            it.preferences.value.lyricsSizeMultiplier
-                                                .times(100)
-                                                .roundToIntOrZero()
-                                        },
-                                        defaultValue = 100,
-                                        min = 50,
-                                        max = 400,
-                                        numberFormatter = {
-                                            Strings[R.string.preferences_multiplier_number]
-                                                .icuFormat(it / 100f)
-                                        },
-                                        onSetValue = { viewModel, value ->
-                                            viewModel.updatePreferences { preferences ->
-                                                preferences.copy(
-                                                    lyricsSizeMultiplier = value / 100f
-                                                )
-                                            }
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_swipe_threshold],
-                        subtitle =
-                            Strings[R.string.preferences_multiplier_number].icuFormat(
-                                preferences.swipeThresholdMultiplier
-                            ),
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSteppedSliderDialog(
-                                        title = Strings[R.string.preferences_swipe_threshold],
-                                        initialValue = {
-                                            it.preferences.value.swipeThresholdMultiplier
-                                                .times(10)
-                                                .roundToIntOrZero()
-                                        },
-                                        defaultValue = 10,
-                                        min = 1,
-                                        max = 100,
-                                        numberFormatter = {
-                                            Strings[R.string.preferences_multiplier_number]
-                                                .icuFormat(it / 10f)
-                                        },
-                                        onSetValue = { viewModel, value ->
-                                            viewModel.updatePreferences { preferences ->
-                                                preferences.copy(
-                                                    swipeThresholdMultiplier = value / 10f
-                                                )
-                                            }
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilityListHeader(Strings[R.string.preferences_playback])
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_system_equalizer],
-                        modifier =
-                            Modifier.clickable {
-                                if (!viewModel.playerManager.openSystemEqualizer(context)) {
-                                    uiManager.toast(
-                                        Strings[R.string.toast_cant_open_system_equalizer]
-                                    )
-                                }
-                            },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_play_on_output_device_connection],
-                        checked = preferences.playOnOutputDeviceConnection,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences {
-                                it.copy(playOnOutputDeviceConnection = checked)
-                            }
-                        },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_pause_on_focus_loss],
-                        checked = preferences.pauseOnFocusLoss,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences { it.copy(pauseOnFocusLoss = checked) }
-                        },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_audio_offloading],
-                        subtitle = Strings[R.string.preferences_audio_offloading_subtitle],
-                        checked = preferences.audioOffloading,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences { it.copy(audioOffloading = checked) }
-                        },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_reshuffle_on_repeat],
-                        checked = preferences.reshuffleOnRepeat,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences { it.copy(reshuffleOnRepeat = checked) }
-                        },
-                    )
-                    UtilityListHeader(Strings[R.string.preferences_theme])
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_dark_theme],
-                        subtitle = Strings[preferences.darkTheme.stringId],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSingleChoiceDialog<DarkThemePreference>(
-                                        title = Strings[R.string.preferences_dark_theme],
-                                        options =
-                                            DarkThemePreference.entries.map {
-                                                it to Strings[it.stringId]
-                                            },
-                                        activeOption = { it.darkTheme },
-                                        updatePreferences = { preferences, darkTheme ->
-                                            preferences.copy(darkTheme = darkTheme)
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_theme_color],
-                        subtitle = Strings[preferences.themeColorSource.stringId],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(PreferencesThemeColorDialog())
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_shape],
-                        subtitle = Strings[preferences.shapePreference.stringId],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSingleChoiceDialog<ShapePreference>(
-                                        title = Strings[R.string.preferences_shape],
-                                        options =
-                                            ShapePreference.entries.map {
-                                                it to Strings[it.stringId]
-                                            },
-                                        activeOption = { it.shapePreference },
-                                        updatePreferences = { preferences, new ->
-                                            preferences.copy(shapePreference = new)
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_pure_background_color],
-                        checked = preferences.pureBackgroundColor,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences { it.copy(pureBackgroundColor = checked) }
-                        },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_colored_global_theme],
-                        checked = preferences.coloredGlobalTheme,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences { it.copy(coloredGlobalTheme = checked) }
-                        },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_colored_cards],
-                        checked = preferences.coloredCards,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences { it.copy(coloredCards = checked) }
-                        },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_colored_player],
-                        checked = preferences.coloredPlayer,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences { it.copy(coloredPlayer = checked) }
-                        },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_artwork_color],
-                        subtitle = Strings[preferences.artworkColorPreference.stringId],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSingleChoiceDialog<ArtworkColorPreference>(
-                                        title = Strings[R.string.preferences_artwork_color],
-                                        options =
-                                            ArtworkColorPreference.entries.map {
-                                                it to Strings[it.stringId]
-                                            },
-                                        activeOption = { it.artworkColorPreference },
-                                        updatePreferences = { preferences, new ->
-                                            preferences.copy(artworkColorPreference = new)
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilityListHeader(Strings[R.string.preferences_indexing])
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_indexing_advanced_metadata_extraction],
-                        subtitle =
-                            Strings[
-                                R.string
-                                    .preferences_indexing_advanced_metadata_extraction_subtitle],
-                        checked = preferences.advancedMetadataExtraction,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences {
-                                it.copy(advancedMetadataExtraction = checked)
-                            }
-                        },
-                    )
-                    UtilitySwitchListItem(
-                        title =
-                            Strings[R.string.preferences_indexing_disable_artwork_color_extraction],
-                        subtitle =
-                            Strings[
-                                R.string
-                                    .preferences_indexing_disable_artwork_color_extraction_subtitle],
-                        checked = preferences.disableArtworkColorExtraction,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences {
-                                it.copy(disableArtworkColorExtraction = checked)
-                            }
-                        },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_indexing_always_rescan_mediastore],
-                        subtitle =
-                            Strings[
-                                R.string.preferences_indexing_always_rescan_mediastore_subtitle],
-                        checked = preferences.alwaysRescanMediaStore,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences {
-                                it.copy(alwaysRescanMediaStore = checked)
-                            }
-                        },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_scan_progress_timeout],
-                        subtitle =
-                            NumberFormatter.withLocale(Locale.getDefault())
-                                .notation(Notation.simple())
-                                .unit(MeasureUnit.SECOND)
-                                .precision(Precision.integer())
-                                .format(preferences.scanProgressTimeoutSeconds)
-                                .toString(),
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSteppedSliderDialog(
-                                        title = Strings[R.string.preferences_scan_progress_timeout],
-                                        initialValue = {
-                                            it.preferences.value.scanProgressTimeoutSeconds
-                                        },
-                                        defaultValue = 1,
-                                        min = 0,
-                                        max = 60,
-                                        numberFormatter = {
-                                            NumberFormatter.withLocale(Locale.getDefault())
-                                                .notation(Notation.simple())
-                                                .unit(MeasureUnit.SECOND)
-                                                .precision(Precision.integer())
-                                                .format(it)
-                                                .toString()
-                                        },
-                                        onSetValue = { viewModel, value ->
-                                            viewModel.updatePreferences { preferences ->
-                                                preferences.copy(scanProgressTimeoutSeconds = value)
-                                            }
-                                        },
-                                    )
-                                )
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_indexing_artist_separators],
-                        subtitle =
-                            Strings[R.string.preferences_indexing_artist_separators_subtitle]
-                                .icuFormat(preferences.artistMetadataSeparators.size),
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(PreferencesArtistSeparatorDialog())
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_indexing_artist_separator_exceptions],
-                        subtitle =
-                            Strings[
-                                    R.string
-                                        .preferences_indexing_artist_separator_exceptions_subtitle]
-                                .icuFormat(preferences.artistMetadataSeparatorExceptions.size),
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(PreferencesArtistSeparatorExceptionDialog())
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_indexing_genre_separators],
-                        subtitle =
-                            Strings[R.string.preferences_indexing_genre_separators_subtitle]
-                                .icuFormat(preferences.genreMetadataSeparators.size),
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(PreferencesGenreSeparatorDialog())
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_indexing_genre_separator_exceptions],
-                        subtitle =
-                            Strings[
-                                    R.string
-                                        .preferences_indexing_genre_separator_exceptions_subtitle]
-                                .icuFormat(preferences.genreMetadataSeparatorExceptions.size),
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(PreferencesGenreSeparatorExceptionDialog())
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_indexing_blacklist],
-                        subtitle =
-                            Strings[R.string.preferences_indexing_blacklist_subtitle].icuFormat(
-                                preferences.blacklist.size,
-                                filteredCount,
-                            ),
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(PreferencesBlacklistDialog())
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_indexing_whitelist],
-                        subtitle =
-                            Strings[R.string.preferences_indexing_whitelist_subtitle].icuFormat(
-                                preferences.whitelist.size
-                            ),
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(PreferencesWhitelistDialog())
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_indexing_help],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(PreferencesIndexingHelpDialog())
-                            },
-                    )
-                    UtilityListHeader(Strings[R.string.preferences_data])
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        val imagesPermissionState =
-                            rememberPermissionState(Manifest.permission.READ_MEDIA_IMAGES)
-                        val partialPermissionState =
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                                rememberPermissionState(
-                                    Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
-                                )
-                            } else {
-                                null
-                            }
-
-                        if (!imagesPermissionState.status.isGranted) {
+                Scrollbar(lazyListState, { null }, false) {
+                    LazyColumn(state = lazyListState) {
+                        items(pages) { page ->
                             UtilityListItem(
-                                title = Strings[R.string.preferences_grant_images_permission],
-                                subtitle =
-                                    Strings[R.string.preferences_grant_images_permission_subtitle],
+                                title = Strings[page.stringId],
+                                lead = { LeadIcon(page.icon) },
                                 modifier =
                                     Modifier.clickable {
-                                        if (partialPermissionState?.status?.isGranted == true) {
-                                            context.startActivity(
-                                                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                                    .apply {
-                                                        setData(
-                                                            Uri.fromParts(
-                                                                "package",
-                                                                context.packageName,
-                                                                null,
-                                                            )
-                                                        )
-                                                    }
-                                            )
-                                        } else {
-                                            imagesPermissionState.launchPermissionRequest()
-                                        }
+                                        viewModel.uiManager.openTopLevelScreen(
+                                            PreferencesSubscreen(page)
+                                        )
                                     },
                             )
                         }
                     }
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_text_encoding],
-                        subtitle =
-                            preferences.charsetName
-                                ?: Strings[R.string.preferences_text_encoding_auto_detect],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(
-                                    PreferencesSingleChoiceDialog<String?>(
-                                        title = Strings[R.string.preferences_text_encoding],
-                                        options =
-                                            listOf(
-                                                null to
-                                                    Strings[
-                                                        R.string
-                                                            .preferences_text_encoding_auto_detect]
-                                            ) +
-                                                Charset.availableCharsets().map {
-                                                    it.value.name() to it.value.displayName()
-                                                },
-                                        activeOption = { it.charsetName },
-                                        updatePreferences = { preferences, new ->
-                                            preferences.copy(charsetName = new)
-                                        },
-                                    )
+                }
+            }
+        }
+    }
+}
+
+@Stable
+private class PreferencesSubscreen(private val page: Page) : TopLevelScreen() {
+    private val lazyListState = LazyListState()
+
+    @Composable
+    override fun Compose(viewModel: MainViewModel) {
+        val context = LocalContext.current
+        val coroutineScope = rememberCoroutineScope()
+        val preferences by viewModel.preferences.collectAsStateWithLifecycle()
+        val filteredTrackCount by
+            viewModel.unfilteredTrackIndex
+                .combine(coroutineScope, viewModel.libraryIndex) { unfiltered, filtered ->
+                    unfiltered.tracks.size - filtered.tracks.size
+                }
+                .collectAsStateWithLifecycle()
+        val logcatDumpPath = remember {
+            context.getExternalFilesDir(null)?.let { FilenameUtils.concat(it.path, "logcat.txt") }
+        }
+        val imagesPermissionState =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                rememberPermissionState(Manifest.permission.READ_MEDIA_IMAGES)
+            } else null
+        val partialImagesPermissionState =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                rememberPermissionState(Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)
+            } else {
+                null
+            }
+        val preferencesScreenContext =
+            PreferencesScreenContext(
+                context,
+                coroutineScope,
+                viewModel.uiManager,
+                viewModel.playerManager,
+                preferences,
+                viewModel::updatePreferences,
+                filteredTrackCount,
+                logcatDumpPath,
+                imagesPermissionState,
+                partialImagesPermissionState,
+            )
+
+        Scaffold(
+            topBar = {
+                key(MaterialTheme.colorScheme) {
+                    TopAppBar(
+                        title = { Text(Strings[page.stringId]) },
+                        navigationIcon = {
+                            IconButton(onClick = { viewModel.uiManager.back() }) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    Strings[R.string.commons_back],
                                 )
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_playlist_io_settings],
-                        modifier =
-                            Modifier.clickable { uiManager.openDialog(PlaylistIoSettingsDialog()) },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.playlist_io_sync],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openTopLevelScreen(PlaylistIoScreen.sync())
-                            },
-                    )
-                    UtilitySwitchListItem(
-                        title = Strings[R.string.preferences_treat_embedded_lyrics_as_lrc],
-                        checked = preferences.treatEmbeddedLyricsAsLrc,
-                        onCheckedChange = { checked ->
-                            viewModel.updatePreferences {
-                                it.copy(treatEmbeddedLyricsAsLrc = checked)
                             }
                         },
                     )
-                    UtilityListHeader(Strings[R.string.preferences_about])
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_version],
-                        subtitle = BuildConfig.VERSION_NAME,
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_website],
-                        subtitle = Strings[R.string.app_url],
-                        modifier =
-                            Modifier.clickable {
-                                context.startActivity(
-                                    Intent(Intent.ACTION_VIEW, Uri.parse(Strings[R.string.app_url]))
-                                )
-                            },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_license],
-                        subtitle = Strings[R.string.app_license_name],
-                        modifier =
-                            Modifier.clickable { uiManager.openDialog(PreferencesLicenseDialog()) },
-                    )
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_third_party_licenses],
-                        modifier =
-                            Modifier.clickable {
-                                uiManager.openDialog(PreferencesThirdPartyLicensesDialog())
-                            },
-                    )
-                    val logcatPath = remember {
-                        context.getExternalFilesDir(null)?.let {
-                            FilenameUtils.concat(it.path, "logcat.txt")
-                        }
-                    }
-                    UtilityListItem(
-                        title = Strings[R.string.preferences_dump_logcat],
-                        subtitle =
-                            Strings[R.string.preferences_dump_logcat_subtitle].icuFormat(
-                                logcatPath
-                            ),
-                        modifier =
-                            Modifier.clickable {
-                                coroutineScope.launch {
-                                    withContext(Dispatchers.IO) {
-                                        try {
-                                            File(checkNotNull(logcatPath)).bufferedWriter().use {
-                                                writer ->
-                                                writer.write(BuildConfig.VERSION_NAME)
-                                                writer.write("\n\n")
-                                                writer.write("API level ${Build.VERSION.SDK_INT}")
-                                                writer.write("\n\n")
-                                                Runtime.getRuntime()
-                                                    .exec("logcat -d")
-                                                    .inputStream
-                                                    .bufferedReader()
-                                                    .use { reader ->
-                                                        while (true) {
-                                                            val line = reader.readLine()
-                                                            if (line == null) break
-                                                            writer.write(line)
-                                                            writer.write("\n")
-                                                        }
-                                                    }
-
-                                                uiManager.toast(
-                                                    Strings[R.string.toast_dump_logcat_success]
-                                                )
-                                            }
-                                        } catch (ex: Exception) {
-                                            Log.e("Phocid", "Can't dump logcat", ex)
-                                            uiManager.toast(
-                                                Strings[R.string.toast_dump_logcat_failed]
-                                                    .icuFormat(ex.toString())
-                                            )
-                                        }
-                                    }
-                                }
-                            },
-                    )
                 }
             }
+        ) { scaffoldPadding ->
+            Surface(
+                modifier = Modifier.fillMaxSize().padding(scaffoldPadding),
+                color = MaterialTheme.colorScheme.background,
+            ) {
+                Scrollbar(lazyListState, { null }, false) {
+                    LazyColumn(state = lazyListState) {
+                        items(page.items) { item ->
+                            when (item) {
+                                is Item.NonInteractive -> {
+                                    UtilityListItem(
+                                        title = item.title(),
+                                        subtitle =
+                                            with(item) { preferencesScreenContext.subtitle() },
+                                        lead = { LeadIcon(item.icon) },
+                                    )
+                                }
+                                is Item.Clickable<*> -> {
+                                    UtilityListItem(
+                                        title = item.title(),
+                                        subtitle =
+                                            with(item) {
+                                                preferencesScreenContext.subtitle(
+                                                    value(preferences)
+                                                )
+                                            },
+                                        lead = { LeadIcon(item.icon) },
+                                        actions = {
+                                            if (item.action != null) {
+                                                IconButton(
+                                                    onClick = {
+                                                        with(item.action) {
+                                                            preferencesScreenContext.third()
+                                                        }
+                                                    },
+                                                    modifier = Modifier.negativePadding(end = 12.dp),
+                                                ) {
+                                                    Icon(item.action.second, item.action.first())
+                                                }
+                                            }
+                                        },
+                                        modifier =
+                                            Modifier.clickable {
+                                                with(item) { preferencesScreenContext.onClick() }
+                                            },
+                                    )
+                                }
+                                is Item.ConditionalClickable -> {
+                                    if (with(item) { preferencesScreenContext.visibility() }) {
+                                        UtilityListItem(
+                                            title = item.title(),
+                                            subtitle =
+                                                with(item) { preferencesScreenContext.subtitle() },
+                                            lead = { LeadIcon(item.icon) },
+                                            modifier =
+                                                Modifier.clickable {
+                                                    with(item) {
+                                                        preferencesScreenContext.onClick()
+                                                    }
+                                                },
+                                        )
+                                    }
+                                }
+                                is Item.Toggle -> {
+                                    UtilitySwitchListItem(
+                                        title = item.title(),
+                                        subtitle =
+                                            with(item) {
+                                                preferencesScreenContext.subtitle(
+                                                    value(preferences)
+                                                )
+                                            },
+                                        lead = { LeadIcon(item.icon) },
+                                        checked = item.value(preferences),
+                                        onCheckedChange = { checked ->
+                                            viewModel.updatePreferences {
+                                                item.onSetValue(it, checked)
+                                            }
+                                        },
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LeadIcon(icon: ImageVector) {
+    Box(modifier = Modifier.padding(end = 16.dp).size(40.dp), contentAlignment = Alignment.Center) {
+        Icon(icon, null)
+    }
+}
+
+private val Interface =
+    Page(
+        R.string.preferences_interface,
+        Icons.Filled.Dashboard,
+        listOf(
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_dark_theme] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.DarkMode,
+                options = DarkThemePreference.entries,
+                value = { it.darkTheme },
+                onSetValue = { preferences, new -> preferences.copy(darkTheme = new) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_theme_color] },
+                subtitle = { Strings[it.stringId] },
+                icon = Icons.Filled.Palette,
+                value = { it.themeColorSource },
+                onClick = { uiManager.openDialog(PreferencesThemeColorDialog()) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_pure_background_color] },
+                subtitle = { null },
+                icon = Icons.Filled.Contrast,
+                value = { it.pureBackgroundColor },
+                onSetValue = { preferences, new -> preferences.copy(pureBackgroundColor = new) },
+            ),
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_artwork_color] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.Colorize,
+                options = ArtworkColorPreference.entries,
+                value = { it.artworkColorPreference },
+                onSetValue = { preferences, new -> preferences.copy(artworkColorPreference = new) },
+            ),
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_shape] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.RoundedCorner,
+                options = ShapePreference.entries,
+                value = { it.shapePreference },
+                onSetValue = { preferences, new -> preferences.copy(shapePreference = new) },
+            ),
+            Item.Slider(
+                title = { Strings[R.string.preferences_ui_scaling] },
+                numberFormatter = { Strings[R.string.preferences_multiplier_number].icuFormat(it) },
+                icon = Icons.Filled.ZoomIn,
+                value = { it.densityMultiplier },
+                default = 1f,
+                min = 0.5f,
+                max = 2f,
+                steps = 200 - 50 - 1,
+                onSetValue = { preferences, new -> preferences.copy(densityMultiplier = new) },
+            ),
+            Item.Slider(
+                title = { Strings[R.string.preferences_swipe_threshold] },
+                numberFormatter = { Strings[R.string.preferences_multiplier_number].icuFormat(it) },
+                icon = Icons.Filled.Swipe,
+                value = { it.swipeThresholdMultiplier },
+                default = 1f,
+                min = 0.1f,
+                max = 10f,
+                steps = 100 - 1 - 1,
+                onSetValue = { preferences, new ->
+                    preferences.copy(swipeThresholdMultiplier = new)
+                },
+            ),
+            Item.OrderAndVisibility(
+                title = { Strings[R.string.preferences_notification_buttons] },
+                subtitle = { preferences ->
+                    preferences.notificationButtons
+                        .takeIf { it.isNotEmpty() }
+                        ?.let { buttons ->
+                            ListFormatter.getInstance().format(buttons.map { Strings[it.stringId] })
+                        } ?: Strings[R.string.preferences_notification_buttons_none]
+                },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.Notifications,
+                value = { it.notificationButtonOrderAndVisibility },
+                onSetValue = { preferences, new ->
+                    preferences.copy(notificationButtonOrderAndVisibility = new)
+                },
+            ),
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_high_res_artwork] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.Hd,
+                options = HighResArtworkPreference.entries,
+                value = { it.highResArtworkPreference },
+                onSetValue = { preferences, new ->
+                    preferences.copy(highResArtworkPreference = new)
+                },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_always_show_hint_on_scroll] },
+                subtitle = { null },
+                icon = Icons.AutoMirrored.Filled.Label,
+                value = { it.alwaysShowHintOnScroll },
+                onSetValue = { preferences, new -> preferences.copy(alwaysShowHintOnScroll = new) },
+            ),
+        ),
+    )
+
+private val HomeScreen =
+    Page(
+        R.string.preferences_home_screen,
+        Icons.Filled.Home,
+        listOf(
+            Item.OrderAndVisibility(
+                title = { Strings[R.string.preferences_tabs] },
+                subtitle = { preferences ->
+                    preferences.tabs.let { buttons ->
+                        ListFormatter.getInstance()
+                            .format(buttons.map { Strings[it.type.stringId] })
+                    }
+                },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.DashboardCustomize,
+                value = { it.tabOrderAndVisibility },
+                onSetValue = { preferences, new -> preferences.copy(tabOrderAndVisibility = new) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_scrollable_tabs] },
+                subtitle = { null },
+                icon = Icons.Filled.Swipe,
+                value = { it.scrollableTabs },
+                onSetValue = { preferences, new -> preferences.copy(scrollableTabs = new) },
+            ),
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_tab_style] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.Tab,
+                options = TabStylePreference.entries,
+                value = { it.tabStyle },
+                onSetValue = { preferences, new -> preferences.copy(tabStyle = new) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_folder_tab_root] },
+                subtitle = { it?.let { "/$it" } ?: Strings[R.string.commons_automatic] },
+                icon = Icons.Filled.FolderSpecial,
+                value = { it.folderTabRoot },
+                onClick = {
+                    uiManager.openDialog(
+                        PreferencesFolderPickerDialog(
+                            unfiltered = false,
+                            initialPath = preferences.folderTabRoot,
+                            onConfirmOrDismiss = { path ->
+                                if (path != null) {
+                                    updatePreferences { it.copy(folderTabRoot = path) }
+                                }
+                            },
+                        )
+                    )
+                },
+                action =
+                    Triple(
+                        { Strings[R.string.commons_reset] },
+                        Icons.AutoMirrored.Filled.Undo,
+                        { updatePreferences { it.copy(folderTabRoot = null) } },
+                    ),
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_colored_cards] },
+                subtitle = { null },
+                icon = Icons.Filled.FormatColorFill,
+                value = { it.coloredCards },
+                onSetValue = { preferences, new -> preferences.copy(coloredCards = new) },
+            ),
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_library_track_click_action] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.AdsClick,
+                options = LibraryTrackClickAction.entries,
+                value = { it.libraryTrackClickAction },
+                onSetValue = { preferences, new -> preferences.copy(libraryTrackClickAction = new) },
+            ),
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_sorting_language] },
+                itemName = {
+                    if (it == null) Strings[R.string.preferences_sorting_language_system]
+                    else "${it.displayName} (${it.toLanguageTag()})"
+                },
+                icon = Icons.Filled.SortByAlpha,
+                options =
+                    listOf(null) +
+                        Collator.getAvailableLocales()
+                            .sortedBy { it.toLanguageTag() }
+                            .filter { it.language != "zh" || it.country.isEmpty() },
+                value = { it.sortingLocale },
+                onSetValue = { preferences, new ->
+                    preferences.copy(sortingLocaleLanguageTag = new?.toLanguageTag())
+                },
+            ),
+        ),
+    )
+
+private val NowPlaying =
+    Page(
+        R.string.preferences_now_playing,
+        Icons.Filled.PlayCircleOutline,
+        listOf(
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_player_screen_layout] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.SpaceDashboard,
+                options = PlayerScreenLayoutType.entries,
+                value = { it.playerScreenLayout },
+                onSetValue = { preferences, new -> preferences.copy(playerScreenLayout = new) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_colored_player] },
+                subtitle = { null },
+                icon = Icons.Filled.FormatColorFill,
+                value = { it.coloredPlayer },
+                onSetValue = { preferences, new -> preferences.copy(coloredPlayer = new) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_swipe_to_remove_from_queue] },
+                subtitle = { null },
+                icon = Icons.Filled.ClearAll,
+                value = { it.swipeToRemoveFromQueue },
+                onSetValue = { preferences, new -> preferences.copy(swipeToRemoveFromQueue = new) },
+            ),
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_lyrics_display] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.Subtitles,
+                options = LyricsDisplayPreference.entries,
+                value = { it.lyricsDisplay },
+                onSetValue = { preferences, new -> preferences.copy(lyricsDisplay = new) },
+            ),
+            Item.Slider(
+                title = { Strings[R.string.preferences_lyrics_scaling] },
+                numberFormatter = { Strings[R.string.preferences_multiplier_number].icuFormat(it) },
+                icon = Icons.Filled.ZoomIn,
+                value = { it.lyricsSizeMultiplier },
+                default = 1f,
+                min = 0.5f,
+                max = 4f,
+                steps = 400 - 50 - 1,
+                onSetValue = { preferences, new -> preferences.copy(lyricsSizeMultiplier = new) },
+            ),
+        ),
+    )
+
+private val Playback =
+    Page(
+        R.string.preferences_playback,
+        Icons.AutoMirrored.Filled.VolumeUp,
+        listOf(
+            Item.Toggle(
+                title = { Strings[R.string.preferences_play_on_output_device_connection] },
+                subtitle = { null },
+                icon = Icons.Filled.PlayArrow,
+                value = { it.playOnOutputDeviceConnection },
+                onSetValue = { preferences, new ->
+                    preferences.copy(playOnOutputDeviceConnection = new)
+                },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_pause_on_focus_loss] },
+                subtitle = { null },
+                icon = Icons.Filled.Pause,
+                value = { it.pauseOnFocusLoss },
+                onSetValue = { preferences, new -> preferences.copy(pauseOnFocusLoss = new) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_reshuffle_on_repeat] },
+                subtitle = { null },
+                icon = Icons.Filled.Shuffle,
+                value = { it.reshuffleOnRepeat },
+                onSetValue = { preferences, new -> preferences.copy(reshuffleOnRepeat = new) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_audio_offloading] },
+                subtitle = { Strings[R.string.preferences_audio_offloading_subtitle] },
+                icon = Icons.Filled.BatterySaver,
+                value = { it.audioOffloading },
+                onSetValue = { preferences, new -> preferences.copy(audioOffloading = new) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_system_equalizer] },
+                subtitle = { null },
+                icon = Icons.Filled.BarChart,
+                onClick = {
+                    if (!playerManager.openSystemEqualizer(context)) {
+                        uiManager.toast(Strings[R.string.toast_cant_open_system_equalizer])
+                    }
+                },
+            ),
+        ),
+    )
+
+private val Indexing =
+    Page(
+        R.string.preferences_indexing,
+        Icons.Filled.AllInbox,
+        listOf(
+            Item.Clickable(
+                title = { Strings[R.string.preferences_indexing_help] },
+                subtitle = { null },
+                icon = Icons.AutoMirrored.Filled.Help,
+                onClick = { uiManager.openDialog(PreferencesIndexingHelpDialog()) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_indexing_advanced_metadata_extraction] },
+                subtitle = {
+                    Strings[R.string.preferences_indexing_advanced_metadata_extraction_subtitle]
+                },
+                icon = Icons.Filled.DocumentScanner,
+                value = { it.pauseOnFocusLoss },
+                onSetValue = { preferences, new -> preferences.copy(pauseOnFocusLoss = new) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_indexing_disable_artwork_color_extraction] },
+                subtitle = {
+                    Strings[R.string.preferences_indexing_disable_artwork_color_extraction_subtitle]
+                },
+                icon = Icons.Filled.FormatColorReset,
+                value = { it.disableArtworkColorExtraction },
+                onSetValue = { preferences, new ->
+                    preferences.copy(disableArtworkColorExtraction = new)
+                },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_indexing_always_rescan_mediastore] },
+                subtitle = {
+                    Strings[R.string.preferences_indexing_always_rescan_mediastore_subtitle]
+                },
+                icon = Icons.Filled.Refresh,
+                value = { it.alwaysRescanMediaStore },
+                onSetValue = { preferences, new -> preferences.copy(alwaysRescanMediaStore = new) },
+            ),
+            Item.Slider(
+                title = { Strings[R.string.preferences_scan_progress_timeout] },
+                numberFormatter = {
+                    NumberFormatter.withLocale(Locale.getDefault())
+                        .notation(Notation.simple())
+                        .unit(MeasureUnit.SECOND)
+                        .precision(Precision.integer())
+                        .format(it)
+                        .toString()
+                },
+                icon = Icons.Filled.HourglassFull,
+                value = { it.scanProgressTimeoutSeconds.toFloat() },
+                default = 1f,
+                min = 0f,
+                max = 60f,
+                steps = 60 - 0 - 1,
+                onSetValue = { preferences, new ->
+                    preferences.copy(scanProgressTimeoutSeconds = new.roundToIntOrZero())
+                },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_indexing_artist_separators] },
+                subtitle = {
+                    Strings[R.string.preferences_indexing_artist_separators_subtitle].icuFormat(
+                        it.size
+                    )
+                },
+                icon = Icons.Filled.SafetyDivider,
+                value = { it.artistMetadataSeparators },
+                onClick = { uiManager.openDialog(PreferencesArtistSeparatorDialog()) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_indexing_artist_separator_exceptions] },
+                subtitle = {
+                    Strings[R.string.preferences_indexing_artist_separator_exceptions_subtitle]
+                        .icuFormat(it.size)
+                },
+                icon = Icons.Filled.DoNotTouch,
+                value = { it.artistMetadataSeparatorExceptions },
+                onClick = { uiManager.openDialog(PreferencesArtistSeparatorExceptionDialog()) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_indexing_genre_separators] },
+                subtitle = {
+                    Strings[R.string.preferences_indexing_genre_separators_subtitle].icuFormat(
+                        it.size
+                    )
+                },
+                icon = Icons.Filled.ShapeLine,
+                value = { it.genreMetadataSeparators },
+                onClick = { uiManager.openDialog(PreferencesGenreSeparatorDialog()) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_indexing_genre_separator_exceptions] },
+                subtitle = {
+                    Strings[R.string.preferences_indexing_genre_separator_exceptions_subtitle]
+                        .icuFormat(it.size)
+                },
+                icon = Icons.Filled.DoNotTouch,
+                value = { it.genreMetadataSeparatorExceptions },
+                onClick = { uiManager.openDialog(PreferencesGenreSeparatorExceptionDialog()) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_indexing_blacklist] },
+                subtitle = {
+                    Strings[R.string.preferences_indexing_blacklist_subtitle].icuFormat(
+                        it.size,
+                        filteredTrackCount,
+                    )
+                },
+                icon = Icons.Filled.Block,
+                value = { it.blacklist },
+                onClick = { uiManager.openDialog(PreferencesBlacklistDialog()) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_indexing_whitelist] },
+                subtitle = {
+                    Strings[R.string.preferences_indexing_whitelist_subtitle].icuFormat(it.size)
+                },
+                icon = Icons.Filled.Check,
+                value = { it.whitelist },
+                onClick = { uiManager.openDialog(PreferencesWhitelistDialog()) },
+            ),
+        ),
+    )
+
+private val Miscellaneous =
+    Page(
+        R.string.preferences_miscellaneous,
+        Icons.Filled.MoreHoriz,
+        listOf(
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_text_encoding] },
+                itemName = {
+                    if (it == null) Strings[R.string.preferences_text_encoding_auto_detect]
+                    else Charset.forName(it).displayName()
+                },
+                icon = Icons.Filled.DataObject,
+                options =
+                    listOf(null as String?) + Charset.availableCharsets().map { it.value.name() },
+                value = { it.charsetName },
+                onSetValue = { preferences, new -> preferences.copy(charsetName = new) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_treat_embedded_lyrics_as_lrc] },
+                subtitle = { null },
+                icon = Icons.Filled.Subtitles,
+                value = { it.treatEmbeddedLyricsAsLrc },
+                onSetValue = { preferences, new ->
+                    preferences.copy(treatEmbeddedLyricsAsLrc = new)
+                },
+            ),
+            Item.ConditionalClickable(
+                title = { Strings[R.string.preferences_grant_images_permission] },
+                subtitle = { Strings[R.string.preferences_grant_images_permission_subtitle] },
+                icon = Icons.Filled.PermMedia,
+                visibility = { imagesPermissionState?.status?.isGranted == false },
+                onClick = {
+                    if (partialImagesPermissionState?.status?.isGranted == true) {
+                        context.startActivity(
+                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                setData(Uri.fromParts("package", context.packageName, null))
+                            }
+                        )
+                    } else {
+                        imagesPermissionState?.launchPermissionRequest()
+                    }
+                },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_playlist_io_settings] },
+                subtitle = { null },
+                icon = Icons.Filled.ImportExport,
+                onClick = { uiManager.openDialog(PlaylistIoSettingsDialog()) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.playlist_io_sync] },
+                subtitle = { null },
+                icon = Icons.Filled.Sync,
+                onClick = { uiManager.openTopLevelScreen(PlaylistIoScreen.sync()) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_dump_logcat] },
+                subtitle = {
+                    Strings[R.string.preferences_dump_logcat_subtitle].icuFormat(logcatDumpPath)
+                },
+                icon = Icons.Filled.BugReport,
+                onClick = { dumpLogcat() },
+            ),
+        ),
+    )
+private val About =
+    Page(
+        R.string.preferences_about,
+        Icons.Filled.Info,
+        listOf(
+            Item.NonInteractive(
+                title = { Strings[R.string.preferences_version] },
+                subtitle = { BuildConfig.VERSION_NAME },
+                icon = Icons.Filled.Commit,
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_website] },
+                subtitle = { Strings[R.string.app_url] },
+                icon = Icons.Filled.Link,
+                onClick = {
+                    context.startActivity(
+                        Intent(Intent.ACTION_VIEW, Strings[R.string.app_url].toUri())
+                    )
+                },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_license] },
+                subtitle = { Strings[R.string.app_license_name] },
+                icon = Icons.Filled.Balance,
+                onClick = { uiManager.openDialog(PreferencesLicenseDialog()) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_third_party_licenses] },
+                subtitle = { null },
+                icon = Icons.Filled.Attribution,
+                onClick = { uiManager.openDialog(PreferencesThirdPartyLicensesDialog()) },
+            ),
+        ),
+    )
+
+private fun PreferencesScreenContext.dumpLogcat() {
+    coroutineScope.launch {
+        withContext(Dispatchers.IO) {
+            try {
+                File(requireNotNull(logcatDumpPath)).bufferedWriter().use { writer ->
+                    writer.write(BuildConfig.VERSION_NAME)
+                    writer.write("\n\n")
+                    writer.write("API level ${Build.VERSION.SDK_INT}")
+                    writer.write("\n\n")
+                    Runtime.getRuntime().exec("logcat -d").inputStream.bufferedReader().use { reader
+                        ->
+                        while (true) {
+                            val line = reader.readLine()
+                            if (line == null) break
+                            writer.write(line)
+                            writer.write("\n")
+                        }
+                    }
+
+                    uiManager.toast(Strings[R.string.toast_dump_logcat_success])
+                }
+            } catch (ex: Exception) {
+                Log.e("Phocid", "Can't dump logcat", ex)
+                uiManager.toast(Strings[R.string.toast_dump_logcat_failed].icuFormat(ex.toString()))
+            }
+        }
+    }
+}
+
+private data class PreferencesScreenContext(
+    val context: Context,
+    val coroutineScope: CoroutineScope,
+    val uiManager: UiManager,
+    val playerManager: PlayerManager,
+    val preferences: Preferences,
+    val updatePreferences: ((Preferences) -> Preferences) -> Unit,
+    val filteredTrackCount: Int,
+    val logcatDumpPath: String?,
+    val imagesPermissionState: PermissionState?,
+    val partialImagesPermissionState: PermissionState?,
+)
+
+private data class Page(val stringId: Int, val icon: ImageVector, val items: List<Item>)
+
+private sealed class Item {
+    data class NonInteractive(
+        val title: () -> String,
+        val subtitle: PreferencesScreenContext.() -> String?,
+        val icon: ImageVector,
+    ) : Item()
+
+    data class Clickable<T>(
+        val title: () -> String,
+        val subtitle: PreferencesScreenContext.(T) -> String?,
+        val icon: ImageVector,
+        val value: (Preferences) -> T,
+        val onClick: PreferencesScreenContext.() -> Unit,
+        val action: Triple<() -> String, ImageVector, PreferencesScreenContext.() -> Unit>? = null,
+    ) : Item()
+
+    data class ConditionalClickable(
+        val title: () -> String,
+        val subtitle: PreferencesScreenContext.() -> String?,
+        val icon: ImageVector,
+        val visibility: PreferencesScreenContext.() -> Boolean,
+        val onClick: PreferencesScreenContext.() -> Unit,
+    ) : Item()
+
+    data class Toggle(
+        val title: () -> String,
+        val subtitle: PreferencesScreenContext.(Boolean) -> String?,
+        val icon: ImageVector,
+        val value: (Preferences) -> Boolean,
+        val onSetValue: (preferences: Preferences, new: Boolean) -> Preferences,
+    ) : Item()
+
+    companion object {
+        fun Clickable(
+            title: () -> String,
+            subtitle: PreferencesScreenContext.() -> String?,
+            icon: ImageVector,
+            onClick: PreferencesScreenContext.() -> Unit,
+        ): Clickable<Unit> {
+            return Clickable(title, { subtitle() }, icon, {}, onClick)
+        }
+
+        @Suppress("FunctionName")
+        fun <T> SingleChoice(
+            title: () -> String,
+            itemName: (T) -> String,
+            icon: ImageVector,
+            options: List<T>,
+            value: (Preferences) -> T,
+            onSetValue: (preferences: Preferences, new: T) -> Preferences,
+        ): Clickable<T> {
+            return Clickable(
+                title,
+                { itemName(it) },
+                icon,
+                value,
+                {
+                    uiManager.openDialog(
+                        PreferencesSingleChoiceDialog(
+                            title = title(),
+                            options = options.map { it to itemName(it) },
+                            activeOption = value,
+                            updatePreferences = onSetValue,
+                        )
+                    )
+                },
+            )
+        }
+
+        @Suppress("FunctionName")
+        fun <T : Any> OrderAndVisibility(
+            title: () -> String,
+            subtitle: (Preferences) -> String,
+            itemName: (T) -> String,
+            icon: ImageVector,
+            value: (Preferences) -> List<Pair<T, Boolean>>,
+            onSetValue: (preferences: Preferences, new: List<Pair<T, Boolean>>) -> Preferences,
+        ): Clickable<Preferences> {
+            return Clickable(
+                title,
+                { subtitle(it) },
+                icon,
+                { it },
+                {
+                    uiManager.openDialog(
+                        PreferencesOrderAndVisibilityDialog(
+                            title = title(),
+                            itemName = itemName,
+                            value = value,
+                            onSetValue = onSetValue,
+                        )
+                    )
+                },
+            )
+        }
+
+        @Suppress("FunctionName")
+        fun Slider(
+            title: () -> String,
+            numberFormatter: (Float) -> String,
+            icon: ImageVector,
+            value: (Preferences) -> Float,
+            default: Float,
+            min: Float,
+            max: Float,
+            steps: Int,
+            onSetValue: (preferences: Preferences, new: Float) -> Preferences,
+        ): Clickable<Float> {
+            return Clickable(
+                title,
+                { numberFormatter(it) },
+                icon,
+                value,
+                {
+                    uiManager.openDialog(
+                        PreferencesSteppedSliderDialog(
+                            title = Strings[R.string.preferences_ui_scaling],
+                            numberFormatter = numberFormatter,
+                            initialValue = value,
+                            defaultValue = default,
+                            min = min,
+                            max = max,
+                            steps = steps,
+                            onSetValue = onSetValue,
+                        )
+                    )
+                },
+            )
         }
     }
 }

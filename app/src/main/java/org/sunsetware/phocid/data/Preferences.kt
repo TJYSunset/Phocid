@@ -36,42 +36,41 @@ import org.sunsetware.phocid.utils.UUIDSerializer
 @Serializable
 data class Preferences(
     // Interface
-    val tabSettings: Map<LibraryScreenTabType, LibraryScreenTabInfo> =
-        LibraryScreenTabType.entries.associateWith { LibraryScreenTabInfo(it) },
-    val tabOrderAndVisibility: List<Pair<LibraryScreenTabType, Boolean>> =
-        LibraryScreenTabType.entries.map { it to true },
-    val tabStyle: TabStylePreference = TabStylePreference.TEXT_ONLY,
-    val scrollableTabs: Boolean = true,
-    val folderTabRoot: String? = null,
-    val libraryTrackClickAction: LibraryTrackClickAction = LibraryTrackClickAction.PLAY_ALL,
-    val alwaysShowHintOnScroll: Boolean = false,
-    val playerScreenLayout: PlayerScreenLayoutType = PlayerScreenLayoutType.DEFAULT,
-    val swipeToRemoveFromQueue: Boolean = false,
-    val highResArtworkPreference: HighResArtworkPreference = HighResArtworkPreference.PLAYER_ONLY,
-    val sortingLocaleLanguageTag: String? = null,
-    val lyricsDisplay: LyricsDisplayPreference = LyricsDisplayPreference.DEFAULT,
+    val darkTheme: DarkThemePreference = DarkThemePreference.SYSTEM,
+    val themeColorSource: ThemeColorSource = ThemeColorSource.MATERIAL_YOU,
+    val customThemeColor: CustomThemeColor = CustomThemeColor(50, 0),
+    val coloredGlobalTheme: Boolean = true,
+    val pureBackgroundColor: Boolean = false,
+    val artworkColorPreference: ArtworkColorPreference = ArtworkColorPreference.MUTED_FIRST,
+    val shapePreference: ShapePreference = ShapePreference.SQUARE,
+    val densityMultiplier: Float = 1f,
+    val swipeThresholdMultiplier: Float = 1f,
     val notificationButtonOrderAndVisibility: List<Pair<NotificationButton, Boolean>> =
         NotificationButton.entries.map {
             it to (it == NotificationButton.REPEAT || it == NotificationButton.SHUFFLE)
         },
-    val densityMultiplier: Float = 1f,
+    val highResArtworkPreference: HighResArtworkPreference = HighResArtworkPreference.PLAYER_ONLY,
+    val alwaysShowHintOnScroll: Boolean = false,
+    // Home screen
+    val tabOrderAndVisibility: List<Pair<LibraryScreenTabType, Boolean>> =
+        LibraryScreenTabType.entries.map { it to true },
+    val scrollableTabs: Boolean = true,
+    val tabStyle: TabStylePreference = TabStylePreference.TEXT_ONLY,
+    val folderTabRoot: String? = null,
+    val coloredCards: Boolean = true,
+    val libraryTrackClickAction: LibraryTrackClickAction = LibraryTrackClickAction.PLAY_ALL,
+    val sortingLocaleLanguageTag: String? = null,
+    // Now playing
+    val playerScreenLayout: PlayerScreenLayoutType = PlayerScreenLayoutType.DEFAULT,
+    val coloredPlayer: Boolean = true,
+    val swipeToRemoveFromQueue: Boolean = false,
+    val lyricsDisplay: LyricsDisplayPreference = LyricsDisplayPreference.DEFAULT,
     val lyricsSizeMultiplier: Float = 1f,
-    val swipeThresholdMultiplier: Float = 1f,
     // Playback
     val playOnOutputDeviceConnection: Boolean = false,
     val pauseOnFocusLoss: Boolean = true,
-    val audioOffloading: Boolean = false,
     val reshuffleOnRepeat: Boolean = false,
-    // Theme
-    val darkTheme: DarkThemePreference = DarkThemePreference.SYSTEM,
-    val themeColorSource: ThemeColorSource = ThemeColorSource.MATERIAL_YOU,
-    val customThemeColor: CustomThemeColor = CustomThemeColor(50, 0),
-    val pureBackgroundColor: Boolean = false,
-    val coloredGlobalTheme: Boolean = true,
-    val coloredCards: Boolean = true,
-    val coloredPlayer: Boolean = true,
-    val artworkColorPreference: ArtworkColorPreference = ArtworkColorPreference.MUTED_FIRST,
-    val shapePreference: ShapePreference = ShapePreference.SQUARE,
+    val audioOffloading: Boolean = false,
     // Indexing
     val advancedMetadataExtraction: Boolean = false,
     val disableArtworkColorExtraction: Boolean = false,
@@ -84,15 +83,15 @@ data class Preferences(
         listOf("R&B", "Rhythm & Blues", "D&B", "Drum & Bass"),
     val blacklist: List<String> = emptyList(),
     val whitelist: List<String> = emptyList(),
-    // Data
+    // Miscellaneous
     val charsetName: String? = null,
+    val treatEmbeddedLyricsAsLrc: Boolean = false,
     val playlistIoSettings: PlaylistIoSettings = PlaylistIoSettings(),
     val playlistIoSyncLocation: String? = null,
     val playlistIoSyncSettings: PlaylistIoSettings =
         PlaylistIoSettings(ignoreLocation = false, removeInvalid = false, exportRelative = true),
     val playlistIoSyncMappings: Map<@Serializable(with = UUIDSerializer::class) UUID, String> =
         emptyMap(),
-    val treatEmbeddedLyricsAsLrc: Boolean = false,
     // Widget
     val widgetArtworkBackground: Boolean = true,
     val widgetAccentBackground: Boolean = true,
@@ -100,6 +99,8 @@ data class Preferences(
     val widgetLayout: WidgetLayout = WidgetLayout.SMALL,
     val widgetArtworkResolutionLimit: Int = 700,
     // Hidden
+    val tabSettings: Map<LibraryScreenTabType, LibraryScreenTabInfo> =
+        LibraryScreenTabType.entries.associateWith { LibraryScreenTabInfo(it) },
     val collectionViewSorting: Map<LibraryScreenCollectionType, Pair<String, Boolean>> =
         LibraryScreenCollectionType.entries.associateWith {
             Pair(it.sortingOptions.keys.first(), true)

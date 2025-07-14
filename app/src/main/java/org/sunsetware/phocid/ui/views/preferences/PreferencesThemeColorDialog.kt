@@ -1,5 +1,6 @@
 package org.sunsetware.phocid.ui.views.preferences
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import org.sunsetware.phocid.ui.components.DialogBase
 import org.sunsetware.phocid.ui.components.SelectBox
 import org.sunsetware.phocid.ui.components.SteppedSliderWithNumber
 import org.sunsetware.phocid.ui.components.UtilityListHeader
+import org.sunsetware.phocid.ui.components.UtilitySwitchListItem
 import org.sunsetware.phocid.utils.icuFormat
 import org.sunsetware.phocid.utils.roundToIntOrZero
 
@@ -62,7 +64,7 @@ class PreferencesThemeColorDialog() : Dialog() {
                     },
                     modifier = Modifier.padding(horizontal = 24.dp),
                 )
-                if (preferences.themeColorSource == ThemeColorSource.CUSTOM) {
+                AnimatedVisibility(preferences.themeColorSource == ThemeColorSource.CUSTOM) {
                     Column {
                         Box(
                             modifier =
@@ -114,6 +116,13 @@ class PreferencesThemeColorDialog() : Dialog() {
                         )
                     }
                 }
+                UtilitySwitchListItem(
+                    title = Strings[R.string.preferences_colored_global_theme],
+                    checked = preferences.coloredGlobalTheme,
+                    onCheckedChange = { checked ->
+                        viewModel.updatePreferences { it.copy(coloredGlobalTheme = checked) }
+                    },
+                )
             }
         }
     }

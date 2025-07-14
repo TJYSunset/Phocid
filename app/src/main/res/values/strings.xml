@@ -155,7 +155,6 @@
     <string name="preferences_dark_theme_dark">Dark</string>
     <string name="preferences_dark_theme_light">Light</string>
     <string name="preferences_dark_theme_system">Follow system</string>
-    <string name="preferences_data">Data</string>
     <string name="preferences_dump_logcat">Dump Logcat</string>
     <string name="preferences_dump_logcat_subtitle">Output path: {0}</string>
     <string name="preferences_folder_picker_dialog_title">Select folder</string>
@@ -168,6 +167,7 @@
     <string name="preferences_high_res_artwork_large_only">Only large images</string>
     <string name="preferences_high_res_artwork_never">Never</string>
     <string name="preferences_high_res_artwork_player_only">Only in player</string>
+    <string name="preferences_home_screen">Home screen</string>
     <string name="preferences_indexing">Indexing</string>
     <string name="preferences_indexing_advanced_metadata_extraction">Advanced metadata extraction</string>
     <string name="preferences_indexing_advanced_metadata_extraction_subtitle">Reads multiple tags and embedded lyrics, but is very slow. Applies after a manual rescan.</string>
@@ -212,12 +212,14 @@
     <string name="preferences_lyrics_display_disabled">Disabled</string>
     <string name="preferences_lyrics_display_two_lines">Two lines</string>
     <string name="preferences_lyrics_scaling">Lyrics scaling</string>
+    <string name="preferences_miscellaneous">Miscellaneous</string>
     <string name="preferences_multiplier_number">{0, number, ::.00}×</string>
     <string name="preferences_notification_button_favorite">Favorite</string>
     <string name="preferences_notification_button_repeat">Repeat</string>
     <string name="preferences_notification_button_shuffle">Shuffle</string>
     <string name="preferences_notification_buttons">Notification buttons</string>
     <string name="preferences_notification_buttons_none">None</string>
+    <string name="preferences_now_playing">Now playing</string>
     <string name="preferences_pause_on_focus_loss">Pause on audio focus loss</string>
     <string name="preferences_play_on_output_device_connection">Play on headphones connection</string>
     <string name="preferences_playback">Playback</string>
@@ -249,11 +251,8 @@
     <string name="preferences_tab_style_text_and_icon">Text and icon</string>
     <string name="preferences_tab_style_text_only">Only text</string>
     <string name="preferences_tabs">Home screen tabs</string>
-    <!-- Symbol used to separate list of enabled tabs in preferences screen -->
-    <string name="preferences_tabs_separator">", "</string>
     <string name="preferences_text_encoding">Text encoding</string>
     <string name="preferences_text_encoding_auto_detect">Auto detect</string>
-    <string name="preferences_theme">Theme</string>
     <string name="preferences_theme_color">Theme color</string>
     <string name="preferences_theme_color_chroma">Chroma</string>
     <string name="preferences_theme_color_chroma_number">{0}%</string>

@@ -123,6 +123,7 @@ inline fun UtilitySwitchListItem(
     crossinline onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
+    crossinline lead: @Composable () -> Unit = {},
 ) {
     Row(
         modifier =
@@ -133,6 +134,7 @@ inline fun UtilitySwitchListItem(
                 .padding(horizontal = 24.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        lead()
         Column(modifier = Modifier.weight(1f)) {
             Text(text = title, style = Typography.bodyLarge)
             if (subtitle != null) {
