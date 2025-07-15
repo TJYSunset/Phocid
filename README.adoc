@@ -65,7 +65,7 @@ Remember to clone the submodule with `git clone --recurse-submodules`.
 Please ask first if you want to work on big code changes.
 Instead of directly contributing code to Phocid, it would be great if you can help with big upstream issues first, like https://github.com/androidx/media/issues/81. (Please let me know if you have successfully closed those!)
 
-If you would like to help with translations, see https://github.com/TJYSunset/Phocid/issues/1[issue #1].
+If you would like to help with translations, please use https://sunsetware.org/phocid/translate/[the translation editor] and follow the instructions. Alternatively, you can use your preferred translation tool, set it up for Android + https://unicode-org.github.io/icu/userguide/format_parse/messages/[ICU MessageFormat 1.0], then submit a pull request.
 Please don't submit machine translations or AI hallucinations.
 
 I don't accept donations.
