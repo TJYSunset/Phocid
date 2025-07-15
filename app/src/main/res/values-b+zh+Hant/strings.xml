@@ -136,6 +136,7 @@
     <string name="preferences_dump_logcat_subtitle">儲存路徑：{0}</string>
     <string name="preferences_example_ellipsis">、……</string>
     <string name="preferences_example_separator">、</string>
+    <string name="preferences_export">匯出設定</string>
     <string name="preferences_folder_picker_dialog_title">選擇資料夾</string>
     <string name="preferences_folder_picker_dialog_up">往上</string>
     <string name="preferences_folder_tab_root">資料夾分頁起始目錄</string>
@@ -147,6 +148,7 @@
     <string name="preferences_high_res_artwork_never">從不</string>
     <string name="preferences_high_res_artwork_player_only">僅播放器</string>
     <string name="preferences_home_screen">主頁</string>
+    <string name="preferences_import">匯入設定</string>
     <string name="preferences_indexing">索引</string>
     <string name="preferences_indexing_advanced_metadata_extraction">進階中繼資料取出</string>
     <string name="preferences_indexing_advanced_metadata_extraction_subtitle">讀取更多標籤與內嵌歌詞，但非常慢。會在手動重新掃描時套用。</string>
@@ -301,6 +303,10 @@
     <string name="toast_playlist_exported_with_failure">已匯出 {0, plural, other {# 個播放清單}}，{1, plural, other {#}} 個失敗了</string>
     <string name="toast_playlist_imported">已匯入 {0, plural, other {# 個播放清單}}</string>
     <string name="toast_playlist_io_sync_error">同步播放清單發生錯誤。請見同步畫面的日誌取得詳細資訊。</string>
+    <string name="toast_preferences_export_failed">設定匯出失敗：{0}</string>
+    <string name="toast_preferences_export_success">已匯出設定</string>
+    <string name="toast_preferences_import_failed">設定匯入失敗：{0}</string>
+    <string name="toast_preferences_import_success">已匯入設定</string>
     <string name="toast_timer_canceled">已取消睡眠計時器</string>
     <string name="toast_timer_set">播放會在約 {0, plural, other {#}} 分鐘後暫停</string>
     <string name="toast_track_queued">已將 {0, plural, other {#}} 首曲目加入待播清單</string>

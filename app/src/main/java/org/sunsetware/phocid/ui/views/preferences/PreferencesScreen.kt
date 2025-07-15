@@ -1,4 +1,8 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalPermissionsApi::class,
+    ExperimentalSerializationApi::class,
+)
 
 package org.sunsetware.phocid.ui.views.preferences
 
@@ -62,6 +66,7 @@ import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.RoundedCorner
 import androidx.compose.material.icons.filled.SafetyDivider
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.ShapeLine
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material.icons.filled.SortByAlpha
@@ -70,6 +75,7 @@ import androidx.compose.material.icons.filled.Subtitles
 import androidx.compose.material.icons.filled.Swipe
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Tab
+import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.filled.ZoomIn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -113,6 +119,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.json.encodeToStream
 import org.apache.commons.io.FilenameUtils
 import org.sunsetware.phocid.BuildConfig
 import org.sunsetware.phocid.MainViewModel
@@ -654,7 +664,9 @@ private val NowPlaying =
                 subtitle = { null },
                 icon = Icons.Filled.Gradient,
                 value = { it.colorfulPlayerBackground },
-                onSetValue = { preferences, new -> preferences.copy(colorfulPlayerBackground = new) },
+                onSetValue = { preferences, new ->
+                    preferences.copy(colorfulPlayerBackground = new)
+                },
             ),
             Item.Toggle(
                 title = { Strings[R.string.preferences_swipe_to_remove_from_queue] },
@@ -913,6 +925,59 @@ private val Miscellaneous =
                 subtitle = { null },
                 icon = Icons.Filled.Sync,
                 onClick = { uiManager.openTopLevelScreen(PlaylistIoScreen.sync()) },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_import] },
+                subtitle = { null },
+                icon = Icons.Filled.UploadFile,
+                onClick = {
+                    uiManager.intentLauncher.get()?.openJsonDocument { uri ->
+                        if (uri == null) return@openJsonDocument
+                        try {
+                            context.contentResolver.openInputStream(uri)?.use { stream ->
+                                updatePreferences {
+                                    @Suppress("JSON_FORMAT_REDUNDANT")
+                                    Json { ignoreUnknownKeys = true }
+                                        .decodeFromStream<Preferences>(stream)
+                                }
+                            }
+                            uiManager.toast(Strings[R.string.toast_preferences_import_success])
+                        } catch (ex: Exception) {
+                            Log.e("Phocid", "Error importing preferences", ex)
+                            uiManager.toast(
+                                Strings[R.string.toast_preferences_import_failed].icuFormat(
+                                    ex.toString()
+                                )
+                            )
+                        }
+                    }
+                },
+            ),
+            Item.Clickable(
+                title = { Strings[R.string.preferences_export] },
+                subtitle = { null },
+                icon = Icons.Filled.Save,
+                onClick = {
+                    uiManager.intentLauncher.get()?.createJsonDocument("phocid-preferences.json") {
+                        uri ->
+                        if (uri == null) return@createJsonDocument
+                        try {
+                            context.contentResolver.openOutputStream(uri)?.use { stream ->
+                                @Suppress("JSON_FORMAT_REDUNDANT")
+                                Json { ignoreUnknownKeys = true }
+                                    .encodeToStream(preferences, stream)
+                            }
+                            uiManager.toast(Strings[R.string.toast_preferences_export_success])
+                        } catch (ex: Exception) {
+                            Log.e("Phocid", "Error exporting preferences", ex)
+                            uiManager.toast(
+                                Strings[R.string.toast_preferences_export_failed].icuFormat(
+                                    ex.toString()
+                                )
+                            )
+                        }
+                    }
+                },
             ),
             Item.Clickable(
                 title = { Strings[R.string.preferences_dump_logcat] },

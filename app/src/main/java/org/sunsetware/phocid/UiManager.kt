@@ -61,6 +61,10 @@ abstract class TopLevelScreen {
 interface IntentLauncher {
     fun openDocumentTree(continuation: (Uri?) -> Unit)
 
+    fun createJsonDocument(fileName: String, continuation: (Uri?) -> Unit)
+
+    fun openJsonDocument(continuation: (Uri?) -> Unit)
+
     fun share(tracks: List<Track>)
 }
 

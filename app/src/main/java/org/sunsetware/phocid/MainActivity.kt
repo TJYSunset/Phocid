@@ -246,10 +246,31 @@ class MainActivity : ComponentActivity(), IntentLauncher {
         registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
             openDocumentTreeContinuation.get()?.invoke(uri)
         }
+    private val createJsonDocumentContinuation = AtomicReference(null as ((Uri?) -> Unit)?)
+    private val createJsonDocumentIntent =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri
+            ->
+            createJsonDocumentContinuation.get()?.invoke(uri)
+        }
+    private val openJsonDocumentContinuation = AtomicReference(null as ((Uri?) -> Unit)?)
+    private val openJsonDocumentIntent =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            openJsonDocumentContinuation.get()?.invoke(uri)
+        }
 
     override fun openDocumentTree(continuation: (Uri?) -> Unit) {
         openDocumentTreeContinuation.set(continuation)
         openDocumentTreeIntent.launch(null)
+    }
+
+    override fun createJsonDocument(fileName: String, continuation: (Uri?) -> Unit) {
+        createJsonDocumentContinuation.set(continuation)
+        createJsonDocumentIntent.launch(fileName)
+    }
+
+    override fun openJsonDocument(continuation: (Uri?) -> Unit) {
+        openJsonDocumentContinuation.set(continuation)
+        openJsonDocumentIntent.launch(arrayOf("application/json"))
     }
 
     override fun share(tracks: List<Track>) {

@@ -358,4 +358,10 @@
     <string name="view_settings">View settings</string>
     <string name="view_settings_grid_size">Grid size</string>
     <string name="view_settings_sort_by">Sort by</string>
+    <string name="preferences_import">Import preferences</string>
+    <string name="preferences_export">Export preferences</string>
+    <string name="toast_preferences_import_failed">Preferences import failed: {0}</string>
+    <string name="toast_preferences_import_success">Imported preferences</string>
+    <string name="toast_preferences_export_failed">Preferences export failed: {0}</string>
+    <string name="toast_preferences_export_success">Exported preferences</string>
 </resources>
