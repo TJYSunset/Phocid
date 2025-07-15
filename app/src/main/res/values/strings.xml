@@ -141,6 +141,7 @@
     <string name="preferences_colored_cards">Color cards based on artwork</string>
     <string name="preferences_colored_global_theme">Change theme color based on artwork</string>
     <string name="preferences_colored_player">Color player screen based on artwork</string>
+    <string name="preferences_colorful_player_background">Colored player background</string>
     <string name="preferences_dark_theme">Dark theme</string>
     <string name="preferences_dark_theme_dark">Dark</string>
     <string name="preferences_dark_theme_light">Light</string>

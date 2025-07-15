@@ -50,7 +50,6 @@ import org.sunsetware.phocid.ui.components.OverflowMenu
 import org.sunsetware.phocid.ui.components.Scrollbar
 import org.sunsetware.phocid.ui.components.SwipeToDismiss
 import org.sunsetware.phocid.ui.components.negativePadding
-import org.sunsetware.phocid.ui.theme.contentColor
 import org.sunsetware.phocid.ui.theme.darken
 import org.sunsetware.phocid.ui.views.MenuItem
 import org.sunsetware.phocid.utils.icuFormat
@@ -71,6 +70,7 @@ sealed class PlayerScreenQueue {
         nestedScrollConnection: NestedScrollConnection,
         containerColor: Color,
         contentColor: Color,
+        colorfulBackground: Boolean,
         dragIndicatorVisibility: Boolean,
         swipeToRemoveFromQueue: Boolean,
         swipeThreshold: Dp,
@@ -84,19 +84,21 @@ sealed class PlayerScreenQueue {
 
 val PlayerScreenQueueDefault =
     PlayerScreenQueueDefaultBase(
-        { colorScheme, containerColor, contentColor -> colorScheme.surfaceContainerLow },
-        { colorScheme, containerColor, contentColor -> colorScheme.onSurface },
+        { colorScheme, _, _, _ -> colorScheme.surfaceContainerLow },
+        { colorScheme, _, _, _ -> colorScheme.onSurface },
     )
 val PlayerScreenQueueColored =
     PlayerScreenQueueDefaultBase(
-        { colorScheme, containerColor, contentColor -> containerColor.darken() },
-        { colorScheme, containerColor, contentColor -> containerColor.darken().contentColor() },
+        { colorScheme, containerColor, contentColor, colorfulBackground ->
+            if (colorfulBackground) containerColor.darken() else colorScheme.surfaceContainerHigh
+        },
+        { colorScheme, containerColor, contentColor, colorfulBackground -> contentColor },
     )
 
 @Immutable
 class PlayerScreenQueueDefaultBase(
-    private val getContainerColor: (ColorScheme, Color, Color) -> Color,
-    private val getContentColor: (ColorScheme, Color, Color) -> Color,
+    private val getContainerColor: (ColorScheme, Color, Color, Boolean) -> Color,
+    private val getContentColor: (ColorScheme, Color, Color, Boolean) -> Color,
 ) : PlayerScreenQueue() {
     @Composable
     override fun Compose(
@@ -108,6 +110,7 @@ class PlayerScreenQueueDefaultBase(
         nestedScrollConnection: NestedScrollConnection,
         containerColor: Color,
         contentColor: Color,
+        colorfulBackground: Boolean,
         dragIndicatorVisibility: Boolean,
         swipeToRemoveFromQueue: Boolean,
         swipeThreshold: Dp,
@@ -152,9 +155,19 @@ class PlayerScreenQueueDefaultBase(
             Column(verticalArrangement = Arrangement.Center) {
                 Surface(
                     color =
-                        getContainerColor(MaterialTheme.colorScheme, containerColor, contentColor),
+                        getContainerColor(
+                            MaterialTheme.colorScheme,
+                            containerColor,
+                            contentColor,
+                            colorfulBackground,
+                        ),
                     contentColor =
-                        getContentColor(MaterialTheme.colorScheme, containerColor, contentColor),
+                        getContentColor(
+                            MaterialTheme.colorScheme,
+                            containerColor,
+                            contentColor,
+                            colorfulBackground,
+                        ),
                 ) {
                     LibraryListHeader(
                         Strings.separate(

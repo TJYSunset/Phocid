@@ -45,6 +45,7 @@ import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material.icons.filled.FolderSpecial
 import androidx.compose.material.icons.filled.FormatColorFill
 import androidx.compose.material.icons.filled.FormatColorReset
+import androidx.compose.material.icons.filled.Gradient
 import androidx.compose.material.icons.filled.Hd
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.HourglassFull
@@ -647,6 +648,13 @@ private val NowPlaying =
                 icon = Icons.Filled.FormatColorFill,
                 value = { it.coloredPlayer },
                 onSetValue = { preferences, new -> preferences.copy(coloredPlayer = new) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_colorful_player_background] },
+                subtitle = { null },
+                icon = Icons.Filled.Gradient,
+                value = { it.colorfulPlayerBackground },
+                onSetValue = { preferences, new -> preferences.copy(colorfulPlayerBackground = new) },
             ),
             Item.Toggle(
                 title = { Strings[R.string.preferences_swipe_to_remove_from_queue] },

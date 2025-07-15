@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -57,7 +58,6 @@ import org.sunsetware.phocid.ui.components.ProgressSlider
 import org.sunsetware.phocid.ui.components.SingleLineText
 import org.sunsetware.phocid.ui.theme.INACTIVE_ALPHA
 import org.sunsetware.phocid.ui.theme.Typography
-import org.sunsetware.phocid.ui.theme.contentColor
 import org.sunsetware.phocid.ui.theme.contentColorVariant
 import org.sunsetware.phocid.ui.theme.darken
 import org.sunsetware.phocid.ui.views.MenuItem
@@ -77,6 +77,7 @@ sealed class PlayerScreenControls {
         dragModifier: Modifier,
         containerColor: Color,
         contentColor: Color,
+        colorfulBackground: Boolean,
         onSeekToFraction: (Float) -> Unit,
         onToggleRepeat: () -> Unit,
         onSeekToPreviousSmart: () -> Unit,
@@ -97,13 +98,16 @@ val PlayerScreenControlsDefault =
             currentTrack: Track,
             currentTrackIsFavorite: Boolean,
             containerColor: Color,
+            contentColor: Color,
+            colorfulBackground: Boolean,
             overflowMenuItems: List<MenuItem>,
             onTogglePlayQueue: () -> Unit,
             onToggleCurrentTrackIsFavorite: () -> Unit ->
-            val color = containerColor.darken()
             Surface(
-                color = color,
-                contentColor = color.contentColor(),
+                color =
+                    if (colorfulBackground) containerColor.darken()
+                    else MaterialTheme.colorScheme.surfaceContainerHigh,
+                contentColor = contentColor,
                 modifier = Modifier.clickable(onClick = onTogglePlayQueue),
             ) {
                 LibraryListItemHorizontal(
@@ -142,12 +146,14 @@ val PlayerScreenControlsNoQueue =
             currentTrack: Track,
             currentTrackIsFavorite: Boolean,
             containerColor: Color,
+            contentColor: Color,
+            colorfulBackground: Boolean,
             overflowMenuItems: List<MenuItem>,
             onTogglePlayQueue: () -> Unit,
             onToggleCurrentTrackIsFavorite: () -> Unit ->
             Surface(
                 color = containerColor,
-                contentColor = containerColor.contentColor(),
+                contentColor = contentColor,
                 modifier = Modifier.clickable(onClick = onTogglePlayQueue),
             ) {
                 Column {
@@ -206,6 +212,8 @@ class PlayerScreenControlsDefaultBase(
             currentTrack: Track,
             currentTrackIsFavorite: Boolean,
             containerColor: Color,
+            contentColor: Color,
+            colorfulBackground: Boolean,
             overflowMenuItems: List<MenuItem>,
             onTogglePlayQueue: () -> Unit,
             onToggleCurrentTrackIsFavorite: () -> Unit,
@@ -223,6 +231,7 @@ class PlayerScreenControlsDefaultBase(
         dragModifier: Modifier,
         containerColor: Color,
         contentColor: Color,
+        colorfulBackground: Boolean,
         onSeekToFraction: (Float) -> Unit,
         onToggleRepeat: () -> Unit,
         onSeekToPreviousSmart: () -> Unit,
@@ -270,6 +279,8 @@ class PlayerScreenControlsDefaultBase(
                         currentTrack,
                         currentTrackIsFavorite,
                         containerColor,
+                        contentColor,
+                        colorfulBackground,
                         overflowMenuItems,
                         onTogglePlayQueue,
                         onToggleCurrentTrackIsFavorite,
@@ -402,6 +413,8 @@ class PlayerScreenControlsDefaultBase(
                         currentTrack,
                         currentTrackIsFavorite,
                         containerColor,
+                        contentColor,
+                        colorfulBackground,
                         overflowMenuItems,
                         onTogglePlayQueue,
                         onToggleCurrentTrackIsFavorite,

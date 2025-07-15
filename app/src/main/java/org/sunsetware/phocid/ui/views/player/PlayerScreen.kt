@@ -171,14 +171,13 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
         playerManager.state.map(coroutineScope) { it.shuffle }.collectAsStateWithLifecycle()
 
     val defaultColor = LocalThemeAccent.current
-    val animatedContainerColor = remember {
+    val artworkColor = remember {
         Animatable(
             if (preferences.coloredPlayer)
                 currentTrack.getArtworkColor(preferences.artworkColorPreference)
             else defaultColor
         )
     }
-    val animatedContentColor = animatedContainerColor.value.contentColor()
 
     val controlsDragLock = remember { DragLock() }
     val playQueueDragLock = remember { DragLock() }
@@ -294,14 +293,16 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
     // Change colors
     // TODO: Fix this synchronization
     val disposing = remember { AtomicBoolean(false) }
-    LaunchedEffect(currentTrack, preferences.coloredPlayer) {
+    LaunchedEffect(currentTrack, preferences.coloredPlayer, preferences.colorfulPlayerBackground) {
         if (!disposing.get()) {
             val color =
                 if (preferences.coloredPlayer)
                     currentTrack.getArtworkColor(preferences.artworkColorPreference)
                 else defaultColor
-            uiManager.overrideStatusBarLightColor.update { color.luminance() >= 0.5 }
-            animatedContainerColor.animateTo(color)
+            coroutineScope.launch { artworkColor.animateTo(color) }
+            if (preferences.colorfulPlayerBackground) {
+                uiManager.overrideStatusBarLightColor.update { color.luminance() >= 0.5 }
+            }
         }
     }
     DisposableEffect(Unit) {
@@ -332,7 +333,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
         colorScheme =
             if (preferences.coloredPlayer)
                 customColorScheme(
-                        color = currentTrack.getArtworkColor(preferences.artworkColorPreference),
+                        color = artworkColor.value,
                         darkTheme = preferences.darkTheme.boolean ?: isSystemInDarkTheme(),
                     )
                     .let { if (preferences.pureBackgroundColor) it.pureBackgroundColor() else it }
@@ -340,13 +341,20 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
         shapes = MaterialTheme.shapes,
         typography = MaterialTheme.typography,
     ) {
+        val containerColor =
+            if (preferences.colorfulPlayerBackground) artworkColor.value
+            else MaterialTheme.colorScheme.surfaceContainerHighest
+        val contentColor =
+            if (preferences.colorfulPlayerBackground) artworkColor.value.contentColor()
+            else MaterialTheme.colorScheme.primary
+
         Scaffold(
             topBar = {
                 Box(
                     modifier =
                         Modifier.fillMaxWidth()
                             .windowInsetsTopHeight(WindowInsets.statusBars)
-                            .background(animatedContainerColor.value)
+                            .background(containerColor)
                 )
             },
             bottomBar = {
@@ -370,8 +378,8 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                     content = {
                         Box {
                             components.topBarStandalone.Compose(
-                                containerColor = animatedContainerColor.value,
-                                contentColor = animatedContentColor,
+                                containerColor = containerColor,
+                                contentColor = contentColor,
                                 lyricsViewVisibility = useLyricsView,
                                 lyricsAutoScrollButtonVisibility =
                                     useLyricsView &&
@@ -389,8 +397,8 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                         }
                         Box {
                             components.topBarOverlay.Compose(
-                                containerColor = animatedContainerColor.value,
-                                contentColor = animatedContentColor,
+                                containerColor = containerColor,
+                                contentColor = contentColor,
                                 lyricsViewVisibility = useLyricsView,
                                 lyricsAutoScrollButtonVisibility =
                                     useLyricsView &&
@@ -441,8 +449,8 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 lyrics = (currentTrackLyrics as? PlayerScreenLyrics.Synced)?.value,
                                 currentPosition = { playerManager.currentPosition },
                                 preferences = preferences,
-                                containerColor = animatedContainerColor.value,
-                                contentColor = animatedContentColor,
+                                containerColor = containerColor,
+                                contentColor = contentColor,
                             )
                         }
                         Box {
@@ -462,8 +470,9 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                         currentTrackIndex,
                                     ),
                                 dragModifier = controlsDragModifier,
-                                containerColor = animatedContainerColor.value,
-                                contentColor = animatedContentColor,
+                                containerColor = containerColor,
+                                contentColor = contentColor,
+                                colorfulBackground = preferences.colorfulPlayerBackground,
                                 onSeekToFraction = { playerManager.seekToFraction(it) },
                                 onToggleRepeat = { playerManager.toggleRepeat() },
                                 onSeekToPreviousSmart = { playerManager.seekToPreviousSmart() },
@@ -492,8 +501,9 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 },
                                 dragModifier = controlsDragModifier,
                                 nestedScrollConnection = nestedScrollConnection,
-                                containerColor = animatedContainerColor.value,
-                                contentColor = animatedContentColor,
+                                containerColor = containerColor,
+                                contentColor = contentColor,
+                                colorfulBackground = preferences.colorfulPlayerBackground,
                                 dragIndicatorVisibility =
                                     playQueueDragState.position == 1f || playQueueDragTarget == 1f,
                                 swipeToRemoveFromQueue = preferences.swipeToRemoveFromQueue,

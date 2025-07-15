@@ -12,6 +12,7 @@ import com.ibm.icu.text.RuleBasedCollator
 import java.util.Locale
 import java.util.UUID
 import kotlin.math.PI
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.sunsetware.phocid.R
@@ -62,7 +63,9 @@ data class Preferences(
     val sortingLocaleLanguageTag: String? = null,
     // Now playing
     val playerScreenLayout: PlayerScreenLayoutType = PlayerScreenLayoutType.DEFAULT,
+    /** Use artwork color as theme color */
     val coloredPlayer: Boolean = true,
+    val colorfulPlayerBackground: Boolean = true,
     val swipeToRemoveFromQueue: Boolean = false,
     val lyricsDisplay: LyricsDisplayPreference = LyricsDisplayPreference.DEFAULT,
     val lyricsSizeMultiplier: Float = 1f,
