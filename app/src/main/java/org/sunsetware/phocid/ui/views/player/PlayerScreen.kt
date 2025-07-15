@@ -270,6 +270,8 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
         animateFloatAsState(if (useLyricsView) 1f else 0f, emphasizedEnter())
     var lyricsViewAutoScroll by rememberSaveable { mutableStateOf(true) }
 
+    val useCountdown by uiManager.playerScreenUseCountdown.collectAsStateWithLifecycle()
+
     LaunchedEffect(currentTrack) { lyricsViewAutoScroll = true }
 
     BackHandler(playerScreenDragState.position >= 1) {
@@ -473,6 +475,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 containerColor = containerColor,
                                 contentColor = contentColor,
                                 colorfulBackground = preferences.colorfulPlayerBackground,
+                                useCountdown = useCountdown,
                                 onSeekToFraction = { playerManager.seekToFraction(it) },
                                 onToggleRepeat = { playerManager.toggleRepeat() },
                                 onSeekToPreviousSmart = { playerManager.seekToPreviousSmart() },
@@ -488,6 +491,9 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 },
                                 onToggleCurrentTrackIsFavorite = {
                                     viewModel.playlistManager.toggleFavorite(currentTrack)
+                                },
+                                onToggleUseCountdown = {
+                                    uiManager.playerScreenUseCountdown.update { !it }
                                 },
                             )
                         }

@@ -3,6 +3,7 @@ package org.sunsetware.phocid.ui.views.player
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -78,6 +79,7 @@ sealed class PlayerScreenControls {
         containerColor: Color,
         contentColor: Color,
         colorfulBackground: Boolean,
+        useCountdown: Boolean,
         onSeekToFraction: (Float) -> Unit,
         onToggleRepeat: () -> Unit,
         onSeekToPreviousSmart: () -> Unit,
@@ -86,6 +88,7 @@ sealed class PlayerScreenControls {
         onToggleShuffle: () -> Unit,
         onTogglePlayQueue: () -> Unit,
         onToggleCurrentTrackIsFavorite: () -> Unit,
+        onToggleUseCountdown: () -> Unit,
     )
 }
 
@@ -232,6 +235,7 @@ class PlayerScreenControlsDefaultBase(
         containerColor: Color,
         contentColor: Color,
         colorfulBackground: Boolean,
+        useCountdown: Boolean,
         onSeekToFraction: (Float) -> Unit,
         onToggleRepeat: () -> Unit,
         onSeekToPreviousSmart: () -> Unit,
@@ -240,6 +244,7 @@ class PlayerScreenControlsDefaultBase(
         onToggleShuffle: () -> Unit,
         onTogglePlayQueue: () -> Unit,
         onToggleCurrentTrackIsFavorite: () -> Unit,
+        onToggleUseCountdown: () -> Unit,
     ) {
         val context = LocalContext.current
         var progress by remember { mutableFloatStateOf(0f) }
@@ -317,13 +322,23 @@ class PlayerScreenControlsDefaultBase(
                                 modifier = Modifier.padding(horizontal = 16.dp).weight(1f),
                             )
                             SingleLineText(
-                                currentTrack.duration.format(),
+                                currentTrack.duration
+                                    .let {
+                                        if (useCountdown) -(it - progressSeconds.seconds) else it
+                                    }
+                                    .format(),
                                 style = Typography.labelMedium.copy(fontFeatureSettings = TNUM),
                                 textAlign = TextAlign.Center,
                                 modifier =
                                     Modifier.defaultMinSize(
-                                        minWidth = 36.dp * LocalDensity.current.fontScale
-                                    ),
+                                            minWidth = 36.dp * LocalDensity.current.fontScale
+                                        )
+                                        .clickable(
+                                            interactionSource =
+                                                remember { MutableInteractionSource() },
+                                            indication = null,
+                                            onClick = onToggleUseCountdown,
+                                        ),
                             )
                         }
                         Spacer(modifier = Modifier.height(14.dp))
