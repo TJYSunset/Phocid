@@ -4,7 +4,6 @@
     <string name="app_license_name" translatable="false">GNU General Public License v3.0 or later</string>
     <string name="app_name" translatable="false">Phocid</string>
     <string name="app_url" translatable="false">https://github.com/tjysunset/phocid</string>
-
     <string name="commons_add">Add</string>
     <string name="commons_automatic">Automatic</string>
     <string name="commons_back">Back</string>
@@ -24,20 +23,16 @@
     <!-- Adjective, not noun -->
     <string name="commons_selected">Selected</string>
     <string name="commons_sync">Sync</string>
-
     <string name="count_album">{0, plural, one {# album} other {# albums}}</string>
     <string name="count_folder">{0, plural, one {# folder} other {# folders}}</string>
     <string name="count_invalid_track">{0, plural, one {# invalid track} other {# invalid tracks}}</string>
     <string name="count_track">{0, plural, one {# track} other {# tracks}}</string>
-
     <string name="duration_hours_minutes_seconds">{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="duration_minutes_seconds">{0, number, ::00}:{1, number, ::00}</string>
     <string name="duration_negative_hours_minutes_seconds">-{0, number, ::00}:{1, number, ::00}:{2, number, ::00}</string>
     <string name="duration_negative_minutes_seconds">-{0, number, ::00}:{1, number, ::00}</string>
-
     <string name="library_rescan">Rescan library</string>
     <string name="library_view_root_folder">View root folder of all tracks</string>
-
     <string name="list_empty">Empty</string>
     <string name="list_move_down">Move down</string>
     <string name="list_move_up">Move up</string>
@@ -46,14 +41,11 @@
     <string name="list_multi_select_select_all">Select all</string>
     <string name="list_multi_select_select_inverse">Select inverse</string>
     <string name="list_multi_select_title">Selected {0, plural, one {# item} other {# items}}</string>
-
     <!-- The IETF language tag of the current translation, used for formatting -->
     <string name="locale">en</string>
-
     <string name="permission_dialog_body">Permission to read your audio files is required for basic functionality. Please grant to continue.</string>
     <string name="permission_dialog_grant">Grant</string>
     <string name="permission_dialog_title">Permission required</string>
-
     <string name="player_clear_queue">Clear queue</string>
     <string name="player_lyrics">Lyrics</string>
     <string name="player_lyrics_auto_scroll">Auto scroll lyrics</string>
@@ -84,7 +76,6 @@
     <string name="player_timer_finish_last_track">Finish last track</string>
     <string name="player_timer_set">Set</string>
     <string name="player_up_next">Up next</string>
-
     <string name="playlist_add_to">Add to playlist</string>
     <string name="playlist_delete">Delete playlist</string>
     <string name="playlist_delete_multiple_dialog_body">{0, plural, one {# playlist} other {# playlists}} will be permanently deleted</string>
@@ -135,7 +126,6 @@
     <string name="playlist_sort">Sort playlist</string>
     <string name="playlist_sort_screen_title">Sort playlist “{0}”</string>
     <string name="playlist_special_favorites">Favorites</string>
-
     <string name="preferences">Preferences</string>
     <string name="preferences_about">About</string>
     <string name="preferences_always_show_hint_on_scroll">Always show thumb index on scroll</string>
@@ -157,6 +147,10 @@
     <string name="preferences_dark_theme_system">Follow system</string>
     <string name="preferences_dump_logcat">Dump Logcat</string>
     <string name="preferences_dump_logcat_subtitle">Output path: {0}</string>
+    <!-- Symbol after a truncated list of examples in the preferences screen -->
+    <string name="preferences_example_ellipsis">, …</string>
+    <!-- Symbol used to separate list of examples in the preferences screen -->
+    <string name="preferences_example_separator">", "</string>
     <string name="preferences_folder_picker_dialog_title">Select folder</string>
     <string name="preferences_folder_picker_dialog_up">Up</string>
     <string name="preferences_folder_tab_root">Folder tab root</string>
@@ -280,20 +274,16 @@
     <string name="preferences_widget_layout_side_artwork_large">Side artwork (large)</string>
     <string name="preferences_widget_layout_small">Small</string>
     <string name="preferences_widget_settings">Widget settings</string>
-
     <string name="search">Search</string>
     <string name="search_in_list">Search in list</string>
     <string name="search_next">Next result</string>
     <string name="search_position_indicator">{0}/{1}</string>
     <string name="search_previous">Previous result</string>
-
     <string name="shortcut_continue_long_label">Continue where you left off</string>
     <string name="shortcut_continue_short_label">Continue</string>
     <string name="shortcut_shuffle_long_label">Shuffle play all tracks</string>
     <string name="shortcut_shuffle_short_label">Shuffle all</string>
-
     <string name="snackbar_scanning_library">Scanning library ({0}/{1})</string>
-
     <string name="sorting_album">Album</string>
     <string name="sorting_album_artist">Album artist</string>
     <string name="sorting_album_count">Album count</string>
@@ -309,12 +299,10 @@
     <string name="sorting_title">Title</string>
     <string name="sorting_track_count">Track count</string>
     <string name="sorting_year">Year</string>
-
     <!-- Symbol used to separate multiple artists of a single track -->
     <string name="symbol_conjunction">" &amp; "</string>
     <!-- Symbol used to separate related info placed on the same line -->
     <string name="symbol_separator">" · "</string>
-
     <string name="tab_album_artists">Album artists</string>
     <string name="tab_albums">Albums</string>
     <string name="tab_artists">Artists</string>
@@ -322,7 +310,6 @@
     <string name="tab_genres">Genres</string>
     <string name="tab_playlists">Playlists</string>
     <string name="tab_tracks">Tracks</string>
-
     <string name="toast_cant_open_system_equalizer">Can’t open system equalizer</string>
     <string name="toast_crash_saved_to">Crash log saved to {0}</string>
     <string name="toast_dump_logcat_failed">Dump failed: {0}</string>
@@ -335,7 +322,6 @@
     <string name="toast_timer_set">Playback will pause after ~{0, plural, one {# minute} other {# minutes}}</string>
     <string name="toast_track_queued">{0, plural, one {# track} other {# tracks}} queued</string>
     <string name="toast_view_intent_not_found">No matching file in library</string>
-
     <string name="track_add_to_queue">Add to queue</string>
     <string name="track_details">Details</string>
     <string name="track_details_album">Album</string>
@@ -367,7 +353,6 @@
     <string name="track_share">Share</string>
     <string name="track_view_album">View album “{0}”</string>
     <string name="track_view_artist">View artist “{0}”</string>
-
     <!-- Settings of how the list is displayed. Unrelated to "view album" etc. -->
     <string name="view_settings">View settings</string>
     <string name="view_settings_grid_size">Grid size</string>

@@ -133,6 +133,8 @@
     <string name="preferences_dark_theme_system">Suivre le système</string>
     <string name="preferences_dump_logcat">Copie des journaux (dump logcat)</string>
     <string name="preferences_dump_logcat_subtitle">Chemin de sortie: {0}</string>
+    <string name="preferences_example_ellipsis">, …</string>
+    <string name="preferences_example_separator">", "</string>
     <string name="preferences_folder_picker_dialog_title">Sélectionnez le dossier</string>
     <string name="preferences_folder_picker_dialog_up">Haut</string>
     <string name="preferences_folder_tab_root">Fichier racine</string>

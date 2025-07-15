@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Help
@@ -88,10 +86,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -108,6 +107,7 @@ import com.ibm.icu.util.MeasureUnit
 import java.io.File
 import java.nio.charset.Charset
 import java.util.Locale
+import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -129,10 +129,10 @@ import org.sunsetware.phocid.data.TabStylePreference
 import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.ui.components.Scrollbar
 import org.sunsetware.phocid.ui.components.UtilityListItem
+import org.sunsetware.phocid.ui.components.UtilityListItemWithCustomSubtitle
 import org.sunsetware.phocid.ui.components.UtilitySwitchListItem
 import org.sunsetware.phocid.ui.components.negativePadding
-import org.sunsetware.phocid.ui.theme.LocalDarkTheme
-import org.sunsetware.phocid.ui.theme.hashColor
+import org.sunsetware.phocid.ui.theme.Typography
 import org.sunsetware.phocid.ui.views.library.LibraryTrackClickAction
 import org.sunsetware.phocid.ui.views.player.PlayerScreenLayoutType
 import org.sunsetware.phocid.ui.views.playlist.PlaylistIoScreen
@@ -173,9 +173,16 @@ object PreferencesScreen : TopLevelScreen() {
                 Scrollbar(lazyListState, { null }, false) {
                     LazyColumn(state = lazyListState) {
                         items(pages) { page ->
-                            UtilityListItem(
+                            UtilityListItemWithCustomSubtitle(
                                 title = Strings[page.stringId],
                                 lead = { LeadIcon(page.icon) },
+                                subtitle = {
+                                    ExamplesSubtitle(
+                                        page.items
+                                            .filter { it !is Item.ConditionalClickable }
+                                            .map { it.title() }
+                                    )
+                                },
                                 modifier =
                                     Modifier.clickable {
                                         viewModel.uiManager.openTopLevelScreen(
@@ -343,6 +350,85 @@ private class PreferencesSubscreen(private val page: Page) : TopLevelScreen() {
 private fun LeadIcon(icon: ImageVector) {
     Box(modifier = Modifier.padding(end = 16.dp).size(40.dp), contentAlignment = Alignment.Center) {
         Icon(icon, null)
+    }
+}
+
+@Composable
+private fun ExamplesSubtitle(examples: List<String>) {
+    Layout(
+        content = {
+            Text(
+                text = examples[0],
+                style = Typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+            )
+            Text(
+                text = Strings[R.string.preferences_example_ellipsis],
+                style = Typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            examples.take(3).forEachIndexed { index, item ->
+                Text(
+                    text = item,
+                    style = Typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                if (index < min(examples.size, 3) - 1) {
+                    Text(
+                        text = Strings[R.string.preferences_example_separator],
+                        style = Typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+    ) { measurables, constraints ->
+        val lineHeight = Typography.bodySmall.lineHeight.roundToPx()
+        val measureConstraints = Constraints(minHeight = lineHeight, maxHeight = lineHeight)
+        val truncatedFirstItem =
+            measurables[0].measure(
+                Constraints(
+                    maxWidth = constraints.maxWidth,
+                    minHeight = lineHeight,
+                    maxHeight = lineHeight,
+                )
+            )
+        val ellipsis = measurables[1].measure(measureConstraints)
+        val items =
+            measurables.drop(1).chunked(2).mapIndexed { index, pair ->
+                if (index == 0) null to pair[1] else pair[0] to pair[1]
+            }
+        var x = 0
+        var truncated = examples.size > 3
+
+        layout(constraints.maxWidth, lineHeight) {
+            for ((separator, item) in items) {
+                val separatorPlaceable = separator?.measure(measureConstraints)
+                val itemPlaceable = item.measure(measureConstraints)
+                val separatorWidth = separatorPlaceable?.measuredWidth ?: 0
+                if (
+                    separatorWidth + itemPlaceable.measuredWidth <=
+                        constraints.maxWidth - (ellipsis.measuredWidth) - x
+                ) {
+                    separatorPlaceable?.placeRelative(x, 0)
+                    itemPlaceable.placeRelative(x + separatorWidth, 0)
+                    x += separatorWidth + itemPlaceable.measuredWidth
+                } else {
+                    truncated = true
+                    break
+                }
+            }
+
+            if (truncated) {
+                if (x == 0) {
+                    truncatedFirstItem.placeRelative(0, 0)
+                } else {
+                    ellipsis.placeRelative(x, 0)
+                }
+            }
+        }
     }
 }
 
@@ -910,14 +996,16 @@ private data class PreferencesScreenContext(
 private data class Page(val stringId: Int, val icon: ImageVector, val items: List<Item>)
 
 private sealed class Item {
+    abstract val title: () -> String
+
     data class NonInteractive(
-        val title: () -> String,
+        override val title: () -> String,
         val subtitle: PreferencesScreenContext.() -> String?,
         val icon: ImageVector,
     ) : Item()
 
     data class Clickable<T>(
-        val title: () -> String,
+        override val title: () -> String,
         val subtitle: PreferencesScreenContext.(T) -> String?,
         val icon: ImageVector,
         val value: (Preferences) -> T,
@@ -926,7 +1014,7 @@ private sealed class Item {
     ) : Item()
 
     data class ConditionalClickable(
-        val title: () -> String,
+        override val title: () -> String,
         val subtitle: PreferencesScreenContext.() -> String?,
         val icon: ImageVector,
         val visibility: PreferencesScreenContext.() -> Boolean,
@@ -934,7 +1022,7 @@ private sealed class Item {
     ) : Item()
 
     data class Toggle(
-        val title: () -> String,
+        override val title: () -> String,
         val subtitle: PreferencesScreenContext.(Boolean) -> String?,
         val icon: ImageVector,
         val value: (Preferences) -> Boolean,

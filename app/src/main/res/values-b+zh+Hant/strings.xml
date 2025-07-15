@@ -133,6 +133,8 @@
     <string name="preferences_dark_theme_system">跟隨系統</string>
     <string name="preferences_dump_logcat">轉儲 Logcat</string>
     <string name="preferences_dump_logcat_subtitle">儲存路徑：{0}</string>
+    <string name="preferences_example_ellipsis">、……</string>
+    <string name="preferences_example_separator">、</string>
     <string name="preferences_folder_picker_dialog_title">選擇資料夾</string>
     <string name="preferences_folder_picker_dialog_up">往上</string>
     <string name="preferences_folder_tab_root">資料夾分頁起始目錄</string>

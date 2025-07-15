@@ -31,6 +31,31 @@ fun UtilityListHeader(text: String) {
 }
 
 @Composable
+inline fun UtilityListItemWithCustomSubtitle(
+    title: String,
+    modifier: Modifier = Modifier,
+    crossinline subtitle: @Composable () -> Unit,
+    crossinline lead: @Composable () -> Unit = {},
+    crossinline actions: @Composable () -> Unit = {},
+) {
+    Row(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 72.dp)
+                .padding(horizontal = 24.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        lead()
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = title, style = Typography.bodyLarge)
+            subtitle()
+        }
+        actions()
+    }
+}
+
+@Composable
 inline fun UtilityListItem(
     title: String,
     modifier: Modifier = Modifier,

@@ -130,6 +130,8 @@
     <string name="preferences_dark_theme_dark">Dunkel</string>
     <string name="preferences_dark_theme_light">Hell</string>
     <string name="preferences_dark_theme_system">Systemeinstellungen folgen</string>
+    <string name="preferences_example_ellipsis">, …</string>
+    <string name="preferences_example_separator">", "</string>
     <string name="preferences_folder_picker_dialog_title">Order auswählen</string>
     <string name="preferences_folder_picker_dialog_up">Hinauf</string>
     <string name="preferences_folder_tab_root">Stammverzeichnis für Ordner</string>

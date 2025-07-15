@@ -133,6 +133,8 @@
     <string name="preferences_dark_theme_system">Как в системе</string>
     <string name="preferences_dump_logcat">Сохранить журнал отладки</string>
     <string name="preferences_dump_logcat_subtitle">Путь вывода: {0}</string>
+    <string name="preferences_example_ellipsis">, …</string>
+    <string name="preferences_example_separator">", "</string>
     <string name="preferences_folder_picker_dialog_title">Выбрать папку</string>
     <string name="preferences_folder_picker_dialog_up">Вверх</string>
     <string name="preferences_folder_tab_root">Корень вкладки папки</string>

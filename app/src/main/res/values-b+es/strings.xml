@@ -133,6 +133,8 @@
     <string name="preferences_dark_theme_system">Seguir el sistema</string>
     <string name="preferences_dump_logcat">Volcar logcat</string>
     <string name="preferences_dump_logcat_subtitle">Ruta de salida: {0}</string>
+    <string name="preferences_example_ellipsis">, …</string>
+    <string name="preferences_example_separator">", "</string>
     <string name="preferences_folder_picker_dialog_title">Seleccionar carpeta</string>
     <string name="preferences_folder_picker_dialog_up">Arriba</string>
     <string name="preferences_folder_tab_root">Raíz de la pestaña de carpeta</string>
