@@ -127,6 +127,7 @@
     <string name="preferences_colored_cards">用图像色彩着色卡片</string>
     <string name="preferences_colored_global_theme">用图像色彩覆盖主题色</string>
     <string name="preferences_colored_player">用图像色彩着色播放界面</string>
+    <string name="preferences_colored_player_subtitle">可能被“界面 › 主题色 › 用图像色彩覆盖主题色”覆盖</string>
     <string name="preferences_colorful_player_background">彩色播放器背景</string>
     <string name="preferences_dark_theme">深色主题</string>
     <string name="preferences_dark_theme_dark">深色</string>

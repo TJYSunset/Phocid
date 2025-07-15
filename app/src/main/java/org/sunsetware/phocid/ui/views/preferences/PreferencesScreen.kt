@@ -654,7 +654,7 @@ private val NowPlaying =
             ),
             Item.Toggle(
                 title = { Strings[R.string.preferences_colored_player] },
-                subtitle = { null },
+                subtitle = { Strings[R.string.preferences_colored_player_subtitle] },
                 icon = Icons.Filled.FormatColorFill,
                 value = { it.coloredPlayer },
                 onSetValue = { preferences, new -> preferences.copy(coloredPlayer = new) },

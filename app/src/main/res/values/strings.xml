@@ -141,6 +141,7 @@
     <string name="preferences_colored_cards">Color cards based on artwork</string>
     <string name="preferences_colored_global_theme">Change theme color based on artwork</string>
     <string name="preferences_colored_player">Color player screen based on artwork</string>
+    <string name="preferences_colored_player_subtitle">Might be overridden by “Interface › Theme color › Change theme color based on artwork”</string>
     <string name="preferences_colorful_player_background">Colored player background</string>
     <string name="preferences_dark_theme">Dark theme</string>
     <string name="preferences_dark_theme_dark">Dark</string>
@@ -152,6 +153,7 @@
     <string name="preferences_example_ellipsis">, …</string>
     <!-- Symbol used to separate list of examples in the preferences screen -->
     <string name="preferences_example_separator">", "</string>
+    <string name="preferences_export">Export preferences</string>
     <string name="preferences_folder_picker_dialog_title">Select folder</string>
     <string name="preferences_folder_picker_dialog_up">Up</string>
     <string name="preferences_folder_tab_root">Folder tab root</string>
@@ -163,6 +165,7 @@
     <string name="preferences_high_res_artwork_never">Never</string>
     <string name="preferences_high_res_artwork_player_only">Only in player</string>
     <string name="preferences_home_screen">Home screen</string>
+    <string name="preferences_import">Import preferences</string>
     <string name="preferences_indexing">Indexing</string>
     <string name="preferences_indexing_advanced_metadata_extraction">Advanced metadata extraction</string>
     <string name="preferences_indexing_advanced_metadata_extraction_subtitle">Reads multiple tags and embedded lyrics, but is very slow. Applies after a manual rescan.</string>
@@ -319,6 +322,10 @@
     <string name="toast_playlist_exported_with_failure">Exported {0, plural, one {# playlist} other {# playlists}}, {1, plural, other {#}} failed</string>
     <string name="toast_playlist_imported">Imported {0, plural, one {# playlist} other {# playlists}}</string>
     <string name="toast_playlist_io_sync_error">Error syncing playlists. See logs in sync screen for details.</string>
+    <string name="toast_preferences_export_failed">Preferences export failed: {0}</string>
+    <string name="toast_preferences_export_success">Exported preferences</string>
+    <string name="toast_preferences_import_failed">Preferences import failed: {0}</string>
+    <string name="toast_preferences_import_success">Imported preferences</string>
     <string name="toast_timer_canceled">Canceled sleep timer</string>
     <string name="toast_timer_set">Playback will pause after ~{0, plural, one {# minute} other {# minutes}}</string>
     <string name="toast_track_queued">{0, plural, one {# track} other {# tracks}} queued</string>
@@ -358,10 +365,4 @@
     <string name="view_settings">View settings</string>
     <string name="view_settings_grid_size">Grid size</string>
     <string name="view_settings_sort_by">Sort by</string>
-    <string name="preferences_import">Import preferences</string>
-    <string name="preferences_export">Export preferences</string>
-    <string name="toast_preferences_import_failed">Preferences import failed: {0}</string>
-    <string name="toast_preferences_import_success">Imported preferences</string>
-    <string name="toast_preferences_export_failed">Preferences export failed: {0}</string>
-    <string name="toast_preferences_export_success">Exported preferences</string>
 </resources>

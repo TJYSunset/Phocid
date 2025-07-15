@@ -127,6 +127,7 @@
     <string name="preferences_colored_cards">依封面色彩為卡片上色</string>
     <string name="preferences_colored_global_theme">依封面色彩變更主題色</string>
     <string name="preferences_colored_player">依封面色彩變更播放器畫面</string>
+    <string name="preferences_colored_player_subtitle">可能被「介面 › 主題色 › 依封面色彩變更主題色」覆蓋</string>
     <string name="preferences_colorful_player_background">彩色播放器背景</string>
     <string name="preferences_dark_theme">深色主題</string>
     <string name="preferences_dark_theme_dark">深色</string>
