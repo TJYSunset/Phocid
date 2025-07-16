@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="commons_add">Hinzufügen</string>
     <string name="commons_automatic">Automatisch</string>
     <string name="commons_back">Zurück</string>
@@ -83,7 +83,7 @@
     <string name="playlist_io_sync">Playlist synchronisieren</string>
     <string name="playlist_io_sync_help">Playlist synchronisieren Hilfe</string>
     <string name="playlist_io_sync_help_body">DATEN AN EINEN ANDEREN SPEICHERORT SICHERN UND DIE DOKUMENTATION VOR DEM FORTFAHREN VORSICHTIG DURCHLESEN!\n\nYou can view logs of the last sync from the top bar to debug problems.\n\nSync settings are independent of manual import/export settings, and can be set from the top bar. Modified sync settings will not take effect until the next time both sides have different timestamps, and modifying settings with sync enabled might corrupt your data. Backup and manually rewrite the older side before doing so.\n\nDue to Android limitations, Phocid will not create missing files on your behalf. You can export the playlists to create corresponding files.\n\n“Syncing” overwrites the older side with contents from the newer side, which means:\n• Creating a new playlist to sync from an existing file may overwrite the file with nothing, and vice versa. To add new mappings, use import/export instead to generate playlists and files that have matching “last modified” timestamps and contents.\n• Syncing relies on your files to have a correct “last modified” timestamp. Expect unexpected behavior if the files are modified externally with incorrect timestamps.\n\nNewly created playlists and playlists updated before Phocid v20250219 have an initial timestamp of 1970-01-01. Exported files will have the timestamp of when exporting happens. Exporting a playlist will also update its timestamp.\n\nPhocid is not aware of M3U comments (and by extension, extended directives), and will strip those when syncing. Do not use syncing if your use case requires M3U comments.\n\nSyncing happens when the app gains focus, a playlist changes, or manually requested.</string>
-    <string name="playlist_io_sync_location">Mit Speicherort  {0} synchronisieren</string>
+    <string name="playlist_io_sync_location">Mit Speicherort {0} synchronisieren</string>
     <string name="playlist_io_sync_location_not_set">Speicherort für Synchronisation: nicht festgelegt</string>
     <string name="playlist_io_sync_log">Playlist Synchronisations-Protokoll</string>
     <string name="playlist_io_sync_log_conflicting_mappings">Mehrere Playlists sind der selben Datei zugeordnet.</string>
@@ -116,7 +116,7 @@
     <string name="playlist_sort_screen_title">Playlist “{0}” sortieren</string>
     <string name="playlist_special_favorites">Favoriten</string>
     <string name="preferences">Einstellungen</string>
-    <string name="preferences_about">Über</string>
+    <string name="preferences_about">Über Phocid</string>
     <string name="preferences_artwork_color">Farbe aus Coverbild extrahieren</string>
     <string name="preferences_artwork_color_muted_first">Gedämpfte Farben bevorzugen</string>
     <string name="preferences_artwork_color_muted_only">Nur gedämpfte Farben</string>
@@ -126,12 +126,15 @@
     <string name="preferences_colored_cards">Kartenfarben basieren auf Coverbild</string>
     <string name="preferences_colored_global_theme">Farben an Coverbild anpassen</string>
     <string name="preferences_colored_player">Farben des Players an Coverbild anpassen</string>
+    <string name="preferences_colorful_player_background">Bunter Hintergrund für Player</string>
     <string name="preferences_dark_theme">Dunkelmodus</string>
     <string name="preferences_dark_theme_dark">Dunkel</string>
     <string name="preferences_dark_theme_light">Hell</string>
     <string name="preferences_dark_theme_system">Systemeinstellungen folgen</string>
+    <string name="preferences_dump_logcat">Logcat-Protokoll erstellen</string>
     <string name="preferences_example_ellipsis">, …</string>
     <string name="preferences_example_separator">", "</string>
+    <string name="preferences_export">Einstellungen exportieren</string>
     <string name="preferences_folder_picker_dialog_title">Order auswählen</string>
     <string name="preferences_folder_picker_dialog_up">Hinauf</string>
     <string name="preferences_folder_tab_root">Stammverzeichnis für Ordner</string>
@@ -142,6 +145,8 @@
     <string name="preferences_high_res_artwork_large_only">Nur große Bilder</string>
     <string name="preferences_high_res_artwork_never">Niemals</string>
     <string name="preferences_high_res_artwork_player_only">Nur im Player</string>
+    <string name="preferences_home_screen">Startbildschirm</string>
+    <string name="preferences_import">Einstellungen importieren</string>
     <string name="preferences_indexing">Indexieren</string>
     <string name="preferences_indexing_advanced_metadata_extraction">Fortgeschrittene Metadaten-Extraktion</string>
     <string name="preferences_indexing_advanced_metadata_extraction_subtitle">Ließt mehrere Tags und eingebettete Lyrics auf Kosten der Geschwindigkeit. Findet nach manuellem Neueinscannen statt.</string>
@@ -177,7 +182,7 @@
     <string name="preferences_indexing_select_folder">Ordner auswählen</string>
     <string name="preferences_indexing_whitelist">Zulassungsliste</string>
     <string name="preferences_indexing_whitelist_subtitle">{0, plural, one {# Regel} other {# Regeln}}</string>
-    <string name="preferences_interface">Schnittstelle</string>
+    <string name="preferences_interface">Benutzeroberfläche</string>
     <string name="preferences_library_track_click_action">Aktion beim Antippen von Titeln</string>
     <string name="preferences_library_track_click_action_open_menu">Menü öffnen</string>
     <string name="preferences_license">Lizenz</string>
@@ -186,14 +191,17 @@
     <string name="preferences_lyrics_display_disabled">Deaktiviert</string>
     <string name="preferences_lyrics_display_two_lines">Zwei Zeilen</string>
     <string name="preferences_lyrics_scaling">Lyrics-Skalierung</string>
+    <string name="preferences_miscellaneous">Diverses</string>
     <string name="preferences_multiplier_number">{0, number, ::.00}×</string>
     <string name="preferences_notification_button_favorite">Favouriten</string>
     <string name="preferences_notification_button_repeat">Wiederholen</string>
     <string name="preferences_notification_button_shuffle">Zufällig</string>
     <string name="preferences_notification_buttons">Schaltflächen im Miniplayer</string>
+    <!-- "Aktueller Titel" wäre die akkuratere Übersetzung, ist aber ziemlich vage. -->
+    <string name="preferences_now_playing">Wiedergabebildschirm</string>
     <string name="preferences_pause_on_focus_loss">Bei Fokusverlust pausieren</string>
     <string name="preferences_play_on_output_device_connection">Wiedergabe beim Anschließen von Kopfhörern starten</string>
-    <string name="preferences_playback">Wiedergabe</string>
+    <string name="preferences_playback">Wiedergabeaktionen</string>
     <string name="preferences_player_screen_layout">Layout des Players</string>
     <string name="preferences_player_screen_layout_default">Standard</string>
     <string name="preferences_player_screen_layout_no_queue">Ohne Warteschlange</string>
@@ -239,12 +247,16 @@
     <string name="preferences_website">Webseite (Englisch)</string>
     <string name="preferences_widget_accent_background">Farbiger Hintergrund</string>
     <string name="preferences_widget_artwork_background">Coverart Hintergrund</string>
+    <string name="preferences_widget_artwork_resolution_limit">Maximale Auflösung von Coverart</string>
+    <string name="preferences_widget_artwork_resolution_limit_subtitle">Verringern sollte Widget abstürzen; Erhöhen für besser Qualität</string>
     <string name="preferences_widget_color">Farbe</string>
     <string name="preferences_widget_dark_theme">Dunkelmodus</string>
     <string name="preferences_widget_layout">Layout</string>
     <string name="preferences_widget_layout_extra_large">Extragroß</string>
     <string name="preferences_widget_layout_large">Groß</string>
     <string name="preferences_widget_layout_medium">Mittel</string>
+    <string name="preferences_widget_layout_side_artwork">Seitlich angeordnetes Coverbild</string>
+    <string name="preferences_widget_layout_side_artwork_large">Seitliches Coverbild (groß)</string>
     <string name="preferences_widget_layout_small">Klein</string>
     <string name="preferences_widget_settings">Widget-Einstellungen</string>
     <string name="search">Suchen</string>
@@ -283,10 +295,16 @@
     <string name="tab_tracks">Titel</string>
     <string name="toast_cant_open_system_equalizer">Öffnen von systemeigenem Equalizer nicht möglich</string>
     <string name="toast_crash_saved_to">Absturzprotokoll gespeichert unter {0}</string>
+    <string name="toast_dump_logcat_failed">Protokoll-Ausgabe fehlgeschlagen: {0}</string>
+    <string name="toast_dump_logcat_success">Protokoll erfolgreich erstellt</string>
     <string name="toast_playlist_exported">Exportierte {0, plural, one {# Playlist} other {# Playlisten}}</string>
     <string name="toast_playlist_exported_with_failure">Exportierte {0, plural, one {# Playlist} other {# Playlisten}}, {1, plural, other {#}} fehlgeschlagen</string>
     <string name="toast_playlist_imported">Importierte {0, plural, one {# Playlist} other {# Playlisten}}</string>
     <string name="toast_playlist_io_sync_error">Fehler beim Synchronisieren der Playlisten. Überprüfe Fehlerprotokolle am Sync-Bildschirm für Details.</string>
+    <string name="toast_preferences_export_failed">Export der Einstellungen fehlgeschlagen: {0}</string>
+    <string name="toast_preferences_export_success">Einstellungen erfolgreich exportiert</string>
+    <string name="toast_preferences_import_failed">Einstellungs-Import fehlgeschlagen: {0}</string>
+    <string name="toast_preferences_import_success">Einstellungen erfolgreich importiert</string>
     <string name="toast_timer_canceled">Ruhemodus-Timer abgebrochen</string>
     <string name="toast_timer_set">Wiedergabe nach ~{0, plural, one {# Minute} other {# Minuten}} pausieren</string>
     <string name="toast_track_queued">{0, plural, one {# Titel} other {# Titel}} eingereiht</string>
