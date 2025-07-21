@@ -874,7 +874,8 @@ fun LibraryScreenCollectionView(
     val cardsLazyListState = state.cardsLazyListState
     val tracksLazyListState = state.tracksLazyListState
     val info by
-        remember(state) { state.info.filterNotNull() }
+        state.info
+            .filterNotNull()
             .collectAsStateWithLifecycle(state.info.value ?: InvalidCollectionViewInfo)
     val items by multiSelectState.items.collectAsStateWithLifecycle()
     val itemInfos = remember(items) { items.map { it.value.info } }
