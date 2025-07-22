@@ -50,6 +50,7 @@ import org.sunsetware.phocid.ui.components.OverflowMenu
 import org.sunsetware.phocid.ui.components.Scrollbar
 import org.sunsetware.phocid.ui.components.SwipeToDismiss
 import org.sunsetware.phocid.ui.components.negativePadding
+import org.sunsetware.phocid.ui.theme.contentColor
 import org.sunsetware.phocid.ui.theme.darken
 import org.sunsetware.phocid.ui.views.MenuItem
 import org.sunsetware.phocid.utils.icuFormat
@@ -92,7 +93,9 @@ val PlayerScreenQueueColored =
         { colorScheme, containerColor, contentColor, colorfulBackground ->
             if (colorfulBackground) containerColor.darken() else colorScheme.surfaceContainerHigh
         },
-        { colorScheme, containerColor, contentColor, colorfulBackground -> contentColor },
+        { colorScheme, containerColor, contentColor, colorfulBackground ->
+            if (colorfulBackground) containerColor.darken().contentColor() else contentColor
+        },
     )
 
 @Immutable

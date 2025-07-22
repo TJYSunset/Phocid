@@ -59,6 +59,7 @@ import org.sunsetware.phocid.ui.components.ProgressSlider
 import org.sunsetware.phocid.ui.components.SingleLineText
 import org.sunsetware.phocid.ui.theme.INACTIVE_ALPHA
 import org.sunsetware.phocid.ui.theme.Typography
+import org.sunsetware.phocid.ui.theme.contentColor
 import org.sunsetware.phocid.ui.theme.contentColorVariant
 import org.sunsetware.phocid.ui.theme.darken
 import org.sunsetware.phocid.ui.views.MenuItem
@@ -110,7 +111,9 @@ val PlayerScreenControlsDefault =
                 color =
                     if (colorfulBackground) containerColor.darken()
                     else MaterialTheme.colorScheme.surfaceContainerHigh,
-                contentColor = contentColor,
+                contentColor =
+                    if (colorfulBackground) containerColor.darken().contentColor()
+                    else contentColor,
                 modifier = Modifier.clickable(onClick = onTogglePlayQueue),
             ) {
                 LibraryListItemHorizontal(
