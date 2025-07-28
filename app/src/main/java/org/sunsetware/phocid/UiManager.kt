@@ -10,6 +10,7 @@ import androidx.compose.runtime.Stable
 import androidx.core.content.ContextCompat
 import java.lang.ref.WeakReference
 import java.util.UUID
+import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
@@ -38,6 +39,7 @@ import org.sunsetware.phocid.data.SaveManager
 import org.sunsetware.phocid.data.Track
 import org.sunsetware.phocid.data.loadCbor
 import org.sunsetware.phocid.ui.components.BinaryDragState
+import org.sunsetware.phocid.ui.components.DragLock
 import org.sunsetware.phocid.ui.components.SelectableList
 import org.sunsetware.phocid.ui.views.library.CollectionViewInfo
 import org.sunsetware.phocid.ui.views.library.LibraryScreenCollectionViewState
@@ -115,6 +117,22 @@ class UiManager(
         }
 
     val playerScreenDragState = BinaryDragState({ DEFAULT_SWIPE_THRESHOLD })
+
+    private val playerScreenQueueCollapseCounter = AtomicLong(0)
+    private val _playerScreenQueueCollapseEvent = MutableStateFlow(0L as Any)
+    val playerScreenQueueCollapseEvent = _playerScreenQueueCollapseEvent.asStateFlow()
+
+    val playerScreenQueueDragState =
+        BinaryDragState(
+            { DEFAULT_SWIPE_THRESHOLD },
+            onSnapToZero = {
+                _playerScreenQueueCollapseEvent.update {
+                    playerScreenQueueCollapseCounter.incrementAndGet()
+                }
+            },
+        )
+
+    val playerScreenQueueDragLock = DragLock()
 
     val playerScreenUseLyricsView = MutableStateFlow(false)
 
@@ -211,7 +229,12 @@ class UiManager(
                 _topLevelScreenStack.update { it.dropLast(1) }
             }
             playerScreenDragState.targetValue.value == 1f -> {
-                playerScreenDragState.animateTo(0f)
+                if (playerScreenQueueDragState.position >= 1 && !playerScreenUseLyricsView.value) {
+                    playerScreenQueueDragLock.isCancelling.set(true)
+                    playerScreenQueueDragState.animateTo(0f)
+                } else {
+                    playerScreenDragState.animateTo(0f)
+                }
             }
             libraryScreenActiveMultiSelectItems.value.selection.isNotEmpty() -> {
                 libraryScreenActiveMultiSelectState.value?.clearSelection()

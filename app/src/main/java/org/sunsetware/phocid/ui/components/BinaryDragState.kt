@@ -35,7 +35,7 @@ class BinaryDragState(
     private val onSnapToZero: () -> Unit = {},
     private val onSnapToOne: () -> Unit = {},
     private val reversed: Boolean = false,
-    private val animationSpec: AnimationSpec<Float> = emphasizedStandard<Float>(),
+    private val animationSpec: AnimationSpec<Float> = emphasizedStandard(),
 ) {
     private val _position = Animatable(initialValue)
     val position by _position.asState()
@@ -52,13 +52,14 @@ class BinaryDragState(
         dragTotal = 0f
         dragInitialPosition = _position.value
         lock.isDragging.set(true)
+        lock.isCancelling.set(false)
     }
 
     fun onDrag(lock: DragLock, delta: Float) {
         val delta = delta * (if (reversed) 1 else -1)
         dragTotal += delta
         coroutineScope.get()?.launch {
-            if (lock.isDragging.get()) {
+            if (lock.isDragging.get() && !lock.isCancelling.get()) {
                 _position.snapTo(
                     (dragInitialPosition + dragTotal / length).coerceIn(0f, 1f).takeIf {
                         it.isFinite()
@@ -70,7 +71,8 @@ class BinaryDragState(
 
     fun onDragEnd(lock: DragLock, density: Density) {
         lock.isDragging.set(false)
-        if (dragTotal == 0f) return
+        val wasCancelling = lock.isCancelling.getAndSet(false)
+        if (dragTotal == 0f || wasCancelling) return
         with(density) {
             val positionalThreshold = swipeThreshold().toPx().coerceAtMost(length / 2)
             if (dragTotal >= positionalThreshold) {
@@ -106,4 +108,5 @@ class BinaryDragState(
 @Stable
 class DragLock {
     val isDragging = AtomicBoolean(false)
+    val isCancelling = AtomicBoolean(false)
 }

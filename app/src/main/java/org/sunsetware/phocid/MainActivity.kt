@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity(), IntentLauncher {
                 val playerScreenOpenDragLock = remember { DragLock() }
                 val playerScreenCloseDragLock = remember { DragLock() }
                 val playerScreenDragState = uiManager.playerScreenDragState
-                playerScreenDragState.coroutineScope = WeakReference(coroutineScope)
+
                 val overrideStatusBarLightColor by
                     uiManager.overrideStatusBarLightColor.collectAsStateWithLifecycle()
 
@@ -144,6 +144,12 @@ class MainActivity : ComponentActivity(), IntentLauncher {
                             }
                         }
                         .collectAsStateWithLifecycle()
+
+                LaunchedEffect(coroutineScope) {
+                    playerScreenDragState.coroutineScope = WeakReference(coroutineScope)
+                    uiManager.playerScreenQueueDragState.coroutineScope =
+                        WeakReference(coroutineScope)
+                }
 
                 LaunchedEffect(lifecycleState) {
                     if (lifecycleState == Lifecycle.State.RESUMED) {

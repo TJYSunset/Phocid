@@ -2,7 +2,6 @@
 
 package org.sunsetware.phocid.ui.views.player
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -55,7 +54,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
-import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
@@ -76,7 +74,6 @@ import org.sunsetware.phocid.data.isFavorite
 import org.sunsetware.phocid.data.loadLyrics
 import org.sunsetware.phocid.data.parseLrc
 import org.sunsetware.phocid.globals.Strings
-import org.sunsetware.phocid.ui.components.BinaryDragState
 import org.sunsetware.phocid.ui.components.DragLock
 import org.sunsetware.phocid.ui.theme.LocalThemeAccent
 import org.sunsetware.phocid.ui.theme.contentColor
@@ -179,8 +176,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
         )
     }
 
-    val controlsDragLock = remember { DragLock() }
-    val playQueueDragLock = remember { DragLock() }
+    val playQueueDragLock = uiManager.playerScreenQueueDragLock
     val playQueueLazyListState = rememberLazyListState()
     // Do not animate the first scroll to reduce lags
     val firstAutoPlayQueueScroll = remember { AtomicBoolean(true) }
@@ -196,15 +192,10 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
             playQueueLazyListState.animateScrollToItem(nextIndex)
         }
     }
-    val playQueueDragState = remember {
-        BinaryDragState(
-            { DEFAULT_SWIPE_THRESHOLD },
-            WeakReference(coroutineScope),
-            0f,
-            onSnapToZero = { coroutineScope.launch { scrollPlayQueueToNextTrack() } },
-        )
-    }
+    val playQueueDragState = uiManager.playerScreenQueueDragState
     val playQueueDragTarget by playQueueDragState.targetValue.collectAsStateWithLifecycle()
+    val playQueueCollapseEvent by
+        uiManager.playerScreenQueueCollapseEvent.collectAsStateWithLifecycle()
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
@@ -249,18 +240,18 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                 detectVerticalDragGestures(
                     onDragStart = {
                         coroutineScope.launch { playQueueLazyListState.stopScroll() }
-                        playQueueDragState.onDragStart(controlsDragLock)
+                        playQueueDragState.onDragStart(playQueueDragLock)
                     },
                     onDragCancel = {
                         coroutineScope.launch { playQueueLazyListState.stopScroll() }
-                        playQueueDragState.onDragEnd(controlsDragLock, density)
+                        playQueueDragState.onDragEnd(playQueueDragLock, density)
                     },
                     onDragEnd = {
                         coroutineScope.launch { playQueueLazyListState.stopScroll() }
-                        playQueueDragState.onDragEnd(controlsDragLock, density)
+                        playQueueDragState.onDragEnd(playQueueDragLock, density)
                     },
                 ) { _, dragAmount ->
-                    playQueueDragState.onDrag(controlsDragLock, dragAmount)
+                    playQueueDragState.onDrag(playQueueDragLock, dragAmount)
                 }
             }
 
@@ -274,16 +265,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
 
     LaunchedEffect(currentTrack) { lyricsViewAutoScroll = true }
 
-    BackHandler(playerScreenDragState.position >= 1) {
-        if (playQueueDragState.position >= 1 && !useLyricsView) {
-            coroutineScope.launch {
-                playQueueLazyListState.stopScroll()
-                playQueueDragState.animateTo(0f)
-            }
-        } else {
-            playerScreenDragState.animateTo(0f)
-        }
-    }
+    LaunchedEffect(playQueueCollapseEvent) { scrollPlayQueueToNextTrack() }
 
     // Auto close on playQueue clear
     LaunchedEffect(playQueue) {
