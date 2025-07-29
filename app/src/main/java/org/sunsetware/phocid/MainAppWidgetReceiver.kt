@@ -198,11 +198,7 @@ class MainAppWidget : GlanceAppWidget() {
                                 }
                             }
                             .clickable(
-                                actionStartActivity(
-                                    Intent(context, MainActivity::class.java).apply {
-                                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                                    }
-                                )
+                                actionStartActivity(Intent(context, MainActivity::class.java))
                             )
                 ) {
                     when (preferences.widgetLayout) {

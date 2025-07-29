@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity(), IntentLauncher {
     override fun onCreate(savedInstanceState: Bundle?) {
         val viewModel by viewModels<MainViewModel>()
         viewModel.initialize()
-        launchIntent.set(intent)
+        intent?.let { launchIntent.set(it) }
 
         installSplashScreen().setKeepOnScreenCondition { !viewModel.initialized.value }
         enableEdgeToEdge(
@@ -245,6 +245,11 @@ class MainActivity : ComponentActivity(), IntentLauncher {
                 }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        launchIntent.set(intent)
+        super.onNewIntent(intent)
     }
 
     private val openDocumentTreeContinuation = AtomicReference(null as ((Uri?) -> Unit)?)
