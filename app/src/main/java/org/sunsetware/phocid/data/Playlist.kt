@@ -3,6 +3,8 @@
 package org.sunsetware.phocid.data
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
@@ -13,6 +15,10 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.content.ContextCompat
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
+import androidx.core.os.bundleOf
 import com.ibm.icu.text.DateFormat
 import java.util.Date
 import java.util.UUID
@@ -26,6 +32,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -37,8 +44,11 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Required
 import kotlinx.serialization.Serializable
 import org.apache.commons.io.FilenameUtils
+import org.sunsetware.phocid.MainActivity
 import org.sunsetware.phocid.PLAYLISTS_FILE_NAME
 import org.sunsetware.phocid.R
+import org.sunsetware.phocid.SHORTCUT_PLAYLIST
+import org.sunsetware.phocid.SHORTCUT_PLAYLIST_EXTRA_KEY
 import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.utils.CaseInsensitiveMap
 import org.sunsetware.phocid.utils.UUIDSerializer
@@ -79,6 +89,7 @@ class PlaylistManager(
     lateinit var playlists: StateFlow<Map<UUID, RealizedPlaylist>>
     private lateinit var saveManager: SaveManager<Map<String, Playlist>>
     private lateinit var syncJob: Job
+    private lateinit var shortcutJob: Job
 
     private val syncMutex = Mutex()
     private val syncPending = AtomicBoolean(false)
@@ -115,11 +126,47 @@ class PlaylistManager(
             coroutineScope.launch {
                 _playlists.onEach { if (syncPending.get()) syncPlaylists() }.collect()
             }
+        shortcutJob =
+            coroutineScope.launch {
+                playlists
+                    .onEach { playlists ->
+                        // Remove invalid shortcuts
+                        val uuids = playlists.map { it.key }.toSet()
+                        val invalidShortcuts =
+                            ShortcutManagerCompat.getDynamicShortcuts(context)
+                                .filter { shortcut ->
+                                    shortcut.intent.action == SHORTCUT_PLAYLIST &&
+                                        !uuids.contains(
+                                            shortcut.intent.extras
+                                                ?.getString(SHORTCUT_PLAYLIST_EXTRA_KEY)
+                                                ?.let {
+                                                    try {
+                                                        UUID.fromString(it)
+                                                    } catch (_: Exception) {
+                                                        null
+                                                    }
+                                                }
+                                        )
+                                }
+                                .map { it.id }
+                        ShortcutManagerCompat.removeDynamicShortcuts(context, invalidShortcuts)
+
+                        // Push shortcuts
+                        val shortcuts =
+                            playlists.map {
+                                playlistShortcut(context, "playlist", it.key, it.value.displayName)
+                            }
+                        ShortcutManagerCompat.addDynamicShortcuts(context, shortcuts)
+                    }
+                    .catch { Log.e("Phocid", "Error updating playlist shortcuts", it) }
+                    .collect()
+            }
     }
 
     override fun close() {
         saveManager.close()
         syncJob.cancel()
+        shortcutJob.cancel()
     }
 
     fun updatePlaylist(
@@ -544,4 +591,22 @@ fun RealizedPlaylist.toM3u(settings: PlaylistIoSettings): String {
                 it.playlistEntry.path
             }
         }
+}
+
+fun playlistShortcut(
+    context: Context,
+    namespace: String,
+    key: UUID,
+    name: String,
+): ShortcutInfoCompat {
+    return ShortcutInfoCompat.Builder(context, "$namespace:$key")
+        .setShortLabel(name)
+        .setLongLabel(name)
+        .setIcon(IconCompat.createWithResource(context, R.drawable.shortcut_playlist))
+        .setIntent(
+            Intent(SHORTCUT_PLAYLIST, null, context, MainActivity::class.java).apply {
+                putExtras(bundleOf(SHORTCUT_PLAYLIST_EXTRA_KEY to key.toString()))
+            }
+        )
+        .build()
 }

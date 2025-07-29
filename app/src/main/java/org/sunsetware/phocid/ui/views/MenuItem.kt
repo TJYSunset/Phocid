@@ -1,6 +1,8 @@
 package org.sunsetware.phocid.ui.views
 
+import android.content.Context
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Album
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.core.content.pm.ShortcutManagerCompat
 import java.util.UUID
 import org.sunsetware.phocid.R
 import org.sunsetware.phocid.UiManager
@@ -24,6 +27,7 @@ import org.sunsetware.phocid.data.PlayerManager
 import org.sunsetware.phocid.data.SpecialPlaylistLookup
 import org.sunsetware.phocid.data.Track
 import org.sunsetware.phocid.data.albumKey
+import org.sunsetware.phocid.data.playlistShortcut
 import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.ui.views.library.LibraryTrackClickAction
 import org.sunsetware.phocid.ui.views.library.openAlbumCollectionView
@@ -184,12 +188,31 @@ fun playlistCollectionMenuItemsWithoutEdit(key: UUID, uiManager: UiManager): Lis
 }
 
 @Stable
-fun playlistCollectionMenuItems(key: UUID, uiManager: UiManager): List<MenuItem.Button> {
+fun playlistCollectionMenuItems(
+    key: UUID,
+    name: String,
+    context: Context,
+    uiManager: UiManager,
+): List<MenuItem> {
     return listOf(
         MenuItem.Button(Strings[R.string.playlist_edit], Icons.Filled.Edit) {
             uiManager.openTopLevelScreen(PlaylistEditScreen(key))
         }
-    ) + playlistCollectionMenuItemsWithoutEdit(key, uiManager)
+    ) +
+        playlistCollectionMenuItemsWithoutEdit(key, uiManager) +
+        listOf(
+            MenuItem.Divider,
+            MenuItem.Button(
+                Strings[R.string.playlist_create_shortcut],
+                Icons.AutoMirrored.Filled.AddToHomeScreen,
+            ) {
+                ShortcutManagerCompat.requestPinShortcut(
+                    context,
+                    playlistShortcut(context, "pinnedPlaylist", key, name),
+                    null,
+                )
+            },
+        )
 }
 
 @Stable

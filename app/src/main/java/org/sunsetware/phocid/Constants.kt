@@ -33,6 +33,8 @@ const val ROOT_MEDIA_ID = "root"
 
 const val SHORTCUT_CONTINUE = "org.sunsetware.phocid.CONTINUE"
 const val SHORTCUT_SHUFFLE = "org.sunsetware.phocid.SHUFFLE"
+const val SHORTCUT_PLAYLIST = "org.sunsetware.phocid.PLAYLIST"
+const val SHORTCUT_PLAYLIST_EXTRA_KEY = "playlist"
 
 const val UNKNOWN = "<unknown>"
 

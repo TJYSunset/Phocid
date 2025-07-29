@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.application
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaMetadata
@@ -519,7 +520,12 @@ class LibraryScreenHomeViewState(
                 menuItems = {
                     collectionMenuItems({ playlist.validTracks }, it.playerManager, it.uiManager) +
                         MenuItem.Divider +
-                        playlistCollectionMenuItems(key, it.uiManager)
+                        playlistCollectionMenuItems(
+                            key,
+                            playlist.displayName,
+                            it.application.applicationContext,
+                            it.uiManager,
+                        )
                 },
                 multiSelectMenuItems = { others, viewModel, continuation ->
                     collectionMenuItems(

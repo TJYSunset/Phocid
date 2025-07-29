@@ -66,6 +66,7 @@
     <string name="player_timer_set">开始定时</string>
     <string name="player_up_next">剩余队列</string>
     <string name="playlist_add_to">添加到播放列表</string>
+    <string name="playlist_create_shortcut">创建快捷方式</string>
     <string name="playlist_delete">删除播放列表</string>
     <string name="playlist_delete_multiple_dialog_body">{0, plural, other {#}} 个播放列表将被永久删除</string>
     <string name="playlist_delete_multiple_dialog_title">删除 {0, plural, other {#}} 个播放列表？</string>
@@ -308,6 +309,7 @@
     <string name="toast_preferences_export_success">已导出设置</string>
     <string name="toast_preferences_import_failed">设置导入失败：{0}</string>
     <string name="toast_preferences_import_success">已导入设置</string>
+    <string name="toast_shortcut_playlist_not_found">播放列表不存在</string>
     <string name="toast_timer_canceled">定时暂停已取消</string>
     <string name="toast_timer_set">将在约 {0, plural, other {#}} 分钟后暂停播放</string>
     <string name="toast_track_queued">已将 {0, plural, other {#}} 首曲目加入队列</string>

@@ -77,6 +77,7 @@
     <string name="player_timer_set">Set</string>
     <string name="player_up_next">Up next</string>
     <string name="playlist_add_to">Add to playlist</string>
+    <string name="playlist_create_shortcut">Create shortcut</string>
     <string name="playlist_delete">Delete playlist</string>
     <string name="playlist_delete_multiple_dialog_body">{0, plural, one {# playlist} other {# playlists}} will be permanently deleted</string>
     <string name="playlist_delete_multiple_dialog_title">Delete {0, plural, one {# playlist} other {# playlists}}?</string>
@@ -326,6 +327,7 @@
     <string name="toast_preferences_export_success">Exported preferences</string>
     <string name="toast_preferences_import_failed">Preferences import failed: {0}</string>
     <string name="toast_preferences_import_success">Imported preferences</string>
+    <string name="toast_shortcut_playlist_not_found">Playlist not found</string>
     <string name="toast_timer_canceled">Canceled sleep timer</string>
     <string name="toast_timer_set">Playback will pause after ~{0, plural, one {# minute} other {# minutes}}</string>
     <string name="toast_track_queued">{0, plural, one {# track} other {# tracks}} queued</string>

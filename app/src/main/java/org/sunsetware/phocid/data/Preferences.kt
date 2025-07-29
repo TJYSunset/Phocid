@@ -12,7 +12,6 @@ import com.ibm.icu.text.RuleBasedCollator
 import java.util.Locale
 import java.util.UUID
 import kotlin.math.PI
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.sunsetware.phocid.R

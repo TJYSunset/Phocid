@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <path
+        android:fillColor="@color/shortcutBackground"
+        android:pathData="M20 0A20 20 0 1 1 20 40A20 20 0 1 1 20 0" />
+    <path
+        android:fillColor="@color/shortcutForeground"
+        android:fillType="nonZero"
+        android:pathData="M30,14L25,14L25,22.18C24.69,22.07 24.35,22 24,22C22.34,22 21,23.34 21,25C21,26.66 22.34,28 24,28C25.66,28 27,26.66 27,25L27,16L30,16L30,14ZM23,14L11,14L11,16L23,16L23,14ZM23,18L11,18L11,20L23,20L23,18ZM19,22L11,22L11,24L19,24L19,22Z" />
+</vector>

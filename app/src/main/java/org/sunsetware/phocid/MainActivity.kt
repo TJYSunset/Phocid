@@ -44,6 +44,7 @@ import com.ibm.icu.util.ULocale
 import java.lang.ref.WeakReference
 import java.net.URLConnection
 import java.util.Locale
+import java.util.UUID
 import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -53,6 +54,7 @@ import org.apache.commons.io.FilenameUtils
 import org.sunsetware.phocid.data.LibraryIndex
 import org.sunsetware.phocid.data.PlayerManager
 import org.sunsetware.phocid.data.Preferences
+import org.sunsetware.phocid.data.RealizedPlaylist
 import org.sunsetware.phocid.data.Track
 import org.sunsetware.phocid.data.getArtworkColor
 import org.sunsetware.phocid.data.sorted
@@ -160,6 +162,7 @@ class MainActivity : ComponentActivity(), IntentLauncher {
                                     viewModel.uiManager,
                                     viewModel.playerManager,
                                     { viewModel.libraryIndex.value },
+                                    { viewModel.playlistManager.playlists.value },
                                     viewModel.preferences.value,
                                     scanJob,
                                     it,
@@ -323,6 +326,7 @@ class MainActivity : ComponentActivity(), IntentLauncher {
         uiManager: UiManager,
         playerManager: PlayerManager,
         libraryIndex: () -> LibraryIndex,
+        playlists: () -> Map<UUID, RealizedPlaylist>,
         preferences: Preferences,
         scanJob: Job,
         intent: Intent,
@@ -346,6 +350,24 @@ class MainActivity : ComponentActivity(), IntentLauncher {
                         ),
                     null,
                 )
+            }
+            SHORTCUT_PLAYLIST -> {
+                scanJob.join()
+
+                val playlist =
+                    playlists()[
+                        intent.extras?.getString(SHORTCUT_PLAYLIST_EXTRA_KEY)?.let {
+                            try {
+                                UUID.fromString(it)
+                            } catch (_: Exception) {
+                                null
+                            }
+                        }]
+                if (playlist == null) {
+                    uiManager.toast(Strings[R.string.toast_shortcut_playlist_not_found])
+                } else {
+                    playerManager.setTracks(playlist.entries.mapNotNull { it.track }, null)
+                }
             }
             ACTION_VIEW -> {
                 Log.d("Phocid", "View intent: ${intent.data}")

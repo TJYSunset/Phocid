@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.application
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import java.util.UUID
@@ -782,7 +783,12 @@ data class PlaylistCollectionViewInfo(val key: UUID, val playlist: RealizedPlayl
 
     @Stable
     override fun extraCollectionMenuItems(viewModel: MainViewModel): List<MenuItem> {
-        return playlistCollectionMenuItems(key, viewModel.uiManager)
+        return playlistCollectionMenuItems(
+            key,
+            playlist.displayName,
+            viewModel.application.applicationContext,
+            viewModel.uiManager,
+        )
     }
 }
 
