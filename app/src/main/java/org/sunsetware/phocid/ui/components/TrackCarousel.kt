@@ -157,6 +157,7 @@ inline fun <reified T> TrackCarousel(
                     nextIndex,
                 )
 
+            // TODO: make animation smooth
             offset.animateTo(0f, emphasizedExit())
         }
     }
@@ -185,8 +186,10 @@ inline fun <reified T> TrackCarousel(
                                     updatedSwipeThreshold.roundToPx().coerceAtMost(size.width / 2)
                                 try {
                                     if (horizontalDragTotal >= positionalThreshold) {
+                                        coroutineScope.launch { offset.animateTo(1f) }
                                         onPrevious()
                                     } else if (horizontalDragTotal <= -positionalThreshold) {
+                                        coroutineScope.launch { offset.animateTo(-1f) }
                                         onNext()
                                     } else {
                                         coroutineScope.launch { offset.animateTo(0f) }
