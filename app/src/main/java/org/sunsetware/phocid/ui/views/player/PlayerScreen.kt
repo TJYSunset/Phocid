@@ -317,7 +317,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
         colorScheme =
             if (preferences.coloredPlayer)
                 customColorScheme(
-                        color = artworkColor.value,
+                        color = currentTrack.getArtworkColor(preferences.artworkColorPreference),
                         darkTheme = preferences.darkTheme.boolean ?: isSystemInDarkTheme(),
                     )
                     .let { if (preferences.pureBackgroundColor) it.pureBackgroundColor() else it }
