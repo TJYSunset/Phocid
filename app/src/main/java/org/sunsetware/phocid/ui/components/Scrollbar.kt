@@ -2,6 +2,7 @@
 
 package org.sunsetware.phocid.ui.components
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -11,11 +12,13 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -44,7 +47,12 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.ceil
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import org.sunsetware.phocid.TNUM
 import org.sunsetware.phocid.ui.theme.EXIT_DURATION
 import org.sunsetware.phocid.ui.theme.Typography
@@ -285,6 +293,7 @@ inline fun Scrollbar(
     color: Color = SCROLLBAR_DEFAULT_COLOR,
     noinline content: @Composable () -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val density = LocalDensity.current
     val thumbRange by
         remember(state) {
@@ -305,19 +314,23 @@ inline fun Scrollbar(
             }
         }
     val totalItemsCount by remember(state) { derivedStateOf { state.layoutInfo.totalItemsCount } }
-    var isScrollbarDragging by remember { mutableStateOf(false) }
-    val isScrollInProgress by
-        remember(state) {
-            derivedStateOf {
+    val isScrollbarDragging = remember { AtomicBoolean(false) }
+
+    val alpha = remember { Animatable(0f) }
+    LaunchedEffect(Unit) {
+        // Reading state.isScrollInProgress outside of LaunchedEffect will trigger a recomposition
+        while (isActive) {
+            val isScrolling =
                 (thumbRange.first > 0 || thumbRange.second < 1) &&
-                    (state.isScrollInProgress || isScrollbarDragging)
+                    (state.isScrollInProgress || isScrollbarDragging.get())
+            if (alpha.targetValue != 1f && isScrolling) {
+                coroutineScope.launch { alpha.animateTo(1f, scrollbarEnter) }
+            } else if (alpha.targetValue != 0f && !isScrolling) {
+                coroutineScope.launch { alpha.animateTo(0f, scrollbarExit) }
             }
+            delay(17.milliseconds)
         }
-    val alpha =
-        animateFloatAsState(
-            if (isScrollInProgress) 1f else 0f,
-            if (isScrollInProgress) scrollbarEnter else scrollbarExit,
-        )
+    }
 
     ScrollbarThumb(
         width,
@@ -327,7 +340,7 @@ inline fun Scrollbar(
         { thumbRange },
         { totalItemsCount },
         { state.requestScrollToItem(it) },
-        { isScrollbarDragging = it },
+        { isScrollbarDragging.set(it) },
         {
             state.layoutInfo.visibleItemsInfo
                 .firstOrNull { it.offset > -it.size / 2 }
@@ -347,6 +360,7 @@ inline fun Scrollbar(
     color: Color = SCROLLBAR_DEFAULT_COLOR,
     noinline content: @Composable () -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val itemsPerRow by
         remember(state) {
             derivedStateOf {
@@ -381,19 +395,23 @@ inline fun Scrollbar(
             }
         }
     val totalItemsCount by remember(state) { derivedStateOf { state.layoutInfo.totalItemsCount } }
-    var isScrollbarDragging by remember { mutableStateOf(false) }
-    val isScrollInProgress by
-        remember(state) {
-            derivedStateOf {
+    val isScrollbarDragging = remember { AtomicBoolean(false) }
+
+    val alpha = remember { Animatable(0f) }
+    LaunchedEffect(Unit) {
+        // Reading state.isScrollInProgress outside of LaunchedEffect will trigger a recomposition
+        while (isActive) {
+            val isScrolling =
                 (thumbRange.first > 0 || thumbRange.second < 1) &&
-                    (state.isScrollInProgress || isScrollbarDragging)
+                    (state.isScrollInProgress || isScrollbarDragging.get())
+            if (alpha.targetValue != 1f && isScrolling) {
+                coroutineScope.launch { alpha.animateTo(1f, scrollbarEnter) }
+            } else if (alpha.targetValue != 0f && !isScrolling) {
+                coroutineScope.launch { alpha.animateTo(0f, scrollbarExit) }
             }
+            delay(17.milliseconds)
         }
-    val alpha =
-        animateFloatAsState(
-            if (isScrollInProgress) 1f else 0f,
-            if (isScrollInProgress) scrollbarEnter else scrollbarExit,
-        )
+    }
 
     ScrollbarThumb(
         width,
@@ -403,7 +421,7 @@ inline fun Scrollbar(
         { thumbRange },
         { totalItemsCount },
         { state.requestScrollToItem(it) },
-        { isScrollbarDragging = it },
+        { isScrollbarDragging.set(it) },
         {
             state.layoutInfo.visibleItemsInfo
                 .firstOrNull { it.offset.y > -it.size.height / 2 }
