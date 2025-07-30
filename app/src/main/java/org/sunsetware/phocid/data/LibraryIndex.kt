@@ -47,7 +47,6 @@ import org.jaudiotagger.tag.KeyNotFoundException
 import org.jaudiotagger.tag.TagTextField
 import org.sunsetware.omio.VORBIS_COMMENT_ALBUM
 import org.sunsetware.omio.VORBIS_COMMENT_ARTIST
-import org.sunsetware.omio.VORBIS_COMMENT_DATE
 import org.sunsetware.omio.VORBIS_COMMENT_GENRE
 import org.sunsetware.omio.VORBIS_COMMENT_TITLE
 import org.sunsetware.omio.VORBIS_COMMENT_TRACKNUMBER
@@ -55,6 +54,7 @@ import org.sunsetware.omio.VORBIS_COMMENT_UNOFFICIAL_ALBUMARTIST
 import org.sunsetware.omio.VORBIS_COMMENT_UNOFFICIAL_COMMENT
 import org.sunsetware.omio.VORBIS_COMMENT_UNOFFICIAL_DISCNUMBER
 import org.sunsetware.omio.VORBIS_COMMENT_UNOFFICIAL_LYRICS
+import org.sunsetware.omio.VORBIS_COMMENT_UNOFFICIAL_YEAR
 import org.sunsetware.omio.readOpusMetadata
 import org.sunsetware.phocid.R
 import org.sunsetware.phocid.READ_PERMISSION
@@ -1364,6 +1364,17 @@ suspend fun scanTracks(
 }
 
 private val lyricsFieldNames = listOf("lyrics", "unsyncedlyrics", "©lyr")
+private val yearRegexes =
+    listOf(
+        // YYYY-MM(-DD)
+        Regex("^(?<year>[0-9]{4})-[0-9]{2}(-[0-9]{2})?$"),
+        // YYYYMM(DD)
+        Regex("^(?<year>[0-9]{4})[0-9]{2}([0-9]{2})?$"),
+        // any integer
+        Regex("^(?<year>[0-9]+)$"),
+        // last resort
+        Regex("^.*?(?<year>[0-9]+).*?$"),
+    )
 
 /**
  * Issue #84: some systems might report incorrect durations, but Jaudiotagger only has second-level
@@ -1399,6 +1410,12 @@ private fun scanTrack(
     var unsyncedLyrics = crudeTrack.unsyncedLyrics
     var comment = crudeTrack.comment
 
+    fun String.parseYear(): Int? {
+        return yearRegexes.firstNotNullOfOrNull {
+            it.matchEntire(this)?.groups["year"]?.value?.toIntOrNull()
+        }
+    }
+
     fun extractWithOmio() {
         val (_, comments, opusDuration) =
             FileInputStream(File(path)).buffered().use { stream ->
@@ -1409,7 +1426,10 @@ private fun scanTrack(
         album = comments[VORBIS_COMMENT_ALBUM]?.firstOrNull() ?: album
         albumArtists = comments[VORBIS_COMMENT_UNOFFICIAL_ALBUMARTIST] ?: albumArtists
         genres = comments[VORBIS_COMMENT_GENRE] ?: genres
-        year = comments[VORBIS_COMMENT_DATE]?.firstNotNullOfOrNull { it.toIntOrNull() } ?: year
+        year =
+            VORBIS_COMMENT_UNOFFICIAL_YEAR.firstNotNullOfOrNull {
+                comments[it]?.firstOrNull()?.parseYear()
+            } ?: year
         trackNumber =
             comments[VORBIS_COMMENT_TRACKNUMBER]?.firstNotNullOfOrNull { it.toIntOrNull() }
                 ?: trackNumber
@@ -1457,9 +1477,18 @@ private fun scanTrack(
                     .filter { !it.isBinary }
                     .map { (it as TagTextField).content }
         } catch (_: KeyNotFoundException) {}
-        try {
-            year = file.tag.getFirst(FieldKey.YEAR).toIntOrNull()
-        } catch (_: KeyNotFoundException) {}
+        year =
+            (try {
+                    file.tag.getFirst(FieldKey.YEAR)
+                } catch (_: KeyNotFoundException) {
+                    null
+                }
+                    ?: file.tag.fields
+                        .asSequence()
+                        .firstOrNull { it.id.equals("year", true) }
+                        ?.let { it as? TagTextField }
+                        ?.content)
+                ?.parseYear() ?: year
         try {
             trackNumber = file.tag.getFirst(FieldKey.TRACK).toIntOrNull()
         } catch (_: KeyNotFoundException) {}
