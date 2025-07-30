@@ -762,8 +762,10 @@ private val Indexing =
                     Strings[R.string.preferences_indexing_advanced_metadata_extraction_subtitle]
                 },
                 icon = Icons.Filled.DocumentScanner,
-                value = { it.pauseOnFocusLoss },
-                onSetValue = { preferences, new -> preferences.copy(pauseOnFocusLoss = new) },
+                value = { it.advancedMetadataExtraction },
+                onSetValue = { preferences, new ->
+                    preferences.copy(advancedMetadataExtraction = new)
+                },
             ),
             Item.Toggle(
                 title = { Strings[R.string.preferences_indexing_disable_artwork_color_extraction] },
