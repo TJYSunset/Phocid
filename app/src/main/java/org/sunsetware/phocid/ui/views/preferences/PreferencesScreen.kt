@@ -110,9 +110,11 @@ import com.ibm.icu.number.NumberFormatter
 import com.ibm.icu.number.Precision
 import com.ibm.icu.text.Collator
 import com.ibm.icu.text.ListFormatter
+import com.ibm.icu.text.SimpleDateFormat
 import com.ibm.icu.util.MeasureUnit
 import java.io.File
 import java.nio.charset.Charset
+import java.time.LocalDateTime
 import java.util.Locale
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
@@ -960,8 +962,12 @@ private val Miscellaneous =
                 subtitle = { null },
                 icon = Icons.Filled.Save,
                 onClick = {
-                    uiManager.intentLauncher.get()?.createJsonDocument("phocid-preferences.json") {
-                        uri ->
+                    val date =
+                        SimpleDateFormat.getInstanceForSkeleton("yyyy-MM-dd", Locale.ROOT)
+                            .format(LocalDateTime.now())
+                    uiManager.intentLauncher.get()?.createJsonDocument(
+                        "phocid-preferences-$date.json"
+                    ) { uri ->
                         if (uri == null) return@createJsonDocument
                         try {
                             context.contentResolver.openOutputStream(uri)?.use { stream ->
