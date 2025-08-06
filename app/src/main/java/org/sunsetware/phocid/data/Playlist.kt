@@ -34,6 +34,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -50,6 +53,7 @@ import org.sunsetware.phocid.R
 import org.sunsetware.phocid.SHORTCUT_PLAYLIST
 import org.sunsetware.phocid.SHORTCUT_PLAYLIST_EXTRA_KEY
 import org.sunsetware.phocid.globals.Strings
+import org.sunsetware.phocid.ui.views.library.LibraryScreenTabType
 import org.sunsetware.phocid.utils.CaseInsensitiveMap
 import org.sunsetware.phocid.utils.UUIDSerializer
 import org.sunsetware.phocid.utils.combine
@@ -129,9 +133,25 @@ class PlaylistManager(
         shortcutJob =
             coroutineScope.launch {
                 playlists
-                    .onEach { playlists ->
-                        // Remove invalid shortcuts
-                        val uuids = playlists.map { it.key }.toSet()
+                    .combine(
+                        preferences.map { it.sortCollator to it.tabSettings }.distinctUntilChanged()
+                    ) { playlists, (sortCollator, tabSettings) ->
+                        val tabSettings = tabSettings[LibraryScreenTabType.PLAYLISTS]!!
+                        val uuids =
+                            playlists
+                                .asIterable()
+                                .sortedBy(
+                                    sortCollator,
+                                    tabSettings.sortingKeys,
+                                    tabSettings.sortAscending,
+                                ) {
+                                    it.value
+                                }
+                                .take(ShortcutManagerCompat.getMaxShortcutCountPerActivity(context))
+                                .map { it.key }
+                                .toSet()
+
+                        // Remove extra shortcuts
                         val invalidShortcuts =
                             ShortcutManagerCompat.getDynamicShortcuts(context)
                                 .filter { shortcut ->
@@ -153,10 +173,18 @@ class PlaylistManager(
 
                         // Push shortcuts
                         val shortcuts =
-                            playlists.map {
-                                playlistShortcut(context, "playlist", it.key, it.value.displayName)
+                            uuids.mapIndexed { i, uuid ->
+                                playlistShortcut(
+                                    context,
+                                    "playlist",
+                                    uuid,
+                                    checkNotNull(playlists[uuid]).displayName,
+                                    i + 1,
+                                )
                             }
-                        ShortcutManagerCompat.addDynamicShortcuts(context, shortcuts)
+                        if (!ShortcutManagerCompat.addDynamicShortcuts(context, shortcuts)) {
+                            Log.e("Phocid", "Shortcut update is rate limited")
+                        }
                     }
                     .catch { Log.e("Phocid", "Error updating playlist shortcuts", it) }
                     .collect()
@@ -598,11 +626,13 @@ fun playlistShortcut(
     namespace: String,
     key: UUID,
     name: String,
+    rank: Int = 0,
 ): ShortcutInfoCompat {
     return ShortcutInfoCompat.Builder(context, "$namespace:$key")
         .setShortLabel(name)
         .setLongLabel(name)
         .setIcon(IconCompat.createWithResource(context, R.drawable.shortcut_playlist))
+        .setRank(rank)
         .setIntent(
             Intent(SHORTCUT_PLAYLIST, null, context, MainActivity::class.java).apply {
                 putExtras(bundleOf(SHORTCUT_PLAYLIST_EXTRA_KEY to key.toString()))
