@@ -1194,7 +1194,7 @@ private sealed class Item {
                 {
                     uiManager.openDialog(
                         PreferencesSteppedSliderDialog(
-                            title = Strings[R.string.preferences_ui_scaling],
+                            title = title(),
                             numberFormatter = numberFormatter,
                             initialValue = value,
                             defaultValue = default,
