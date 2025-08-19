@@ -83,6 +83,7 @@ data class Track(
     val albumArtists: List<String> = emptyList(),
     val genres: List<String>,
     val year: Int?,
+    val originalYear: Int? = null,
     val trackNumber: Int?,
     val discNumber: Int?,
     val duration: Duration,
@@ -177,6 +178,9 @@ data class Track(
     override val sortYear
         get() = year ?: 0
 
+    override val sortOriginalYear
+        get() = originalYear ?: year ?: 0
+
     override val sortIsFolder
         get() = false
 
@@ -260,6 +264,19 @@ data class Track(
                             SortingKey.FILE_NAME,
                         ),
                     ),
+                "Original year" to
+                    SortingOption(
+                        R.string.sorting_original_release_year,
+                        listOf(
+                            SortingKey.ORIGINAL_YEAR,
+                            SortingKey.ALBUM_ARTIST,
+                            SortingKey.ALBUM,
+                            SortingKey.TRACK,
+                            SortingKey.TITLE,
+                            SortingKey.ARTIST,
+                            SortingKey.FILE_NAME,
+                        ),
+                    ),
                 "Date added" to
                     SortingOption(
                         R.string.sorting_date_added,
@@ -327,6 +344,7 @@ val InvalidTrack =
         null,
         null,
         null,
+        null,
         Duration.ZERO,
         0,
         "<error>",
@@ -345,6 +363,7 @@ data class Album(
     val name: String,
     val albumArtists: List<String> = emptyList(),
     val year: Int? = null,
+    val originalYear: Int?,
     val tracks: List<Track> = emptyList(),
 ) : Searchable, Sortable {
     val displayAlbumArtist
@@ -366,6 +385,9 @@ data class Album(
 
     override val sortYear
         get() = year ?: 0
+
+    override val sortOriginalYear
+        get() = originalYear ?: year ?: 0
 
     override val sortDateAdded = tracks.maxOf { it.dateAdded }
 
@@ -391,6 +413,11 @@ data class Album(
                     SortingOption(
                         R.string.sorting_year,
                         listOf(SortingKey.YEAR, SortingKey.ALBUM_ARTIST, SortingKey.ALBUM),
+                    ),
+                "Original year" to
+                    SortingOption(
+                        R.string.sorting_original_release_year,
+                        listOf(SortingKey.ORIGINAL_YEAR, SortingKey.ALBUM_ARTIST, SortingKey.ALBUM),
                     ),
                 "Date added" to
                     SortingOption(
@@ -581,6 +608,17 @@ data class Artist(
                             SortingKey.TITLE,
                         ),
                     ),
+                "Original year" to
+                    SortingOption(
+                        R.string.sorting_original_release_year,
+                        listOf(
+                            SortingKey.ORIGINAL_YEAR,
+                            SortingKey.ALBUM_ARTIST,
+                            SortingKey.ALBUM,
+                            SortingKey.TRACK,
+                            SortingKey.TITLE,
+                        ),
+                    ),
             )
     }
 }
@@ -685,6 +723,17 @@ data class AlbumArtist(
                             SortingKey.ARTIST,
                         ),
                     ),
+                "Original year" to
+                    SortingOption(
+                        R.string.sorting_original_release_year,
+                        listOf(
+                            SortingKey.ORIGINAL_YEAR,
+                            SortingKey.ALBUM,
+                            SortingKey.TRACK,
+                            SortingKey.TITLE,
+                            SortingKey.ARTIST,
+                        ),
+                    ),
             )
     }
 }
@@ -781,6 +830,18 @@ data class Genre(
                             SortingKey.ARTIST,
                         ),
                     ),
+                "Original year" to
+                    SortingOption(
+                        R.string.sorting_original_release_year,
+                        listOf(
+                            SortingKey.ORIGINAL_YEAR,
+                            SortingKey.ALBUM_ARTIST,
+                            SortingKey.ALBUM,
+                            SortingKey.TRACK,
+                            SortingKey.TITLE,
+                            SortingKey.ARTIST,
+                        ),
+                    ),
             )
     }
 }
@@ -859,6 +920,9 @@ data class Folder(
         get() = ""
 
     override val sortYear
+        get() = 0
+
+    override val sortOriginalYear
         get() = 0
 
     override val sortIsFolder
@@ -973,6 +1037,17 @@ data class ArtistSlice(val artist: Artist, val tracks: List<Track> = emptyList()
                             SortingKey.TITLE,
                         ),
                     ),
+                "Original year" to
+                    SortingOption(
+                        R.string.sorting_original_release_year,
+                        listOf(
+                            SortingKey.ORIGINAL_YEAR,
+                            SortingKey.ALBUM_ARTIST,
+                            SortingKey.ALBUM,
+                            SortingKey.TRACK,
+                            SortingKey.TITLE,
+                        ),
+                    ),
             )
     }
 }
@@ -1057,7 +1132,13 @@ private fun getAlbums(tracks: Collection<Track>, collator: Collator): Map<AlbumK
             val name = sortedTracks.mode { it.album!! }
             val albumArtist = sortedTracks.mode { it.albumArtists }
             AlbumKey(name, albumArtist) to
-                Album(name, albumArtist, sortedTracks.mode { it.year }, sortedTracks)
+                Album(
+                    name,
+                    albumArtist,
+                    sortedTracks.mode { it.year },
+                    sortedTracks.mode { it.originalYear },
+                    sortedTracks,
+                )
         }
         .toMap()
 }
@@ -1286,6 +1367,7 @@ suspend fun scanTracks(
                                 cursor.getStringOrNull(ci[Media.GENRE]!!)?.trimAndNormalize()
                             ),
                         year = cursor.getIntOrNull(ci[Media.YEAR]!!),
+                        originalYear = null,
                         // https://developer.android.com/reference/android/provider/MediaStore.Audio.AudioColumns.html#TRACK
                         trackNumber = cursor.getIntOrNull(ci[Media.TRACK]!!)?.let { it % 1000 },
                         discNumber = cursor.getIntOrNull(ci[Media.DISC_NUMBER]!!),
@@ -1363,6 +1445,8 @@ suspend fun scanTracks(
     return UnfilteredTrackIndex(libraryVersion, tracks.associateBy { it.id })
 }
 
+private val originalYearFieldNames =
+    listOf("originalyear", "originaldate", "original_year", "original_date", "origyear")
 private val lyricsFieldNames = listOf("lyrics", "unsyncedlyrics", "©lyr")
 private val yearRegexes =
     listOf(
@@ -1400,6 +1484,7 @@ private fun scanTrack(
     var albumArtists = crudeTrack.albumArtists
     var genres = crudeTrack.genres
     var year = crudeTrack.year
+    var originalYear = crudeTrack.originalYear
     var trackNumber = crudeTrack.trackNumber
     var discNumber = crudeTrack.discNumber
     var duration = crudeTrack.duration
@@ -1430,6 +1515,10 @@ private fun scanTrack(
             VORBIS_COMMENT_UNOFFICIAL_YEAR.firstNotNullOfOrNull {
                 comments[it]?.firstOrNull()?.parseYear()
             } ?: year
+        originalYear =
+            originalYearFieldNames.firstNotNullOfOrNull { name ->
+                comments[name]?.map { it.parseYear() }?.firstOrNull()
+            }
         trackNumber =
             comments[VORBIS_COMMENT_TRACKNUMBER]?.firstNotNullOfOrNull { it.toIntOrNull() }
                 ?: trackNumber
@@ -1489,6 +1578,19 @@ private fun scanTrack(
                         ?.let { it as? TagTextField }
                         ?.content)
                 ?.parseYear() ?: year
+        originalYear =
+            originalYearFieldNames.firstNotNullOfOrNull { name ->
+                try {
+                    file.tag.fields
+                        .asSequence()
+                        .firstOrNull { it.id.equals(name, true) }
+                        ?.let { it as? TagTextField }
+                        ?.content
+                        ?.parseYear()
+                } catch (_: KeyNotFoundException) {
+                    null
+                }
+            }
         try {
             trackNumber = file.tag.getFirst(FieldKey.TRACK).toIntOrNull()
         } catch (_: KeyNotFoundException) {}
@@ -1571,6 +1673,7 @@ private fun scanTrack(
         albumArtists = albumArtists,
         genres = genres,
         year = year,
+        originalYear = originalYear,
         trackNumber = trackNumber,
         discNumber = discNumber,
         duration = duration,

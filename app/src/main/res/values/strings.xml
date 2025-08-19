@@ -302,6 +302,7 @@
     <string name="sorting_file_name">File name</string>
     <string name="sorting_name">Name</string>
     <string name="sorting_number">Track number</string>
+    <string name="sorting_original_release_year">Original release year</string>
     <string name="sorting_title">Title</string>
     <string name="sorting_track_count">Track count</string>
     <string name="sorting_year">Year</string>
@@ -345,6 +346,7 @@
     <string name="track_details_date_modified">Date modified</string>
     <string name="track_details_format">Format</string>
     <string name="track_details_genre">Genre</string>
+    <string name="track_details_original_release_year">Original release year</string>
     <string name="track_details_path">Path</string>
     <string name="track_details_sample_rate">Sample rate</string>
     <string name="track_details_size">Size</string>

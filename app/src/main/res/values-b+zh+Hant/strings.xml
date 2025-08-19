@@ -286,6 +286,7 @@
     <string name="sorting_file_name">檔案名稱</string>
     <string name="sorting_name">名稱</string>
     <string name="sorting_number">曲目編號</string>
+    <string name="sorting_original_release_year">原版發行年份</string>
     <string name="sorting_title">標題</string>
     <string name="sorting_track_count">曲目數量</string>
     <string name="sorting_year">年份</string>
@@ -327,6 +328,7 @@
     <string name="track_details_date_modified">修改日期</string>
     <string name="track_details_format">格式</string>
     <string name="track_details_genre">曲風</string>
+    <string name="track_details_original_release_year">原版發行年份</string>
     <string name="track_details_path">路徑</string>
     <string name="track_details_sample_rate">取樣率</string>
     <string name="track_details_size">大小</string>

@@ -47,6 +47,9 @@ class TrackDetailsDialog(private val track: Track) : Dialog() {
                     Strings[R.string.track_details_album_artist] to track.displayAlbumArtist,
                     Strings[R.string.track_details_genre] to track.displayGenre,
                     Strings[R.string.track_details_year] to track.displayYear,
+                    track.originalYear?.let {
+                        Strings[R.string.track_details_original_release_year] to it.toString()
+                    },
                     Strings[R.string.track_details_track_number] to track.displayNumber,
                     Strings[R.string.track_details_path] to track.path,
                     Strings[R.string.track_details_date_added] to

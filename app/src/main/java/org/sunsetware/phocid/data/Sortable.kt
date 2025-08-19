@@ -41,6 +41,9 @@ interface Sortable {
     val sortYear: Int?
         get() = null
 
+    val sortOriginalYear: Int?
+        get() = null
+
     val sortGenre: String?
         get() = null
 
@@ -75,6 +78,7 @@ enum class SortingKey {
     ALBUM_ARTIST,
     TRACK,
     YEAR,
+    ORIGINAL_YEAR,
     GENRE,
     PLAYLIST,
     FILE_NAME,
@@ -114,6 +118,8 @@ inline fun <T> Iterable<T>.sortedBy(
                                 ?: a.sortTrackNumber!!.compareTo(b.sortTrackNumber!!)
 
                         SortingKey.YEAR -> a.sortYear!!.compareTo(b.sortYear!!)
+                        SortingKey.ORIGINAL_YEAR ->
+                            a.sortOriginalYear!!.compareTo(b.sortOriginalYear!!)
                         SortingKey.GENRE -> collator.compare(a.sortGenre, b.sortGenre)
                         SortingKey.PLAYLIST ->
                             (a.sortPlaylist!!.first?.order ?: Int.MAX_VALUE)
@@ -169,6 +175,9 @@ inline fun <T> Iterable<T>.hintBy(
                 SortingKey.TRACK -> sortable.sortTrackNumberDisplay!!
                 SortingKey.YEAR ->
                     sortable.sortYear!!.takeIf { it > 0 }?.toString()
+                        ?: Strings[R.string.track_number_not_available]
+                SortingKey.ORIGINAL_YEAR ->
+                    sortable.sortOriginalYear!!.takeIf { it > 0 }?.toString()
                         ?: Strings[R.string.track_number_not_available]
                 SortingKey.GENRE -> sortable.sortGenre!!.initialLetter(locale)
                 SortingKey.PLAYLIST ->
