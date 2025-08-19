@@ -1579,18 +1579,23 @@ private fun scanTrack(
                         ?.content)
                 ?.parseYear() ?: year
         originalYear =
-            originalYearFieldNames.firstNotNullOfOrNull { name ->
-                try {
-                    file.tag.fields
-                        .asSequence()
-                        .firstOrNull { it.id.equals(name, true) }
-                        ?.let { it as? TagTextField }
-                        ?.content
-                        ?.parseYear()
-                } catch (_: KeyNotFoundException) {
-                    null
-                }
+            try {
+                file.tag.getFirst(FieldKey.ORIGINAL_YEAR).parseYear()
+            } catch (_: KeyNotFoundException) {
+                null
             }
+                ?: originalYearFieldNames.firstNotNullOfOrNull { name ->
+                    try {
+                        file.tag.fields
+                            .asSequence()
+                            .firstOrNull { it.id.equals(name, true) }
+                            ?.let { it as? TagTextField }
+                            ?.content
+                            ?.parseYear()
+                    } catch (_: KeyNotFoundException) {
+                        null
+                    }
+                }
         try {
             trackNumber = file.tag.getFirst(FieldKey.TRACK).toIntOrNull()
         } catch (_: KeyNotFoundException) {}
