@@ -28,6 +28,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.sunsetware.phocid.R
@@ -45,7 +46,7 @@ sealed class PlayerScreenTopBar {
         lyricsViewVisibility: Boolean,
         lyricsAutoScrollButtonVisibility: Boolean,
         lyricsButtonEnabled: Boolean,
-        overlayVisibility: Boolean,
+        overlayVisibility: Float,
         onBack: () -> Unit,
         onEnableLyricsViewAutoScroll: () -> Unit,
         onToggleLyricsView: () -> Unit,
@@ -61,76 +62,70 @@ object PlayerScreenTopBarDefaultOverlay : PlayerScreenTopBar() {
         lyricsViewVisibility: Boolean,
         lyricsAutoScrollButtonVisibility: Boolean,
         lyricsButtonEnabled: Boolean,
-        overlayVisibility: Boolean,
+        overlayVisibility: Float,
         onBack: () -> Unit,
         onEnableLyricsViewAutoScroll: () -> Unit,
         onToggleLyricsView: () -> Unit,
     ) {
-        AnimatedVisibility(
-            overlayVisibility,
-            enter = fadeIn(emphasizedStandard()),
-            exit = fadeOut(emphasizedStandard()),
-        ) {
-            Box(modifier = Modifier.fillMaxWidth().height((48 + 8 * 2).dp)) {
-                FilledTonalIconButton(
-                    onClick = onBack,
-                    modifier = Modifier.padding(start = 8.dp, top = 8.dp),
-                    colors =
-                        IconButtonDefaults.filledTonalIconButtonColors(
-                            containerColor = Color.Black.copy(alpha = INACTIVE_ALPHA),
-                            contentColor = Color.White,
-                        ),
+        Box(modifier = Modifier.fillMaxWidth().height((48 + 8 * 2).dp).alpha(overlayVisibility)) {
+            FilledTonalIconButton(
+                onClick = onBack,
+                modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+                colors =
+                    IconButtonDefaults.filledTonalIconButtonColors(
+                        containerColor = Color.Black.copy(alpha = INACTIVE_ALPHA),
+                        contentColor = Color.White,
+                    ),
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Default.ArrowBack,
+                    contentDescription = Strings[R.string.commons_back],
+                )
+            }
+            Row(modifier = Modifier.align(Alignment.TopEnd).padding(end = 8.dp, top = 8.dp)) {
+                AnimatedVisibility(
+                    lyricsAutoScrollButtonVisibility,
+                    enter = fadeIn(emphasizedStandard()),
+                    exit = fadeOut(emphasizedStandard()),
                 ) {
-                    Icon(
-                        Icons.AutoMirrored.Default.ArrowBack,
-                        contentDescription = Strings[R.string.commons_back],
-                    )
-                }
-                Row(modifier = Modifier.align(Alignment.TopEnd).padding(end = 8.dp, top = 8.dp)) {
-                    AnimatedVisibility(
-                        lyricsAutoScrollButtonVisibility,
-                        enter = fadeIn(emphasizedStandard()),
-                        exit = fadeOut(emphasizedStandard()),
+                    FilledTonalIconButton(
+                        onClick = onEnableLyricsViewAutoScroll,
+                        colors =
+                            IconButtonDefaults.filledTonalIconButtonColors(
+                                containerColor = containerColor,
+                                contentColor = contentColor,
+                            ),
                     ) {
-                        FilledTonalIconButton(
-                            onClick = onEnableLyricsViewAutoScroll,
-                            colors =
-                                IconButtonDefaults.filledTonalIconButtonColors(
-                                    containerColor = containerColor,
-                                    contentColor = contentColor,
-                                ),
-                        ) {
-                            Icon(
-                                Icons.Outlined.VerticalAlignCenter,
-                                contentDescription = Strings[R.string.player_lyrics_auto_scroll],
-                            )
-                        }
+                        Icon(
+                            Icons.Outlined.VerticalAlignCenter,
+                            contentDescription = Strings[R.string.player_lyrics_auto_scroll],
+                        )
                     }
-                    AnimatedVisibility(
-                        lyricsButtonEnabled,
-                        enter = fadeIn(emphasizedStandard()),
-                        exit = fadeOut(emphasizedStandard()),
+                }
+                AnimatedVisibility(
+                    lyricsButtonEnabled,
+                    enter = fadeIn(emphasizedStandard()),
+                    exit = fadeOut(emphasizedStandard()),
+                ) {
+                    FilledTonalIconButton(
+                        onClick = onToggleLyricsView,
+                        colors =
+                            IconButtonDefaults.filledTonalIconButtonColors(
+                                containerColor = containerColor,
+                                contentColor = contentColor,
+                            ),
                     ) {
-                        FilledTonalIconButton(
-                            onClick = onToggleLyricsView,
-                            colors =
-                                IconButtonDefaults.filledTonalIconButtonColors(
-                                    containerColor = containerColor,
-                                    contentColor = contentColor,
-                                ),
-                        ) {
-                            AnimatedContent(lyricsViewVisibility) {
-                                if (it) {
-                                    Icon(
-                                        Icons.Outlined.Image,
-                                        contentDescription = Strings[R.string.player_close_lyrics],
-                                    )
-                                } else {
-                                    Icon(
-                                        Icons.Outlined.Subtitles,
-                                        contentDescription = Strings[R.string.player_lyrics],
-                                    )
-                                }
+                        AnimatedContent(lyricsViewVisibility) {
+                            if (it) {
+                                Icon(
+                                    Icons.Outlined.Image,
+                                    contentDescription = Strings[R.string.player_close_lyrics],
+                                )
+                            } else {
+                                Icon(
+                                    Icons.Outlined.Subtitles,
+                                    contentDescription = Strings[R.string.player_lyrics],
+                                )
                             }
                         }
                     }
@@ -149,7 +144,7 @@ object PlayerScreenTopBarDefaultStandalone : PlayerScreenTopBar() {
         lyricsViewVisibility: Boolean,
         lyricsAutoScrollButtonVisibility: Boolean,
         lyricsButtonEnabled: Boolean,
-        overlayVisibility: Boolean,
+        overlayVisibility: Float,
         onBack: () -> Unit,
         onEnableLyricsViewAutoScroll: () -> Unit,
         onToggleLyricsView: () -> Unit,

@@ -48,6 +48,7 @@ sealed class PlayerScreenLyricsOverlay {
         preferences: Preferences,
         containerColor: Color,
         contentColor: Color,
+        overlayVisibility: Float,
     )
 }
 
@@ -60,6 +61,7 @@ object PlayerScreenLyricsOverlayDefault : PlayerScreenLyricsOverlay() {
         preferences: Preferences,
         containerColor: Color,
         contentColor: Color,
+        overlayVisibility: Float,
     ) {
         fun getLineIndex(): Int? {
             return lyrics?.getLineIndex((currentPosition() + EXIT_DURATION).milliseconds)
@@ -104,7 +106,10 @@ object PlayerScreenLyricsOverlayDefault : PlayerScreenLyricsOverlay() {
             LocalDensity provides
                 Density(density.density, density.fontScale * preferences.lyricsSizeMultiplier)
         ) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+            Box(
+                modifier = Modifier.fillMaxSize().alpha(overlayVisibility),
+                contentAlignment = Alignment.BottomCenter,
+            ) {
                 Box(
                     modifier =
                         Modifier.alpha(alpha.value)

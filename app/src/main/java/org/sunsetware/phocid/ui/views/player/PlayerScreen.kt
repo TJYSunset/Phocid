@@ -78,6 +78,7 @@ import org.sunsetware.phocid.ui.theme.LocalThemeAccent
 import org.sunsetware.phocid.ui.theme.contentColor
 import org.sunsetware.phocid.ui.theme.customColorScheme
 import org.sunsetware.phocid.ui.theme.emphasizedEnter
+import org.sunsetware.phocid.ui.theme.emphasizedStandard
 import org.sunsetware.phocid.ui.theme.pureBackgroundColor
 import org.sunsetware.phocid.ui.views.MenuItem
 import org.sunsetware.phocid.ui.views.SpeedAndPitchDialog
@@ -259,6 +260,8 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
     val lyricsViewVisibility by
         animateFloatAsState(if (useLyricsView) 1f else 0f, emphasizedEnter())
     var lyricsViewAutoScroll by rememberSaveable { mutableStateOf(true) }
+    val overlayVisibility by
+        animateFloatAsState(if (!hideOverlay || useLyricsView) 1f else 0f, emphasizedStandard())
 
     val useCountdown by uiManager.playerScreenUseCountdown.collectAsStateWithLifecycle()
 
@@ -369,7 +372,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                         !lyricsViewAutoScroll &&
                                         currentTrackLyrics is PlayerScreenLyrics.Synced,
                                 lyricsButtonEnabled = useLyricsView || currentTrackLyrics != null,
-                                overlayVisibility = false,
+                                overlayVisibility = overlayVisibility,
                                 onBack = { uiManager.back() },
                                 onEnableLyricsViewAutoScroll = { lyricsViewAutoScroll = true },
                                 onToggleLyricsView = {
@@ -387,7 +390,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                         !lyricsViewAutoScroll &&
                                         currentTrackLyrics is PlayerScreenLyrics.Synced,
                                 lyricsButtonEnabled = useLyricsView || currentTrackLyrics != null,
-                                overlayVisibility = !hideOverlay || useLyricsView,
+                                overlayVisibility = overlayVisibility,
                                 onBack = { uiManager.back() },
                                 onEnableLyricsViewAutoScroll = { lyricsViewAutoScroll = true },
                                 onToggleLyricsView = {
@@ -432,6 +435,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 preferences = preferences,
                                 containerColor = containerColor,
                                 contentColor = contentColor,
+                                overlayVisibility = overlayVisibility,
                             )
                         }
                         Box {
