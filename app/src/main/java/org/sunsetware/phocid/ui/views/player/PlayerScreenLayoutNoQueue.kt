@@ -6,10 +6,10 @@ import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
+import kotlin.math.min
 import org.sunsetware.phocid.ui.components.BinaryDragState
 import org.sunsetware.phocid.utils.roundToIntOrZero
-
-private val queueHeaderHeight = 56.dp
 
 @Immutable
 object PlayerScreenLayoutNoQueue : PlayerScreenLayout() {
@@ -32,8 +32,11 @@ object PlayerScreenLayoutNoQueue : PlayerScreenLayout() {
         with(
             when (aspectRatio(width, height, 1.5f)) {
                 AspectRatio.LANDSCAPE -> PlayerScreenLayoutNoQueueLandscape
-                AspectRatio.SQUARE -> PlayerScreenLayoutNoQueueSquare
-                AspectRatio.PORTRAIT -> PlayerScreenLayoutNoQueuePortrait
+                AspectRatio.SQUARE ->
+                    if (min(width, height) >= with(density) { TABLET_BREAK_POINT.roundToPx() })
+                        PlayerScreenLayoutNoQueuePortraitTablet
+                    else PlayerScreenLayoutNoQueueSquarePhone
+                AspectRatio.PORTRAIT -> PlayerScreenLayoutNoQueuePortraitPhone
             }
         ) {
             place(
@@ -56,8 +59,13 @@ object PlayerScreenLayoutNoQueue : PlayerScreenLayout() {
     }
 }
 
+private val TABLET_LYRICS_PADDING = 16.dp
+
+val PlayerScreenLayoutNoQueuePortraitPhone = PlayerScreenLayoutNoQueuePortrait(false)
+val PlayerScreenLayoutNoQueuePortraitTablet = PlayerScreenLayoutNoQueuePortrait(true)
+
 @Immutable
-object PlayerScreenLayoutNoQueuePortrait : PlayerScreenLayout() {
+class PlayerScreenLayoutNoQueuePortrait(val tablet: Boolean) : PlayerScreenLayout() {
     override fun Placeable.PlacementScope.place(
         topBarStandalone: Measurable,
         topBarOverlay: Measurable,
@@ -74,79 +82,80 @@ object PlayerScreenLayoutNoQueuePortrait : PlayerScreenLayout() {
         queueDragState: BinaryDragState,
         lyricsViewVisibility: Float,
     ) {
-        val offset = (queueDragState.length * queueDragState.position).roundToIntOrZero()
+        val lyricsTransitionFirstHalf = (lyricsViewVisibility * 2).coerceIn(0f, 1f)
+        val lyricsTransitionSecondHalf = (lyricsViewVisibility * 2 - 1).coerceIn(0f, 1f)
 
-        val artworkHeight = width
-        artwork
-            .measure(Constraints(maxWidth = width, maxHeight = artworkHeight))
-            .placeRelative(0, 0)
+        val topBarStandalonePlaceable = topBarStandalone.measure(Constraints(maxWidth = width))
+        val topBarOverlayPlaceable = topBarOverlay.measure(Constraints(maxWidth = width))
 
-        lyricsOverlay
-            .measure(Constraints(maxWidth = width, maxHeight = artworkHeight))
-            .placeRelative(0, 0)
-        val topBarOverlayPlaceable =
-            topBarOverlay.measure(Constraints(maxWidth = width, maxHeight = artworkHeight))
-        if (lyricsViewVisibility <= 0) {
-            topBarOverlayPlaceable.placeRelative(0, 0)
+        val topBarStandaloneHeight = if (tablet) topBarStandalonePlaceable.height else 0
+        val artworkHeight =
+            if (tablet)
+                (height * 0.618034f - topBarStandaloneHeight)
+                    .roundToIntOrZero()
+                    .coerceAtLeast(0)
+                    .coerceAtMost(width)
+            else width
+        val lyricsPadding =
+            if (tablet) with(density) { TABLET_LYRICS_PADDING.roundToPx() }
+            else topBarOverlayPlaceable.height
+        val lyricsHeight =
+            (height * 0.618034f - topBarStandaloneHeight).roundToIntOrZero().coerceAtLeast(0)
+        val lyricsHeightInner = (lyricsHeight - lyricsPadding * 2).coerceAtLeast(0)
+        val queueCollapsedHeight = with(density) { PLAYER_SCREEN_QUEUE_HEADER_HEIGHT.roundToPx() }
+        val contentHeight = lerp(artworkHeight, lyricsHeight, lyricsTransitionSecondHalf)
+        val controlsHeight =
+            (height - topBarStandaloneHeight - contentHeight - queueCollapsedHeight).coerceAtLeast(
+                0
+            )
+        val queueOffset =
+            (queueDragState.position *
+                    (height - topBarStandaloneHeight - controlsHeight - queueCollapsedHeight))
+                .roundToIntOrZero()
+
+        if (lyricsTransitionFirstHalf < 1) {
+            artwork
+                .measure(Constraints(maxWidth = width, maxHeight = artworkHeight))
+                .placeRelative(0, topBarStandaloneHeight)
+            lyricsOverlay
+                .measure(Constraints(maxWidth = width, maxHeight = contentHeight))
+                .placeRelative(0, topBarStandaloneHeight)
         }
-
-        val queueHeaderHeightPx = with(density) { queueHeaderHeight.roundToPx() }
-        if (lyricsViewVisibility < 0.5) {
-            controls
-                .measure(
-                    Constraints(
-                        maxWidth = width,
-                        maxHeight = (height - artworkHeight - queueHeaderHeightPx).coerceAtLeast(0),
-                    )
-                )
-                .placeRelative(0, artworkHeight)
-
-            scrimQueue
-                .measure(Constraints(maxWidth = width, maxHeight = height))
-                .placeRelativeWithLayer(0, 0) { alpha = queueDragState.position }
-
-            queue
-                .measure(Constraints(maxWidth = width, maxHeight = queueHeaderHeightPx + offset))
-                .placeRelative(0, height - queueHeaderHeightPx - offset)
-        }
-
-        if (lyricsViewVisibility > 0) {
+        if (lyricsTransitionFirstHalf > 0) {
             scrimLyrics
-                .measure(Constraints(maxWidth = width, maxHeight = height))
-                .placeRelativeWithLayer(0, 0) {
-                    alpha = (lyricsViewVisibility * 2).coerceIn(0f, 1f)
+                .measure(Constraints(maxWidth = width, maxHeight = contentHeight))
+                .placeRelativeWithLayer(0, topBarStandaloneHeight) {
+                    alpha = lyricsTransitionFirstHalf
                 }
-            topBarOverlayPlaceable.placeRelative(0, 0)
         }
-        if (lyricsViewVisibility >= 0.5) {
-            val controlsPlaceable =
-                controls.measure(
-                    Constraints(
-                        maxWidth = width,
-                        maxHeight =
-                            ((height - topBarOverlayPlaceable.height) * 0.38196602f)
-                                .roundToIntOrZero()
-                                .coerceAtLeast(0),
-                    )
-                )
+        if (lyricsTransitionSecondHalf > 0) {
             lyricsView
-                .measure(
-                    Constraints(
-                        maxWidth = width,
-                        maxHeight =
-                            (height - topBarOverlayPlaceable.height * 2 - controlsPlaceable.height)
-                                .coerceAtLeast(0),
-                    )
-                )
-                .placeRelativeWithLayer(0, topBarOverlayPlaceable.height) {
-                    alpha = (lyricsViewVisibility * 2 - 1).coerceIn(0f, 1f)
+                .measure(Constraints(maxWidth = width, maxHeight = lyricsHeightInner))
+                .placeRelativeWithLayer(0, topBarStandaloneHeight + lyricsPadding) {
+                    alpha = lyricsTransitionSecondHalf
                 }
-            controlsPlaceable.placeRelativeWithLayer(0, height - controlsPlaceable.height) {
-                alpha = (lyricsViewVisibility * 2 - 1).coerceIn(0f, 1f)
-            }
+        }
+        (if (tablet) topBarStandalonePlaceable else topBarOverlayPlaceable).placeRelative(0, 0)
+
+        if (queueOffset > 0) {
+            scrimQueue
+                .measure(Constraints(maxWidth = width, maxHeight = height - topBarStandaloneHeight))
+                .placeRelativeWithLayer(0, topBarStandaloneHeight) {
+                    alpha = queueDragState.position
+                }
         }
 
-        queueDragState.length = (height - queueHeaderHeightPx).coerceAtLeast(0).toFloat()
+        controls
+            .measure(Constraints(maxWidth = width, maxHeight = controlsHeight))
+            .placeRelative(0, topBarStandaloneHeight + contentHeight - queueOffset)
+        queue
+            .measure(Constraints(maxWidth = width, maxHeight = queueCollapsedHeight + queueOffset))
+            .placeRelative(0, (height - queueCollapsedHeight - queueOffset).coerceAtLeast(0))
+
+        queueDragState.length =
+            (height - topBarStandaloneHeight - controlsHeight - queueCollapsedHeight)
+                .coerceAtLeast(0)
+                .toFloat()
     }
 }
 
@@ -168,65 +177,68 @@ object PlayerScreenLayoutNoQueueLandscape : PlayerScreenLayout() {
         queueDragState: BinaryDragState,
         lyricsViewVisibility: Float,
     ) {
-        val offset = (queueDragState.length * queueDragState.position).roundToIntOrZero()
+        val lyricsTransitionFirstHalf = (lyricsViewVisibility * 2).coerceIn(0f, 1f)
+        val lyricsTransitionSecondHalf = (lyricsViewVisibility * 2 - 1).coerceIn(0f, 1f)
 
         val artworkWidth = height
+        val queueCollapsedHeight = with(density) { PLAYER_SCREEN_QUEUE_HEADER_HEIGHT.roundToPx() }
+
+        val topBarOverlayPlaceable =
+            topBarOverlay.measure(Constraints(maxWidth = artworkWidth, maxHeight = height))
+        val controlsPlaceable =
+            controls.measure(
+                Constraints(
+                    maxWidth = width - artworkWidth,
+                    maxHeight = (height - queueCollapsedHeight).coerceAtLeast(0),
+                )
+            )
+
+        val queueOffset = (queueDragState.position * controlsPlaceable.height).roundToIntOrZero()
+
         artwork
             .measure(Constraints(maxWidth = artworkWidth, maxHeight = height))
             .placeRelative(0, 0)
-
         lyricsOverlay
             .measure(Constraints(maxWidth = artworkWidth, maxHeight = height))
-            .placeRelativeWithLayer(0, 0) {
-                alpha = (1 - lyricsViewVisibility * 2).coerceIn(0f, 1f)
-            }
-        topBarOverlay
-            .measure(Constraints(maxWidth = artworkWidth, maxHeight = height))
             .placeRelative(0, 0)
-
-        val queueHeaderHeightPx = with(density) { queueHeaderHeight.roundToPx() }
-        controls
-            .measure(
-                Constraints(
-                    maxWidth = width - artworkWidth,
-                    maxHeight = (height - queueHeaderHeightPx).coerceAtLeast(0),
+        if (lyricsTransitionFirstHalf > 0) {
+            scrimLyrics
+                .measure(Constraints(maxWidth = artworkWidth, maxHeight = height))
+                .placeRelativeWithLayer(0, 0) { alpha = lyricsTransitionFirstHalf }
+        }
+        if (lyricsTransitionSecondHalf >= 0.5) {
+            lyricsView
+                .measure(
+                    Constraints(
+                        maxWidth = artworkWidth,
+                        maxHeight = (height - topBarOverlayPlaceable.height).coerceAtLeast(0),
+                    )
                 )
-            )
-            .placeRelative(artworkWidth, 0)
+                .placeRelativeWithLayer(0, topBarOverlayPlaceable.height) {
+                    alpha = lyricsTransitionSecondHalf
+                }
+        }
+        topBarOverlayPlaceable.placeRelative(0, 0)
+
+        controlsPlaceable.placeRelative(artworkWidth, 0)
         scrimQueue
             .measure(Constraints(maxWidth = width - artworkWidth, maxHeight = height))
             .placeRelativeWithLayer(artworkWidth, 0) { alpha = queueDragState.position }
-
         queue
             .measure(
                 Constraints(
                     maxWidth = width - artworkWidth,
-                    maxHeight = queueHeaderHeightPx + offset,
+                    maxHeight = queueCollapsedHeight + queueOffset,
                 )
             )
-            .placeRelative(artworkWidth, height - queueHeaderHeightPx - offset)
+            .placeRelative(artworkWidth, controlsPlaceable.height - queueOffset)
 
-        if (lyricsViewVisibility > 0) {
-            scrimLyrics
-                .measure(Constraints(maxWidth = width - artworkWidth, maxHeight = height))
-                .placeRelativeWithLayer(artworkWidth, 0) {
-                    alpha = (lyricsViewVisibility * 2).coerceIn(0f, 1f)
-                }
-        }
-        if (lyricsViewVisibility >= 0.5) {
-            lyricsView
-                .measure(Constraints(maxWidth = width - artworkWidth, maxHeight = height))
-                .placeRelativeWithLayer(artworkWidth, 0) {
-                    alpha = (lyricsViewVisibility * 2 - 1).coerceIn(0f, 1f)
-                }
-        }
-
-        queueDragState.length = (height - queueHeaderHeightPx).coerceAtLeast(0).toFloat()
+        queueDragState.length = controlsPlaceable.height.toFloat()
     }
 }
 
 @Immutable
-object PlayerScreenLayoutNoQueueSquare : PlayerScreenLayout() {
+object PlayerScreenLayoutNoQueueSquarePhone : PlayerScreenLayout() {
     override fun Placeable.PlacementScope.place(
         topBarStandalone: Measurable,
         topBarOverlay: Measurable,
@@ -243,42 +255,57 @@ object PlayerScreenLayoutNoQueueSquare : PlayerScreenLayout() {
         queueDragState: BinaryDragState,
         lyricsViewVisibility: Float,
     ) {
-        val offset = (queueDragState.length * queueDragState.position).roundToIntOrZero()
+        val lyricsTransitionFirstHalf = (lyricsViewVisibility * 2).coerceIn(0f, 1f)
+        val lyricsTransitionSecondHalf = (lyricsViewVisibility * 2 - 1).coerceIn(0f, 1f)
 
         val topBarPlaceable =
             topBarStandalone.measure(Constraints(maxWidth = width, maxHeight = height))
-        if (lyricsViewVisibility <= 0) {
-            topBarPlaceable.placeRelative(0, 0)
-        }
+        topBarPlaceable.placeRelative(0, 0)
 
-        val queueHeaderHeightPx = with(density) { queueHeaderHeight.roundToPx() }
-        controls
+        val controlsPlaceable =
+            controls.measure(
+                Constraints(
+                    maxWidth = width,
+                    maxHeight = (height - topBarPlaceable.height).coerceAtLeast(0),
+                )
+            )
+        controlsPlaceable.placeRelative(0, topBarPlaceable.height)
+
+        val queueOffset = (queueDragState.position * controlsPlaceable.height).roundToIntOrZero()
+
+        scrimQueue
+            .measure(
+                Constraints(
+                    maxWidth = width,
+                    maxHeight = (height - topBarPlaceable.height).coerceAtLeast(0),
+                )
+            )
+            .placeRelativeWithLayer(0, topBarPlaceable.height) { alpha = queueDragState.position }
+
+        queue
             .measure(
                 Constraints(
                     maxWidth = width,
                     maxHeight =
-                        (height - topBarPlaceable.height - queueHeaderHeightPx).coerceAtLeast(0),
+                        (height - topBarPlaceable.height - controlsPlaceable.height + queueOffset)
+                            .coerceAtLeast(0),
                 )
             )
-            .placeRelative(0, topBarPlaceable.height)
+            .placeRelative(0, topBarPlaceable.height - queueOffset + controlsPlaceable.height)
 
-        scrimQueue
-            .measure(Constraints(maxWidth = width, maxHeight = height))
-            .placeRelativeWithLayer(0, 0) { alpha = queueDragState.position }
-
-        queue
-            .measure(Constraints(maxWidth = width, maxHeight = queueHeaderHeightPx + offset))
-            .placeRelative(0, height - queueHeaderHeightPx - offset)
-
-        if (lyricsViewVisibility > 0) {
+        if (lyricsTransitionFirstHalf > 0) {
             scrimLyrics
-                .measure(Constraints(maxWidth = width, maxHeight = height))
-                .placeRelativeWithLayer(0, 0) {
-                    alpha = (lyricsViewVisibility * 2).coerceIn(0f, 1f)
+                .measure(
+                    Constraints(
+                        maxWidth = width,
+                        maxHeight = (height - topBarPlaceable.height).coerceAtLeast(0),
+                    )
+                )
+                .placeRelativeWithLayer(0, topBarPlaceable.height) {
+                    alpha = lyricsTransitionFirstHalf
                 }
-            topBarPlaceable.placeRelative(0, 0)
         }
-        if (lyricsViewVisibility >= 0.5) {
+        if (lyricsTransitionSecondHalf >= 0.5) {
             lyricsView
                 .measure(
                     Constraints(
@@ -287,10 +314,10 @@ object PlayerScreenLayoutNoQueueSquare : PlayerScreenLayout() {
                     )
                 )
                 .placeRelativeWithLayer(0, topBarPlaceable.height) {
-                    alpha = (lyricsViewVisibility * 2 - 1).coerceIn(0f, 1f)
+                    alpha = lyricsTransitionSecondHalf
                 }
         }
 
-        queueDragState.length = (height - queueHeaderHeightPx).coerceAtLeast(0).toFloat()
+        queueDragState.length = controlsPlaceable.height.toFloat()
     }
 }

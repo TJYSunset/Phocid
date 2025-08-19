@@ -38,6 +38,7 @@
     <string name="permission_dialog_grant">授予</string>
     <string name="permission_dialog_title">需要授权</string>
     <string name="player_clear_queue">清空队列</string>
+    <string name="player_close_lyrics">关闭歌词</string>
     <string name="player_lyrics">歌词</string>
     <string name="player_lyrics_auto_scroll">自动滚动歌词</string>
     <string name="player_next">下一首</string>

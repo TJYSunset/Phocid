@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -356,7 +355,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                     Modifier.fillMaxSize()
                         .padding(scaffoldPadding)
                         .consumeWindowInsets(scaffoldPadding)
-                        .systemBarsPadding()
+                        .background(containerColor)
             ) {
                 Layout(
                     content = {
@@ -374,7 +373,6 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 onBack = { uiManager.back() },
                                 onEnableLyricsViewAutoScroll = { lyricsViewAutoScroll = true },
                                 onToggleLyricsView = {
-                                    playQueueDragState.snapTo(0f)
                                     uiManager.playerScreenUseLyricsView.update { !it }
                                 },
                             )
@@ -393,7 +391,6 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 onBack = { uiManager.back() },
                                 onEnableLyricsViewAutoScroll = { lyricsViewAutoScroll = true },
                                 onToggleLyricsView = {
-                                    playQueueDragState.snapTo(0f)
                                     uiManager.playerScreenUseLyricsView.update { !it }
                                 },
                             )
@@ -465,11 +462,9 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 onSeekToNext = { playerManager.seekToNext() },
                                 onToggleShuffle = { playerManager.toggleShuffle() },
                                 onTogglePlayQueue = {
-                                    if (!useLyricsView) {
-                                        playQueueDragState.animateTo(
-                                            if (playQueueDragState.position <= 0) 1f else 0f
-                                        )
-                                    }
+                                    playQueueDragState.animateTo(
+                                        if (playQueueDragState.position <= 0) 1f else 0f
+                                    )
                                 },
                                 onToggleCurrentTrackIsFavorite = {
                                     viewModel.playlistManager.toggleFavorite(currentTrack)

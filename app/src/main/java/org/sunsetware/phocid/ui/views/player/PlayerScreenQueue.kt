@@ -83,6 +83,8 @@ sealed class PlayerScreenQueue {
     )
 }
 
+val PLAYER_SCREEN_QUEUE_HEADER_HEIGHT = 56.dp
+
 val PlayerScreenQueueDefault =
     PlayerScreenQueueDefaultBase(
         { colorScheme, _, _, _ -> colorScheme.surfaceContainerLow },

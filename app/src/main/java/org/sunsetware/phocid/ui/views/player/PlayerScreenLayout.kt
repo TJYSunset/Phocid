@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
 import org.sunsetware.phocid.ui.components.BinaryDragState
 
 @Immutable
@@ -47,3 +48,9 @@ fun aspectRatio(width: Int, height: Int, threshold: Float): AspectRatio {
         else -> AspectRatio.SQUARE
     }
 }
+
+/**
+ * https://developer.android.com/develop/ui/views/layout/responsive-adaptive-design-with-views#smallest_width
+ * midpoint between "large phone" and "7" tablet"
+ */
+val TABLET_BREAK_POINT = 540.dp

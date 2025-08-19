@@ -1,11 +1,14 @@
 package org.sunsetware.phocid.ui.views.player
 
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -82,16 +85,18 @@ object PlayerScreenArtworkDefault : PlayerScreenArtwork() {
             },
             onPrevious = onPrevious,
             onNext = onNext,
-            modifier = Modifier.aspectRatio(1f, matchHeightConstraintsFirst = true),
         ) { state, index ->
-            ArtworkImage(
-                artwork = Artwork.Track(onGetTrackAtIndex(state, index)),
-                artworkColorPreference = artworkColorPreference,
-                shape = RoundedCornerShape(0.dp),
-                modifier = Modifier.fillMaxSize(),
-                highRes = highResArtworkPreference.player,
-                highResCache = carouselArtworkCache,
-            )
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                ArtworkImage(
+                    artwork = Artwork.Track(onGetTrackAtIndex(state, index)),
+                    artworkColorPreference = artworkColorPreference,
+                    shape = RoundedCornerShape(0.dp),
+                    modifier =
+                        Modifier.aspectRatio(1f, matchHeightConstraintsFirst = true).fillMaxSize(),
+                    highRes = highResArtworkPreference.player,
+                    highResCache = carouselArtworkCache,
+                )
+            }
         }
     }
 }

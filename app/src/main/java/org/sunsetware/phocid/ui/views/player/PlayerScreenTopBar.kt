@@ -2,6 +2,7 @@
 
 package org.sunsetware.phocid.ui.views.player
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Subtitles
 import androidx.compose.material.icons.outlined.VerticalAlignCenter
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -117,10 +119,19 @@ object PlayerScreenTopBarDefaultOverlay : PlayerScreenTopBar() {
                                     contentColor = contentColor,
                                 ),
                         ) {
-                            Icon(
-                                Icons.Outlined.Subtitles,
-                                contentDescription = Strings[R.string.player_lyrics],
-                            )
+                            AnimatedContent(lyricsViewVisibility) {
+                                if (it) {
+                                    Icon(
+                                        Icons.Outlined.Image,
+                                        contentDescription = Strings[R.string.player_close_lyrics],
+                                    )
+                                } else {
+                                    Icon(
+                                        Icons.Outlined.Subtitles,
+                                        contentDescription = Strings[R.string.player_lyrics],
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -173,10 +184,19 @@ object PlayerScreenTopBarDefaultStandalone : PlayerScreenTopBar() {
                             }
                         }
                         IconButton(enabled = lyricsButtonEnabled, onClick = onToggleLyricsView) {
-                            Icon(
-                                Icons.Outlined.Subtitles,
-                                contentDescription = Strings[R.string.player_lyrics],
-                            )
+                            AnimatedContent(lyricsViewVisibility) {
+                                if (it) {
+                                    Icon(
+                                        Icons.Outlined.Image,
+                                        contentDescription = Strings[R.string.player_close_lyrics],
+                                    )
+                                } else {
+                                    Icon(
+                                        Icons.Outlined.Subtitles,
+                                        contentDescription = Strings[R.string.player_lyrics],
+                                    )
+                                }
+                            }
                         }
                     },
                     colors =
