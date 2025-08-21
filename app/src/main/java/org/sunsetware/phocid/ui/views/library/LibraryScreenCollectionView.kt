@@ -1,10 +1,12 @@
 package org.sunsetware.phocid.ui.views.library
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,6 +27,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
@@ -887,6 +890,8 @@ fun LibraryScreenCollectionView(
     val itemInfos = remember(items) { items.map { it.value.info } }
     val searchIndex by state.searchIndex.collectAsStateWithLifecycle()
     val searchResults by state.searchResults.collectAsStateWithLifecycle()
+    val size by uiManager.libraryScreenSize.collectAsStateWithLifecycle()
+    val aspectRatio = size?.let { it.first / it.second }
     val haptics = LocalHapticFeedback.current
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -904,17 +909,32 @@ fun LibraryScreenCollectionView(
                 preferences.alwaysShowHintOnScroll,
             ) {
                 LazyColumn(state = tracksLazyListState, modifier = Modifier.fillMaxSize()) {
-                    if (info.artwork != null) {
+                    if (info.artwork != null && aspectRatio?.let { it < 3f / 2 } == true) {
                         item {
-                            ArtworkImage(
-                                artwork = info.artwork!!,
-                                artworkColorPreference = preferences.artworkColorPreference,
-                                shape = RoundedCornerShape(0.dp),
-                                highRes = preferences.highResArtworkPreference.library,
+                            Box(
                                 modifier =
                                     Modifier.fillMaxWidth()
-                                        .aspectRatio(1f, matchHeightConstraintsFirst = true),
-                            )
+                                        .height(
+                                            if (aspectRatio <= 2f / 3) size!!.first
+                                            else size!!.first / 2
+                                        )
+                                        .padding(
+                                            0.dp,
+                                            if (aspectRatio <= 2f / 3) 0.dp
+                                            else size!!.first / 2 / 8,
+                                        ),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                ArtworkImage(
+                                    artwork = info.artwork!!,
+                                    artworkColorPreference = preferences.artworkColorPreference,
+                                    shape = RoundedCornerShape(0.dp),
+                                    highRes = preferences.highResArtworkPreference.library,
+                                    modifier =
+                                        Modifier.fillMaxWidth()
+                                            .aspectRatio(1f, matchHeightConstraintsFirst = true),
+                                )
+                            }
                         }
                     }
                     if (info.cards?.items?.isNotEmpty() == true) {

@@ -327,10 +327,7 @@ fun LibraryScreen(
     }
 
     Scaffold(
-        modifier =
-            Modifier.imePadding().onSizeChanged {
-                with(density) { maxGridSize = (it.width / 72.dp.toPx()).toInt().coerceAtLeast(4) }
-            },
+        modifier = Modifier.imePadding(),
         topBar = {
             TopBar(
                 collectionTitles = collectionInfos.map { it.title },
@@ -379,6 +376,14 @@ fun LibraryScreen(
                     .padding(scaffoldPadding)
                     .consumeWindowInsets(scaffoldPadding)
                     .systemBarsPadding()
+                    .onSizeChanged { size ->
+                        with(density) {
+                            maxGridSize = (size.width / 72.dp.toPx()).toInt().coerceAtLeast(4)
+                        }
+                        uiManager.libraryScreenSize.update {
+                            with(density) { size.width.toDp() to size.height.toDp() }
+                        }
+                    }
         ) {
             AnimatedForwardBackwardTransition(collectionViewStack) { animatedCollectionViewState ->
                 if (animatedCollectionViewState == null) {

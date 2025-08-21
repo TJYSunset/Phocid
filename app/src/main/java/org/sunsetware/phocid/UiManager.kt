@@ -7,6 +7,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.unit.Dp
 import androidx.core.content.ContextCompat
 import java.lang.ref.WeakReference
 import java.util.UUID
@@ -84,6 +85,8 @@ class UiManager(
 
     private val _dialog = MutableStateFlow(null as Dialog?)
     val dialog = _dialog.asStateFlow()
+
+    val libraryScreenSize = MutableStateFlow(null as Pair<Dp, Dp>?)
 
     val libraryScreenSearchQuery = MutableStateFlow("")
 
