@@ -377,6 +377,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 onEnableLyricsViewAutoScroll = { lyricsViewAutoScroll = true },
                                 onToggleLyricsView = {
                                     uiManager.playerScreenUseLyricsView.update { !it }
+                                    hideOverlay = false
                                 },
                             )
                         }
@@ -395,6 +396,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 onEnableLyricsViewAutoScroll = { lyricsViewAutoScroll = true },
                                 onToggleLyricsView = {
                                     uiManager.playerScreenUseLyricsView.update { !it }
+                                    hideOverlay = false
                                 },
                             )
                         }
