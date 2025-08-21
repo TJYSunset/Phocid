@@ -135,6 +135,11 @@
     <string name="preferences_dark_theme_dark">深色</string>
     <string name="preferences_dark_theme_light">淺色</string>
     <string name="preferences_dark_theme_system">跟隨系統</string>
+    <string name="preferences_default_shuffle_mode_keep_current">保持不變</string>
+    <string name="preferences_default_shuffle_mode_list">預設隨機播放狀態（清單）</string>
+    <string name="preferences_default_shuffle_mode_off">關閉隨機播放</string>
+    <string name="preferences_default_shuffle_mode_on">開啟隨機播放</string>
+    <string name="preferences_default_shuffle_mode_track">預設隨機播放狀態（曲目）</string>
     <string name="preferences_dump_logcat">轉儲 Logcat</string>
     <string name="preferences_dump_logcat_subtitle">儲存路徑：{0}</string>
     <string name="preferences_example_ellipsis">、……</string>

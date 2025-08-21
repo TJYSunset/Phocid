@@ -411,7 +411,7 @@ class MainActivity : ComponentActivity(), IntentLauncher {
                         if (track == null) {
                             uiManager.toast(Strings[R.string.toast_view_intent_not_found])
                         } else {
-                            playerManager.setTracks(listOf(track), null)
+                            playerManager.setTracks(listOf(track), 0)
                         }
                     }
                 }

@@ -135,6 +135,11 @@
     <string name="preferences_dark_theme_dark">深色</string>
     <string name="preferences_dark_theme_light">浅色</string>
     <string name="preferences_dark_theme_system">跟随系统</string>
+    <string name="preferences_default_shuffle_mode_keep_current">保持不变</string>
+    <string name="preferences_default_shuffle_mode_list">默认打乱播放状态（列表）</string>
+    <string name="preferences_default_shuffle_mode_off">关闭打乱</string>
+    <string name="preferences_default_shuffle_mode_on">开启打乱</string>
+    <string name="preferences_default_shuffle_mode_track">默认打乱播放状态（曲目）</string>
     <string name="preferences_dump_logcat">转储 Logcat</string>
     <string name="preferences_dump_logcat_subtitle">保存路径：{0}</string>
     <string name="preferences_example_ellipsis">、……</string>

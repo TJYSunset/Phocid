@@ -149,6 +149,13 @@
     <string name="preferences_dark_theme_dark">Dark</string>
     <string name="preferences_dark_theme_light">Light</string>
     <string name="preferences_dark_theme_system">Follow system</string>
+    <string name="preferences_default_shuffle_mode_keep_current">Keep current setting</string>
+    <!-- Set shuffle mode to this value when starting playback by clicking on a track -->
+    <string name="preferences_default_shuffle_mode_list">Default shuffle mode (list)</string>
+    <string name="preferences_default_shuffle_mode_off">Off</string>
+    <string name="preferences_default_shuffle_mode_on">On</string>
+    <!-- Set shuffle mode to this value when starting playback on a list of tracks -->
+    <string name="preferences_default_shuffle_mode_track">Default shuffle mode (track)</string>
     <string name="preferences_dump_logcat">Dump Logcat</string>
     <string name="preferences_dump_logcat_subtitle">Output path: {0}</string>
     <!-- Symbol after a truncated list of examples in the preferences screen -->

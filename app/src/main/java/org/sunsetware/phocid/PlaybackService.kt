@@ -43,6 +43,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import org.sunsetware.phocid.data.DefaultShuffleMode
 import org.sunsetware.phocid.data.capturePlayerState
 import org.sunsetware.phocid.data.captureTransientState
 import org.sunsetware.phocid.data.getChildMediaItems
@@ -70,6 +71,8 @@ class PlaybackService : MediaLibraryService() {
     @Volatile private var audioOffloading = true
     @Volatile private var lastIndex = null as Int?
     @Volatile private var reshuffleOnRepeat = false
+    @Volatile private var defaultShuffleModeTrack = DefaultShuffleMode.KEEP_CURRENT
+    @Volatile private var defaultShuffleModeList = DefaultShuffleMode.KEEP_CURRENT
 
     override fun onCreate() {
         super.onCreate()
@@ -107,6 +110,8 @@ class PlaybackService : MediaLibraryService() {
                     audioOffloading = preferences.audioOffloading
                     player.updateAudioOffloading(audioOffloading)
                     reshuffleOnRepeat = preferences.reshuffleOnRepeat
+                    defaultShuffleModeTrack = preferences.defaultShuffleModeTrack
+                    defaultShuffleModeList = preferences.defaultShuffleModeList
                 }
                 .collect()
         }
@@ -332,12 +337,23 @@ class PlaybackService : MediaLibraryService() {
                         playlists,
                         mediaItems,
                     )
+                val shuffle =
+                    if (startIndex != C.INDEX_UNSET) {
+                        when (defaultShuffleModeTrack) {
+                            DefaultShuffleMode.KEEP_CURRENT -> playerState.shuffle
+                            DefaultShuffleMode.OFF -> false
+                            DefaultShuffleMode.ON -> true
+                        }
+                    } else {
+                        when (defaultShuffleModeList) {
+                            DefaultShuffleMode.KEEP_CURRENT -> playerState.shuffle
+                            DefaultShuffleMode.OFF -> false
+                            DefaultShuffleMode.ON -> true
+                        }
+                    }
+                player.setShuffleModeEnabledWithoutReshuffle(shuffle)
                 val (newItems, seekIndex) =
-                    transformOnSetTracks(
-                        playerState,
-                        items,
-                        startIndex.takeIf { it != C.INDEX_UNSET },
-                    )
+                    transformOnSetTracks(shuffle, items, startIndex.takeIf { it != C.INDEX_UNSET })
                 return Futures.immediateFuture(
                     MediaSession.MediaItemsWithStartPosition(newItems, seekIndex, startPositionMs)
                 )

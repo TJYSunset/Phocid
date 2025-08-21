@@ -72,6 +72,8 @@ data class Preferences(
     val playOnOutputDeviceConnection: Boolean = false,
     val pauseOnFocusLoss: Boolean = true,
     val reshuffleOnRepeat: Boolean = false,
+    val defaultShuffleModeTrack: DefaultShuffleMode = DefaultShuffleMode.KEEP_CURRENT,
+    val defaultShuffleModeList: DefaultShuffleMode = DefaultShuffleMode.KEEP_CURRENT,
     val audioOffloading: Boolean = false,
     // Indexing
     val advancedMetadataExtraction: Boolean = false,
@@ -276,6 +278,13 @@ enum class LyricsDisplayPreference(val stringId: Int) {
     DISABLED(R.string.preferences_lyrics_display_disabled),
     DEFAULT(R.string.preferences_lyrics_display_default),
     TWO_LINES(R.string.preferences_lyrics_display_two_lines),
+}
+
+@Serializable
+enum class DefaultShuffleMode(val stringId: Int) {
+    KEEP_CURRENT(R.string.preferences_default_shuffle_mode_keep_current),
+    OFF(R.string.preferences_default_shuffle_mode_off),
+    ON(R.string.preferences_default_shuffle_mode_on),
 }
 
 @Serializable

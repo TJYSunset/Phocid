@@ -89,11 +89,11 @@ fun Player.captureTransientState(): PlayerTransientState {
 }
 
 fun transformOnSetTracks(
-    state: PlayerState,
+    shuffle: Boolean,
     mediaItems: List<MediaItem>,
     index: Int?,
 ): Pair<List<MediaItem>, Int> {
-    if (!state.shuffle) {
+    if (!shuffle) {
         return mediaItems.map { it.setUnshuffledIndex(null) } to (index ?: 0)
     } else {
         val shuffledIndices =

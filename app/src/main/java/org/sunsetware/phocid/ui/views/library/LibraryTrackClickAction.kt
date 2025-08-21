@@ -33,7 +33,7 @@ enum class LibraryTrackClickAction(
         R.string.track_play,
         Icons.Filled.PlayArrow,
         { tracks, index, playerManager, uiManager ->
-            playerManager.setTracks(listOf(tracks[index]), null)
+            playerManager.setTracks(listOf(tracks[index]), 0)
         },
     ),
     PLAY_NEXT(

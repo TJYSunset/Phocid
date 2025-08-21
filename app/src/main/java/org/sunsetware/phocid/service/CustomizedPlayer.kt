@@ -51,6 +51,16 @@ class CustomizedPlayer(val inner: ExoPlayer) : ForwardingPlayer(inner) {
         }
     }
 
+    fun setShuffleModeEnabledWithoutReshuffle(shuffleModeEnabled: Boolean) {
+        val raiseEvent = shuffleModeEnabled != shuffle
+        shuffle = shuffleModeEnabled
+        if (raiseEvent) {
+            for (listener in listeners) {
+                listener.onShuffleModeEnabledChanged(shuffleModeEnabled)
+            }
+        }
+    }
+
     fun enableShuffle() {
         if (currentTimeline.isEmpty) return
 

@@ -69,6 +69,7 @@ import androidx.compose.material.icons.filled.SafetyDivider
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.ShapeLine
 import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.ShuffleOn
 import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.material.icons.filled.SpaceDashboard
 import androidx.compose.material.icons.filled.Subtitles
@@ -133,6 +134,7 @@ import org.sunsetware.phocid.TopLevelScreen
 import org.sunsetware.phocid.UiManager
 import org.sunsetware.phocid.data.ArtworkColorPreference
 import org.sunsetware.phocid.data.DarkThemePreference
+import org.sunsetware.phocid.data.DefaultShuffleMode
 import org.sunsetware.phocid.data.HighResArtworkPreference
 import org.sunsetware.phocid.data.LyricsDisplayPreference
 import org.sunsetware.phocid.data.PlayerManager
@@ -726,6 +728,22 @@ private val Playback =
                 icon = Icons.Filled.Shuffle,
                 value = { it.reshuffleOnRepeat },
                 onSetValue = { preferences, new -> preferences.copy(reshuffleOnRepeat = new) },
+            ),
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_default_shuffle_mode_track] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.ShuffleOn,
+                options = DefaultShuffleMode.entries,
+                value = { it.defaultShuffleModeTrack },
+                onSetValue = { preferences, new -> preferences.copy(defaultShuffleModeTrack = new) },
+            ),
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_default_shuffle_mode_list] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.ShuffleOn,
+                options = DefaultShuffleMode.entries,
+                value = { it.defaultShuffleModeList },
+                onSetValue = { preferences, new -> preferences.copy(defaultShuffleModeList = new) },
             ),
             Item.Toggle(
                 title = { Strings[R.string.preferences_audio_offloading] },
