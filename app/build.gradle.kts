@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "org.sunsetware.phocid"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "org.sunsetware.phocid"
