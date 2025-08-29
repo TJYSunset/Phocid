@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import kotlin.math.abs
+import org.sunsetware.phocid.utils.coerceInOrMin
 
 @Composable
 fun TabIndicatorScope.TabIndicator(pagerState: PagerState) {
@@ -26,9 +27,9 @@ fun TabIndicatorScope.TabIndicator(pagerState: PagerState) {
             Modifier.height(3.dp)
                 .tabIndicatorLayout { measurable, constraints, tabPositions ->
                     val settledPosition =
-                        tabPositions[pagerState.currentPage.coerceIn(0, tabPositions.size - 1)]
+                        tabPositions[pagerState.currentPage.coerceInOrMin(0, tabPositions.size - 1)]
                     val targetPosition =
-                        tabPositions[pagerState.targetPage.coerceIn(0, tabPositions.size - 1)]
+                        tabPositions[pagerState.targetPage.coerceInOrMin(0, tabPositions.size - 1)]
                     val width =
                         (lerp(settledPosition.contentWidth, targetPosition.contentWidth, morph) -
                                 4.dp)

@@ -43,6 +43,7 @@ import androidx.compose.ui.util.lerp
 import kotlin.math.abs
 import kotlin.math.cos
 import org.sunsetware.phocid.ui.theme.INACTIVE_ALPHA
+import org.sunsetware.phocid.utils.coerceInOrMin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -150,7 +151,7 @@ fun ProgressSliderTrack(
                 lerpInv(
                         valueRange.start,
                         valueRange.endInclusive,
-                        value.coerceIn(valueRange.start, valueRange.endInclusive),
+                        value.coerceInOrMin(valueRange.start, valueRange.endInclusive),
                     )
                     .coerceIn(0f, 1f)
             },

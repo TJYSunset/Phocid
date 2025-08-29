@@ -145,6 +145,7 @@ import org.sunsetware.phocid.ui.views.collectionMenuItemsWithoutPlay
 import org.sunsetware.phocid.ui.views.playlist.NewPlaylistDialog
 import org.sunsetware.phocid.ui.views.playlist.PlaylistIoScreen
 import org.sunsetware.phocid.ui.views.preferences.PreferencesScreen
+import org.sunsetware.phocid.utils.coerceInOrMin
 import org.sunsetware.phocid.utils.combine
 import org.sunsetware.phocid.utils.flatMapLatest
 import org.sunsetware.phocid.utils.icuFormat
@@ -192,7 +193,7 @@ fun LibraryScreen(
     val currentCollection = collectionViewStack.lastOrNull()
     val currentCollectionType = collectionInfos.lastOrNull()?.type
     val currentHomeTabIndex =
-        homeViewState.pagerState.targetPage.coerceIn(0, preferences.tabs.size - 1)
+        homeViewState.pagerState.targetPage.coerceInOrMin(0, preferences.tabs.size - 1)
     val currentHomeTab = preferences.tabs[currentHomeTabIndex]
     val activeHomeViewMultiSelectState by
         homeViewState.activeMultiSelectState.collectAsStateWithLifecycle()

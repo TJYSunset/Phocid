@@ -62,6 +62,7 @@ import org.sunsetware.phocid.UNKNOWN
 import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.utils.CaseInsensitiveMap
 import org.sunsetware.phocid.utils.ColorSerializer
+import org.sunsetware.phocid.utils.coerceInOrMin
 import org.sunsetware.phocid.utils.distinctCaseInsensitive
 import org.sunsetware.phocid.utils.icuFormat
 import org.sunsetware.phocid.utils.mode
@@ -1400,7 +1401,7 @@ suspend fun scanTracks(
         else
             floor(freeMemory.toDouble() / maxSize / overheadFactor)
                 .toInt()
-                .coerceIn(1, min(processorCount, 4))
+                .coerceInOrMin(1, min(processorCount, 4))
     Log.d(
         "Phocid",
         "Scanning tracks with parallelism of $parallelism (max file size $maxSize, free memory $freeMemory, processor count $processorCount)",

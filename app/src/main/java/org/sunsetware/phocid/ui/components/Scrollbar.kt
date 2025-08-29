@@ -58,6 +58,7 @@ import org.sunsetware.phocid.ui.theme.EXIT_DURATION
 import org.sunsetware.phocid.ui.theme.Typography
 import org.sunsetware.phocid.ui.theme.contentColor
 import org.sunsetware.phocid.ui.theme.emphasized
+import org.sunsetware.phocid.utils.coerceInOrMin
 import org.sunsetware.phocid.utils.roundToIntOrZero
 
 val SCROLLBAR_DEFAULT_WIDTH = 4.dp
@@ -134,7 +135,7 @@ fun DrawScope.drawHint(
     val height = text.size.height.toFloat()
     val width = (text.size.width + padding * 2).takeIf { it >= height * 1.1f } ?: height
     val offsetY =
-        (start * size.height - height / 2 - marginY).coerceIn(
+        (start * size.height - height / 2 - marginY).coerceInOrMin(
             0f,
             size.height - height - marginY * 2,
         )

@@ -26,6 +26,7 @@ import org.sunsetware.phocid.PlaybackService
 import org.sunsetware.phocid.SET_TIMER_COMMAND
 import org.sunsetware.phocid.TIMER_FINISH_LAST_TRACK_KEY
 import org.sunsetware.phocid.TIMER_TARGET_KEY
+import org.sunsetware.phocid.utils.coerceInOrMin
 import org.sunsetware.phocid.utils.wrap
 
 @Stable
@@ -119,7 +120,7 @@ class PlayerManager(
 
     fun seekToFraction(fraction: Float) {
         val duration = mediaController.duration
-        mediaController.seekTo((duration * fraction).toLong().coerceIn(0, duration))
+        mediaController.seekTo((duration * fraction).toLong().coerceInOrMin(0, duration))
     }
 
     fun togglePlay() {

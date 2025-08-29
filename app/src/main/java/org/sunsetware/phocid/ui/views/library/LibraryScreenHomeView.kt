@@ -107,6 +107,7 @@ import org.sunsetware.phocid.ui.views.collectionMenuItems
 import org.sunsetware.phocid.ui.views.playlistCollectionMenuItems
 import org.sunsetware.phocid.ui.views.playlistCollectionMultiSelectMenuItems
 import org.sunsetware.phocid.ui.views.trackMenuItemsLibrary
+import org.sunsetware.phocid.utils.coerceInOrMin
 import org.sunsetware.phocid.utils.combine
 
 @Immutable
@@ -598,7 +599,7 @@ fun LibraryScreenHomeView(
 @Composable
 private fun ViewTabRow(preferences: Preferences, state: LibraryScreenHomeViewState) {
     val coroutineScope = rememberCoroutineScope()
-    val currentTabIndex = state.pagerState.targetPage.coerceIn(0, preferences.tabs.size - 1)
+    val currentTabIndex = state.pagerState.targetPage.coerceInOrMin(0, preferences.tabs.size - 1)
 
     @Composable
     fun tabs() {

@@ -21,6 +21,7 @@ import org.jaudiotagger.audio.AudioFileIO
 import org.sunsetware.omio.VORBIS_COMMENT_METADATA_BLOCK_PICTURE
 import org.sunsetware.omio.decodeMetadataBlockPicture
 import org.sunsetware.omio.readOpusMetadata
+import org.sunsetware.phocid.utils.coerceInOrMin
 import org.sunsetware.phocid.utils.roundToIntOrZero
 import org.sunsetware.phocid.utils.trimAndNormalize
 
@@ -198,9 +199,13 @@ private fun decodeBitmap(source: ImageDecoder.Source, sizeLimit: Int?, crop: Boo
                     it.isFinite() && it > 0 && it < 1
                 } ?: 1f
             val finalWidth =
-                (resizeFactor * info.size.width).roundToIntOrZero().coerceIn(1, info.size.width)
+                (resizeFactor * info.size.width)
+                    .roundToIntOrZero()
+                    .coerceInOrMin(1, info.size.width)
             val finalHeight =
-                (resizeFactor * info.size.height).roundToIntOrZero().coerceIn(1, info.size.height)
+                (resizeFactor * info.size.height)
+                    .roundToIntOrZero()
+                    .coerceInOrMin(1, info.size.height)
 
             if (resizeFactor != 1f) {
                 decoder.setTargetSize(finalWidth, finalHeight)
