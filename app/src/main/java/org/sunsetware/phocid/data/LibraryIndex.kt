@@ -1513,12 +1513,12 @@ private fun scanTrack(
         albumArtists = comments[VORBIS_COMMENT_UNOFFICIAL_ALBUMARTIST] ?: albumArtists
         genres = comments[VORBIS_COMMENT_GENRE] ?: genres
         year =
-            VORBIS_COMMENT_UNOFFICIAL_YEAR.firstNotNullOfOrNull {
-                comments[it]?.firstOrNull()?.parseYear()
+            VORBIS_COMMENT_UNOFFICIAL_YEAR.firstNotNullOfOrNull { name ->
+                comments[name]?.firstNotNullOfOrNull { it.parseYear() }
             } ?: year
         originalYear =
             originalYearFieldNames.firstNotNullOfOrNull { name ->
-                comments[name]?.map { it.parseYear() }?.firstOrNull()
+                comments[name]?.firstNotNullOfOrNull { it.parseYear() }
             }
         trackNumber =
             comments[VORBIS_COMMENT_TRACKNUMBER]?.firstNotNullOfOrNull { it.toIntOrNull() }
