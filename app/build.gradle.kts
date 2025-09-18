@@ -51,6 +51,7 @@ android {
         // Disables dependency metadata when building Android App Bundles.
         includeInBundle = false
     }
+    androidResources { generateLocaleConfig = true }
 }
 
 dependencies {
