@@ -51,6 +51,7 @@ data class Preferences(
         },
     val highResArtworkPreference: HighResArtworkPreference = HighResArtworkPreference.PLAYER_ONLY,
     val alwaysShowHintOnScroll: Boolean = false,
+    val conjunctionSymbol: String = "",
     // Home screen
     val tabOrderAndVisibility: List<Pair<LibraryScreenTabType, Boolean>> =
         LibraryScreenTabType.entries.map { it to true },

@@ -145,6 +145,8 @@
     <string name="preferences_colored_player">Color player screen based on artwork</string>
     <string name="preferences_colored_player_subtitle">Might be overridden by “Interface › Theme color › Change theme color based on artwork”</string>
     <string name="preferences_colorful_player_background">Colored player background</string>
+    <string name="preferences_conjunction_symbol">Metadata separator</string>
+    <string name="preferences_conjunction_symbol_subtitle">Only applies to new queued tracks</string>
     <string name="preferences_dark_theme">Dark theme</string>
     <string name="preferences_dark_theme_dark">Dark</string>
     <string name="preferences_dark_theme_light">Light</string>

@@ -547,6 +547,17 @@ private val Interface =
                 value = { it.alwaysShowHintOnScroll },
                 onSetValue = { preferences, new -> preferences.copy(alwaysShowHintOnScroll = new) },
             ),
+            Item.TextInput(
+                title = { Strings[R.string.preferences_conjunction_symbol] },
+                subtitle = { Strings[R.string.preferences_conjunction_symbol_subtitle] },
+                icon = Icons.Filled.SafetyDivider,
+                value = { it.conjunctionSymbol },
+                placeholder = { Strings[R.string.symbol_conjunction] },
+                allowEmpty = true,
+                updatePreferences = { preferences, value ->
+                    preferences.copy(conjunctionSymbol = value)
+                },
+            ),
         ),
     )
 
@@ -1220,6 +1231,35 @@ private sealed class Item {
                             max = max,
                             steps = steps,
                             onSetValue = onSetValue,
+                        )
+                    )
+                },
+            )
+        }
+
+        @Suppress("FunctionName")
+        fun TextInput(
+            title: () -> String,
+            subtitle: PreferencesScreenContext.(String) -> String?,
+            icon: ImageVector,
+            value: (Preferences) -> String,
+            placeholder: (Preferences) -> String,
+            allowEmpty: Boolean,
+            updatePreferences: (Preferences, String) -> Preferences,
+        ): Clickable<String> {
+            return Clickable(
+                title,
+                subtitle,
+                icon,
+                value,
+                {
+                    uiManager.openDialog(
+                        PreferencesTextInputDialog(
+                            title(),
+                            placeholder(preferences),
+                            allowEmpty,
+                            value(preferences),
+                            updatePreferences,
                         )
                     )
                 },

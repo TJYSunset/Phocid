@@ -12,7 +12,14 @@ interface StringSource {
 
     @Stable
     fun conjoin(strings: Iterable<String?>): String {
-        return strings.filterNotNull().joinToString(get(R.string.symbol_conjunction))
+        // TODO: Require callers to pass in preferences as a dependency?
+        return strings
+            .filterNotNull()
+            .joinToString(
+                (if (GlobalData.initialized.get())
+                    GlobalData.preferences.value.conjunctionSymbol.takeIf { it.isNotEmpty() }
+                else null) ?: get(R.string.symbol_conjunction)
+            )
     }
 
     @Stable
