@@ -77,6 +77,7 @@ I don't accept donations.
 * de: https://github.com/Omega-3-4-5[Omega-3-4-5]
 * es: https://github.com/AlejandroMoc[AlejandroMoc]
 * fr: https://github.com/HermitCyclop[HermitCyclop]
+* pt-BR: https://github.com/MateusRodCosta[MateusRodCosta]
 * ru: https://github.com/yurtpage[yurtpage]
 * zh-Hant: https://github.com/kisaragi-hiu[kisaragi-hiu]
 
