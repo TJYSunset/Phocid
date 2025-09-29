@@ -8,6 +8,8 @@ image:https://img.shields.io/badge/official-website-blue[Official website,link=h
 image:https://img.shields.io/badge/works_on-my_machine-yellow[Works on my machine]
 image:https://img.shields.io/github/license/tjysunset/phocid[License]
 
+NOTE: https://github.com/TJYSunset/Phocid/issues/185[Phocid is currently in maintenance mode.]
+
 image:metadata/en-US/images/phoneScreenshots/00-screenshot-home-tracks.png[Screenshot,15%]
 image:metadata/en-US/images/phoneScreenshots/01-screenshot-home-albums.png[Screenshot,15%]
 image:metadata/en-US/images/phoneScreenshots/02-screenshot-home-folders.png[Screenshot,15%]
