@@ -78,7 +78,9 @@ class MainActivity : ComponentActivity(), IntentLauncher {
     override fun onCreate(savedInstanceState: Bundle?) {
         val viewModel by viewModels<MainViewModel>()
         viewModel.initialize()
-        intent?.let { launchIntent.set(it) }
+        if (savedInstanceState == null) {
+            intent?.let { launchIntent.set(it) }
+        }
 
         installSplashScreen().setKeepOnScreenCondition { !viewModel.initialized.value }
         enableEdgeToEdge(
