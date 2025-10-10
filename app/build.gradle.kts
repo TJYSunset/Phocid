@@ -14,12 +14,12 @@ android {
     defaultConfig {
         applicationId = "org.sunsetware.phocid"
         minSdk = 30
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 20250929
         versionName = "20250929"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables { useSupportLibrary = true }
     }
 
     buildTypes {
@@ -35,23 +35,23 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        kotlinOptions.jvmTarget = "17"
     }
-    kotlinOptions { jvmTarget = "1.8" }
     buildFeatures {
         compose = true
         buildConfig = true
     }
-    composeOptions { kotlinCompilerExtensionVersion = "1.5.1" }
-    packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
+    packaging.resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
         includeInApk = false
         // Disables dependency metadata when building Android App Bundles.
         includeInBundle = false
     }
-    androidResources { generateLocaleConfig = true }
+    @Suppress("UnstableApiUsage")
+    androidResources.generateLocaleConfig = true
 }
 
 dependencies {
