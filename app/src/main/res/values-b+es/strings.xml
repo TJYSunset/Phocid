@@ -51,7 +51,7 @@
     <string name="player_repeat_mode_all">Modo de repetición: Todo</string>
     <string name="player_repeat_mode_off">Modo de repetición: Apagado</string>
     <string name="player_repeat_mode_one">Modo de repetición: Una</string>
-    <string name="player_save_queue">Guardar fila como lita de reproducción</string>
+    <string name="player_save_queue">Guardar cola como lista de reproducción</string>
     <string name="player_shuffle_off">Modo aleatorio: Apagado</string>
     <string name="player_shuffle_on">Modo aleatorio: Encendido</string>
     <string name="player_speed_and_pitch">Velocidad y tono</string>
