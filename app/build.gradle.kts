@@ -31,7 +31,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("debug").apply {
+                // Disable v2 signing and force enable v3 signing for modern Android (9+)
+                enableV2Signing = false
+                enableV3Signing = true
+            }
         }
     }
     compileOptions {
