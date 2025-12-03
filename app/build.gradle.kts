@@ -16,8 +16,7 @@ android {
     defaultConfig {
         applicationId = "org.sunsetware.phocid"
         minSdk = 30
-        //noinspection OldTargetApi
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 20251206
         versionName = "20251206"
 
