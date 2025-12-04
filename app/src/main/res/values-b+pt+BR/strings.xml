@@ -123,7 +123,7 @@
     <string name="preferences_artwork_color">Extração de cor da arte de álbum</string>
     <string name="preferences_artwork_color_muted_first">Preferir cores suaves</string>
     <string name="preferences_artwork_color_muted_only">Apenas cores suaves</string>
-    <string name="preferences_artwork_color_vibrant_first">Preferir vibrante</string>
+    <string name="preferences_artwork_color_vibrant_first">Preferir cores vibrantes</string>
     <string name="preferences_audio_offloading">Offloading de áudio</string>
     <string name="preferences_audio_offloading_subtitle">Reduz o uso de bateria, mas pode causar problemas de reprodução.</string>
     <string name="preferences_colored_cards">Colorir cartões com base na arte de álbum</string>
@@ -131,6 +131,8 @@
     <string name="preferences_colored_player">Colorir tela do reprodutor baseado na arte do álbum</string>
     <string name="preferences_colored_player_subtitle">Pode ser substituído em “Interface › Cor do tema › Mudar cor do tema baseado na arte do álbum”</string>
     <string name="preferences_colorful_player_background">Plano de fundo do reprodutor colorido</string>
+    <string name="preferences_conjunction_symbol">Separador de metadados</string>
+    <string name="preferences_conjunction_symbol_subtitle">Se aplica apenas a novas faixas na fila</string>
     <string name="preferences_dark_theme">Tema Escuro</string>
     <string name="preferences_dark_theme_dark">Escuro</string>
     <string name="preferences_dark_theme_light">Claro</string>
@@ -212,7 +214,7 @@
     <string name="preferences_pause_on_focus_loss">Pausar ao perder o foco de áudio</string>
     <string name="preferences_play_on_output_device_connection">Tocar ao conectar fones de ouvido</string>
     <string name="preferences_playback">Reprodução</string>
-    <string name="preferences_player_screen_layout">"Layout da tela de  reprodução"</string>
+    <string name="preferences_player_screen_layout">Layout da tela de reprodução</string>
     <string name="preferences_player_screen_layout_default">Padrão</string>
     <string name="preferences_player_screen_layout_no_queue">Sem fila</string>
     <string name="preferences_playlist_io_settings">Configurações de E/S de listas de reprodução</string>
@@ -224,7 +226,7 @@
     <string name="preferences_playlist_io_settings_remove_invalid">Remover faixas não encontradas</string>
     <string name="preferences_pure_background_color">Plano de fundo preto/branco puro</string>
     <string name="preferences_reshuffle_on_repeat">Modo aleatório na repetição (experimental)</string>
-    <string name="preferences_scan_progress_timeout">Mostrar progresso da verificação depois</string>
+    <string name="preferences_scan_progress_timeout">Mostrar progresso da verificação após</string>
     <string name="preferences_scrollable_tabs">Abas roláveis</string>
     <string name="preferences_shape">Formato da arte de álbum</string>
     <string name="preferences_shape_circle">Círculo</string>
@@ -245,7 +247,7 @@
     <string name="preferences_theme_color">Cor do tema</string>
     <string name="preferences_theme_color_chroma">Chroma</string>
     <string name="preferences_theme_color_chroma_number">{0}%</string>
-    <string name="preferences_theme_color_hue">Tom</string>
+    <string name="preferences_theme_color_hue">Matiz</string>
     <string name="preferences_theme_color_hue_number">{0}°</string>
     <string name="preferences_theme_color_source_custom">Personalizado</string>
     <string name="preferences_theme_color_source_default">Padrão</string>
@@ -305,7 +307,7 @@
     <string name="tab_playlists">Listas de reprodução</string>
     <string name="tab_tracks">Faixas</string>
     <string name="toast_cant_open_system_equalizer">Não foi possível abrir o equalizador do sistema</string>
-    <string name="toast_crash_saved_to">Log de travamento salvo em {0}</string>
+    <string name="toast_crash_saved_to">Registro de travamento salvo em {0}</string>
     <string name="toast_dump_logcat_failed">Falha ao exportar logcat: {0}</string>
     <string name="toast_dump_logcat_success">Logcat exportado</string>
     <string name="toast_playlist_exported">{0, plural, one {# lista de reprodução exportada} other {# listas de reprodução exportadas}}</string>
