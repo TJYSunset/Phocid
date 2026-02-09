@@ -44,6 +44,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.sunsetware.phocid.data.DefaultShuffleMode
+import org.sunsetware.phocid.data.PlayHistoryEntry
+import org.sunsetware.phocid.data.RadioGenerator
 import org.sunsetware.phocid.data.capturePlayerState
 import org.sunsetware.phocid.data.captureTransientState
 import org.sunsetware.phocid.data.getChildMediaItems
@@ -210,6 +212,27 @@ class PlaybackService : MediaLibraryService() {
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 if (
+                    reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO ||
+                        reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
+                ) {
+                    if (lastIndex != null && lastIndex != player.currentMediaItemIndex) {
+                        val previousTrackId =
+                            GlobalData.playerState.value.actualPlayQueue.getOrNull(lastIndex!!)
+                        if (previousTrackId != null) {
+                            GlobalData.playHistory.update { history ->
+                                val entry = history[previousTrackId] ?: PlayHistoryEntry()
+                                history +
+                                    (previousTrackId to
+                                        entry.copy(
+                                            playCount = entry.playCount + 1,
+                                            lastPlayed = System.currentTimeMillis(),
+                                        ))
+                            }
+                        }
+                    }
+                }
+
+                if (
                     player.currentMediaItemIndex == 0 &&
                         lastIndex == player.mediaItemCount - 1 &&
                         (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO ||
@@ -223,6 +246,33 @@ class PlaybackService : MediaLibraryService() {
                     player.enableShuffle()
                 }
                 lastIndex = player.currentMediaItemIndex
+
+                val seedTrackId = GlobalData.radioSeedTrackId.value
+                if (seedTrackId != null) {
+                    val preferences = GlobalData.preferences.value
+                    if (preferences.radioInfiniteMode) {
+                        val remaining =
+                            player.mediaItemCount - player.currentMediaItemIndex
+                        if (remaining <= 3) {
+                            val libraryIndex = GlobalData.libraryIndex.value
+                            val seedTrack = libraryIndex.tracks[seedTrackId]
+                            if (seedTrack != null) {
+                                val playHistory = GlobalData.playHistory.value
+                                val newTracks =
+                                    RadioGenerator.generate(
+                                        seedTrack,
+                                        libraryIndex,
+                                        playHistory,
+                                        preferences.radioMixRatio,
+                                        preferences.radioBatchSize,
+                                    )
+                                player.addMediaItems(
+                                    newTracks.map { it.getMediaItem(null) }
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }

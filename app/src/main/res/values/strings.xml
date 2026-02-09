@@ -379,4 +379,15 @@
     <string name="view_settings">View settings</string>
     <string name="view_settings_grid_size">Grid size</string>
     <string name="view_settings_sort_by">Sort by</string>
+    <string name="preferences_radio">Radio</string>
+    <string name="preferences_radio_mix_ratio">Radio mix ratio</string>
+    <string name="preferences_radio_mix_ratio_related">Related</string>
+    <string name="preferences_radio_mix_ratio_top_played">Top played</string>
+    <string name="preferences_radio_mix_ratio_number">{0, number, ::percent}</string>
+    <string name="preferences_radio_infinite_mode">Infinite radio mode</string>
+    <string name="preferences_radio_infinite_mode_subtitle">Automatically append new tracks when the queue is running low</string>
+    <string name="preferences_radio_batch_size">Radio batch size</string>
+    <string name="preferences_radio_batch_size_number">{0, plural, one {# track} other {# tracks}}</string>
+    <string name="track_start_radio">Start radio</string>
+    <string name="toast_radio_started">Radio started</string>
 </resources>

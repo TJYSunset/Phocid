@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PlaylistRemove
+import androidx.compose.material.icons.filled.Radio
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.runtime.Immutable
@@ -98,12 +99,17 @@ fun trackMenuItems(
                 }
             }
         )
+    val radio =
+        MenuItem.Button(Strings[R.string.track_start_radio], Icons.Filled.Radio) {
+            playerManager.startRadio(track)
+            uiManager.toast(Strings[R.string.toast_radio_started])
+        }
     val details =
         MenuItem.Button(Strings[R.string.track_details], Icons.Filled.Info) {
             uiManager.openDialog(TrackDetailsDialog(track))
         }
 
-    return queue + playlist + share + MenuItem.Divider + artists + album + details
+    return queue + playlist + radio + share + MenuItem.Divider + artists + album + details
 }
 
 @Stable

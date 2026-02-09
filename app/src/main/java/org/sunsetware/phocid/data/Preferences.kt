@@ -103,6 +103,10 @@ data class Preferences(
     val widgetDarkTheme: DarkThemePreference = DarkThemePreference.SYSTEM,
     val widgetLayout: WidgetLayout = WidgetLayout.SMALL,
     val widgetArtworkResolutionLimit: Int = 700,
+    // Radio
+    val radioMixRatio: Float = 0.5f,
+    val radioInfiniteMode: Boolean = false,
+    val radioBatchSize: Int = 50,
     // Hidden
     val tabSettings: Map<LibraryScreenTabType, LibraryScreenTabInfo> =
         LibraryScreenTabType.entries.associateWith { LibraryScreenTabInfo(it) },

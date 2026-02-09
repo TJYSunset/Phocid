@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.sunsetware.phocid.data.LibraryIndex
+import org.sunsetware.phocid.data.PlayHistory
 import org.sunsetware.phocid.data.PlayerState
 import org.sunsetware.phocid.data.PlayerTransientState
 import org.sunsetware.phocid.data.PlaylistManager
@@ -25,6 +26,10 @@ object GlobalData {
     val playerTransientState = MutableStateFlow(PlayerTransientState())
 
     @Volatile lateinit var libraryIndex: StateFlow<LibraryIndex>
+
+    @Volatile lateinit var playHistory: MutableStateFlow<PlayHistory>
+
+    val radioSeedTrackId = MutableStateFlow(null as Long?)
 
     @Volatile lateinit var playlistManager: PlaylistManager
 }

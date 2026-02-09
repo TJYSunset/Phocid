@@ -26,6 +26,7 @@ import org.sunsetware.phocid.PlaybackService
 import org.sunsetware.phocid.SET_TIMER_COMMAND
 import org.sunsetware.phocid.TIMER_FINISH_LAST_TRACK_KEY
 import org.sunsetware.phocid.TIMER_TARGET_KEY
+import org.sunsetware.phocid.globals.GlobalData
 import org.sunsetware.phocid.utils.coerceInOrMin
 import org.sunsetware.phocid.utils.wrap
 
@@ -145,6 +146,7 @@ class PlayerManager(
     }
 
     fun setTracks(tracks: List<Track>, index: Int?) {
+        GlobalData.radioSeedTrackId.update { null }
         if (index != null)
             mediaController.setMediaItems(tracks.map { it.getMediaItem(null) }, index, 0)
         else mediaController.setMediaItems(tracks.map { it.getMediaItem(null) })
@@ -216,7 +218,30 @@ class PlayerManager(
     }
 
     fun clearTracks() {
+        GlobalData.radioSeedTrackId.update { null }
         mediaController.clearMediaItems()
+    }
+
+    fun startRadio(seedTrack: Track) {
+        val preferences = GlobalData.preferences.value
+        val libraryIndex = GlobalData.libraryIndex.value
+        val playHistory = GlobalData.playHistory.value
+        val radioTracks =
+            RadioGenerator.generate(
+                seedTrack,
+                libraryIndex,
+                playHistory,
+                preferences.radioMixRatio,
+                preferences.radioBatchSize,
+            )
+        val fullQueue = listOf(seedTrack) + radioTracks
+        GlobalData.radioSeedTrackId.update { seedTrack.id }
+        mediaController.setMediaItems(fullQueue.map { it.getMediaItem(null) }, 0, 0)
+        mediaController.play()
+    }
+
+    fun cancelRadio() {
+        GlobalData.radioSeedTrackId.update { null }
     }
 
     fun toggleShuffle() {

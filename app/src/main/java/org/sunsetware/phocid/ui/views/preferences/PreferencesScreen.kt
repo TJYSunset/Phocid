@@ -29,6 +29,7 @@ import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.AdsClick
 import androidx.compose.material.icons.filled.AllInbox
+import androidx.compose.material.icons.filled.AllInclusive
 import androidx.compose.material.icons.filled.Attribution
 import androidx.compose.material.icons.filled.Balance
 import androidx.compose.material.icons.filled.BarChart
@@ -63,6 +64,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PermMedia
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PlayCircleOutline
+import androidx.compose.material.icons.filled.Radio
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.RoundedCorner
 import androidx.compose.material.icons.filled.SafetyDivider
@@ -76,6 +78,7 @@ import androidx.compose.material.icons.filled.Subtitles
 import androidx.compose.material.icons.filled.Swipe
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Tab
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.filled.ZoomIn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -160,7 +163,7 @@ import org.sunsetware.phocid.utils.roundToIntOrZero
 object PreferencesScreen : TopLevelScreen() {
     private val lazyListState = LazyListState()
     private val pages =
-        listOf(Interface, HomeScreen, NowPlaying, Playback, Indexing, Miscellaneous, About)
+        listOf(Interface, HomeScreen, NowPlaying, Playback, Radio, Indexing, Miscellaneous, About)
 
     @Composable
     override fun Compose(viewModel: MainViewModel) {
@@ -771,6 +774,51 @@ private val Playback =
                     if (!playerManager.openSystemEqualizer(context)) {
                         uiManager.toast(Strings[R.string.toast_cant_open_system_equalizer])
                     }
+                },
+            ),
+        ),
+    )
+
+private val Radio =
+    Page(
+        R.string.preferences_radio,
+        Icons.Filled.Radio,
+        listOf(
+            Item.Slider(
+                title = { Strings[R.string.preferences_radio_mix_ratio] },
+                numberFormatter = {
+                    val relatedPct = ((1f - it) * 100).toInt()
+                    val topPct = (it * 100).toInt()
+                    "${Strings[R.string.preferences_radio_mix_ratio_related]} $relatedPct% / ${Strings[R.string.preferences_radio_mix_ratio_top_played]} $topPct%"
+                },
+                icon = Icons.Filled.Tune,
+                value = { it.radioMixRatio },
+                default = 0.5f,
+                min = 0f,
+                max = 1f,
+                steps = 100 - 1 - 1,
+                onSetValue = { preferences, new -> preferences.copy(radioMixRatio = new) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_radio_infinite_mode] },
+                subtitle = { Strings[R.string.preferences_radio_infinite_mode_subtitle] },
+                icon = Icons.Filled.AllInclusive,
+                value = { it.radioInfiniteMode },
+                onSetValue = { preferences, new -> preferences.copy(radioInfiniteMode = new) },
+            ),
+            Item.Slider(
+                title = { Strings[R.string.preferences_radio_batch_size] },
+                numberFormatter = {
+                    Strings[R.string.preferences_radio_batch_size_number].icuFormat(it.toInt())
+                },
+                icon = Icons.Filled.PlayArrow,
+                value = { it.radioBatchSize.toFloat() },
+                default = 50f,
+                min = 10f,
+                max = 200f,
+                steps = 200 - 10 - 1,
+                onSetValue = { preferences, new ->
+                    preferences.copy(radioBatchSize = new.toInt())
                 },
             ),
         ),
