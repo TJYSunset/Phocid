@@ -180,4 +180,8 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
             )
         }
     }
+
+    fun clearHistory() {
+        GlobalData.historyEntries.update { emptyList() }
+    }
 }

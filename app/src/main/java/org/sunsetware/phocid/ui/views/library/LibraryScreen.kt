@@ -42,6 +42,7 @@ import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.BorderStyle
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material.icons.filled.Pause
@@ -143,6 +144,7 @@ import org.sunsetware.phocid.ui.theme.contentColorVariant
 import org.sunsetware.phocid.ui.theme.emphasizedEnter
 import org.sunsetware.phocid.ui.theme.emphasizedExit
 import org.sunsetware.phocid.ui.views.MenuItem
+import org.sunsetware.phocid.ui.views.ClearHistoryDialog
 import org.sunsetware.phocid.ui.views.collectionMenuItemsWithoutPlay
 import org.sunsetware.phocid.ui.views.playlist.NewPlaylistDialog
 import org.sunsetware.phocid.ui.views.playlist.PlaylistIoScreen
@@ -283,6 +285,17 @@ fun LibraryScreen(
                                     )
                                 }
                             }
+                    )
+                currentHomeTab.type == LibraryScreenTabType.HISTORY ->
+                    listOf(
+                        MenuItem.Button(
+                            Strings[R.string.history_clear],
+                            Icons.Filled.Delete,
+                            dangerous = true,
+                        ) {
+                            uiManager.openDialog(ClearHistoryDialog())
+                        },
+                        MenuItem.Divider,
                     )
                 else -> emptyList()
             } +

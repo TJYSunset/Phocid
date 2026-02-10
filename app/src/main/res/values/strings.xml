@@ -23,6 +23,9 @@
     <!-- Adjective, not noun -->
     <string name="commons_selected">Selected</string>
     <string name="commons_sync">Sync</string>
+    <string name="history_clear">Clear history</string>
+    <string name="history_clear_dialog_body">This will remove all history entries.</string>
+    <string name="history_clear_dialog_title">Clear history?</string>
     <string name="count_album">{0, plural, one {# album} other {# albums}}</string>
     <string name="count_folder">{0, plural, one {# folder} other {# folders}}</string>
     <string name="count_invalid_track">{0, plural, one {# invalid track} other {# invalid tracks}}</string>

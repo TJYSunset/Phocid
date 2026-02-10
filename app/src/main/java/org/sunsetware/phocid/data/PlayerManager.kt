@@ -154,14 +154,24 @@ class PlayerManager(
             val timestamp = System.currentTimeMillis()
             GlobalData.historyEntries.update { history ->
                 when (historySource) {
-                    is HistoryStartContext.Album ->
-                        history.appendEntry(
-                            AlbumHistoryEntry(historySource.albumKey.toString(), timestamp)
-                        )
-                    is HistoryStartContext.Playlist ->
-                        history.appendEntry(
-                            PlaylistHistoryEntry(historySource.playlistKey, timestamp)
-                        )
+                    is HistoryStartContext.Album -> {
+                        val albumKey = historySource.albumKey.toString()
+                        val last = history.lastOrNull()
+                        if (last is AlbumHistoryEntry && last.albumKey == albumKey) {
+                            history
+                        } else {
+                            history.appendEntry(AlbumHistoryEntry(albumKey, timestamp))
+                        }
+                    }
+                    is HistoryStartContext.Playlist -> {
+                        val playlistKey = historySource.playlistKey
+                        val last = history.lastOrNull()
+                        if (last is PlaylistHistoryEntry && last.playlistKey == playlistKey) {
+                            history
+                        } else {
+                            history.appendEntry(PlaylistHistoryEntry(playlistKey, timestamp))
+                        }
+                    }
                 }
             }
         }
