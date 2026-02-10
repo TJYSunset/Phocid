@@ -41,6 +41,8 @@
     <string name="list_multi_select_select_all">Select all</string>
     <string name="list_multi_select_select_inverse">Select inverse</string>
     <string name="list_multi_select_title">Selected {0, plural, one {# item} other {# items}}</string>
+    <string name="history_entry_album_subtitle">Album - {0}</string>
+    <string name="history_entry_playlist_subtitle">Playlist - {0}</string>
     <!-- The IETF language tag of the current translation, used for formatting -->
     <string name="locale">en</string>
     <string name="permission_dialog_body">Permission to read your audio files is required for basic functionality. Please grant to continue.</string>
@@ -216,6 +218,8 @@
     <string name="preferences_library_track_click_action">Track click action</string>
     <string name="preferences_library_track_click_action_open_menu">Open menu</string>
     <string name="preferences_license">License</string>
+    <string name="preferences_history_record_min_percentage">History record threshold (percent)</string>
+    <string name="preferences_history_record_min_seconds">History record threshold (seconds)</string>
     <string name="preferences_lyrics_display">Lyrics display</string>
     <string name="preferences_lyrics_display_default">Default</string>
     <string name="preferences_lyrics_display_disabled">Disabled</string>

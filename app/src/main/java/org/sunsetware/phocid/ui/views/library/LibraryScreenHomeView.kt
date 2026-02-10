@@ -117,6 +117,7 @@ import org.sunsetware.phocid.ui.views.playlistCollectionMultiSelectMenuItems
 import org.sunsetware.phocid.ui.views.trackMenuItemsLibrary
 import org.sunsetware.phocid.utils.coerceInOrMin
 import org.sunsetware.phocid.utils.combine
+import org.sunsetware.phocid.utils.icuFormat
 import org.sunsetware.phocid.utils.trimAndNormalize
 
 @Immutable
@@ -603,72 +604,79 @@ class LibraryScreenHomeViewState(
         searchQuery: String,
     ): List<LibraryScreenHomeViewItem> {
         val normalizedQuery = searchQuery.trimAndNormalize().lowercase()
+        fun matchesQuery(title: String, subtitle: String): Boolean {
+            return normalizedQuery.isEmpty() ||
+                listOf(title, subtitle).any {
+                    it.trimAndNormalize().lowercase().contains(normalizedQuery)
+                }
+        }
+
+        fun buildTrackHistoryItem(
+            trackId: Long,
+            timestamp: Long,
+            keyPrefix: String,
+        ): LibraryScreenHomeViewItem? {
+            val track = libraryIndex.tracks[trackId]
+            val title = track?.displayTitle ?: UNKNOWN
+            val subtitle = track?.displayArtistWithAlbum ?: UNKNOWN
+            if (!matchesQuery(title, subtitle)) return null
+            return LibraryScreenHomeViewItem(
+                key = "history-$keyPrefix-$trackId-$timestamp",
+                title = title,
+                subtitle = subtitle,
+                scrollHint = title.firstOrNull()?.toString() ?: "",
+                artwork = Artwork.Track(track ?: InvalidTrack),
+                tracks = { listOfNotNull(track) },
+                menuItems = {
+                    if (track == null) emptyList()
+                    else
+                        trackMenuItemsLibrary(
+                            track,
+                            { listOf(track) to 0 },
+                            it.playerManager,
+                            it.uiManager,
+                        )
+                },
+                multiSelectMenuItems = { others, viewModel, continuation ->
+                    if (track == null) emptyList()
+                    else
+                        collectionMenuItems(
+                            { listOf(track) + others.flatMap { it.tracks() } },
+                            viewModel.playerManager,
+                            viewModel.uiManager,
+                            continuation = continuation,
+                        )
+                },
+            ) { viewModel, onOpenMenu ->
+                if (track != null) {
+                    viewModel.preferences.value.libraryTrackClickAction
+                        .invokeOrOpenMenu(
+                            listOf(track),
+                            0,
+                            viewModel.playerManager,
+                            viewModel.uiManager,
+                            onOpenMenu = onOpenMenu,
+                        )
+                }
+            }
+        }
+
         val items =
             historyEntries.asReversed().mapNotNull { entry ->
                 when (entry) {
-                    is TrackHistoryEntry -> {
-                        val track = libraryIndex.tracks[entry.trackId]
-                        val title = track?.displayTitle ?: UNKNOWN
-                        val subtitle = track?.displayArtistWithAlbum ?: UNKNOWN
-                        val matchesQuery =
-                            normalizedQuery.isEmpty() ||
-                                listOf(title, subtitle).any {
-                                    it.trimAndNormalize().lowercase().contains(normalizedQuery)
-                                }
-                        if (!matchesQuery) return@mapNotNull null
-                        LibraryScreenHomeViewItem(
-                            key = "history-track-${entry.trackId}-${entry.timestamp}",
-                            title = title,
-                            subtitle = subtitle,
-                            scrollHint = title.firstOrNull()?.toString() ?: "",
-                            artwork = Artwork.Track(track ?: InvalidTrack),
-                            tracks = { listOfNotNull(track) },
-                            menuItems = {
-                                if (track == null) emptyList()
-                                else
-                                    trackMenuItemsLibrary(
-                                        track,
-                                        { listOf(track) to 0 },
-                                        it.playerManager,
-                                        it.uiManager,
-                                    )
-                            },
-                            multiSelectMenuItems = { others, viewModel, continuation ->
-                                if (track == null) emptyList()
-                                else
-                                    collectionMenuItems(
-                                        { listOf(track) + others.flatMap { it.tracks() } },
-                                        viewModel.playerManager,
-                                        viewModel.uiManager,
-                                        continuation = continuation,
-                                    )
-                            },
-                        ) { viewModel, onOpenMenu ->
-                            if (track != null) {
-                                viewModel.preferences.value.libraryTrackClickAction
-                                    .invokeOrOpenMenu(
-                                        listOf(track),
-                                        0,
-                                        viewModel.playerManager,
-                                        viewModel.uiManager,
-                                        onOpenMenu = onOpenMenu,
-                                    )
-                            }
-                        }
-                    }
+                    is TrackHistoryEntry ->
+                        buildTrackHistoryItem(entry.trackId, entry.timestamp, "track")
                     is AlbumHistoryEntry -> {
                         val albumKey = org.sunsetware.phocid.data.AlbumKey(entry.albumKey)
                         val album = albumKey?.let { libraryIndex.albums[it] }
                         val title = album?.name ?: UNKNOWN
                         val subtitle =
-                            album?.displayAlbumArtist
-                                ?: Strings[R.string.tab_albums]
-                        val matchesQuery =
-                            normalizedQuery.isEmpty() ||
-                                listOf(title, subtitle).any {
-                                    it.trimAndNormalize().lowercase().contains(normalizedQuery)
-                                }
-                        if (!matchesQuery) return@mapNotNull null
+                            Strings[R.string.history_entry_album_subtitle]
+                                .icuFormat(
+                                    album?.displayAlbumArtist
+                                        ?: Strings[R.string.tab_albums]
+                                )
+                        if (!matchesQuery(title, subtitle)) return@mapNotNull null
                         val artworkTrack = album?.tracks?.firstOrNull() ?: InvalidTrack
                         LibraryScreenHomeViewItem(
                             key = "history-album-${entry.albumKey}-${entry.timestamp}",
@@ -708,14 +716,12 @@ class LibraryScreenHomeViewState(
                         val playlist = playlists[entry.playlistKey]
                         val title = playlist?.displayName ?: UNKNOWN
                         val subtitle =
-                            playlist?.displayStatistics
-                                ?: Strings[R.string.tab_playlists]
-                        val matchesQuery =
-                            normalizedQuery.isEmpty() ||
-                                listOf(title, subtitle).any {
-                                    it.trimAndNormalize().lowercase().contains(normalizedQuery)
-                                }
-                        if (!matchesQuery) return@mapNotNull null
+                            Strings[R.string.history_entry_playlist_subtitle]
+                                .icuFormat(
+                                    playlist?.displayStatistics
+                                        ?: Strings[R.string.tab_playlists]
+                                )
+                        if (!matchesQuery(title, subtitle)) return@mapNotNull null
                         val artwork =
                             playlist?.specialType?.let { Artwork.Icon(it.icon, it.color) }
                                 ?: Artwork.Track(

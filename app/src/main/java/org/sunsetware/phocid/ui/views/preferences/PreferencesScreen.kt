@@ -766,6 +766,39 @@ private val Playback =
                 value = { it.audioOffloading },
                 onSetValue = { preferences, new -> preferences.copy(audioOffloading = new) },
             ),
+            Item.Slider(
+                title = { Strings[R.string.preferences_history_record_min_percentage] },
+                numberFormatter = { "${(it * 100).toInt()}%" },
+                icon = Icons.Filled.Tune,
+                value = { it.historyRecordMinPositionPercentage },
+                default = 0.3f,
+                min = 0f,
+                max = 1f,
+                steps = 100 - 1,
+                onSetValue = { preferences, new ->
+                    preferences.copy(historyRecordMinPositionPercentage = new)
+                },
+            ),
+            Item.Slider(
+                title = { Strings[R.string.preferences_history_record_min_seconds] },
+                numberFormatter = {
+                    NumberFormatter.withLocale(Locale.getDefault())
+                        .notation(Notation.simple())
+                        .unit(MeasureUnit.SECOND)
+                        .precision(Precision.integer())
+                        .format(it)
+                        .toString()
+                },
+                icon = Icons.Filled.HourglassFull,
+                value = { it.historyRecordMinPositionSeconds.toFloat() },
+                default = 25f,
+                min = 0f,
+                max = 300f,
+                steps = 300 - 0 - 1,
+                onSetValue = { preferences, new ->
+                    preferences.copy(historyRecordMinPositionSeconds = new.roundToIntOrZero())
+                },
+            ),
             Item.Clickable(
                 title = { Strings[R.string.preferences_system_equalizer] },
                 subtitle = { null },

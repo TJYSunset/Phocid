@@ -48,8 +48,10 @@ fun HistoryList.appendEntry(entry: HistoryEntry, maxEntries: Int = HISTORY_MAX_E
 fun HistoryList.trackPlayCounts(): Map<Long, Int> {
     val counts = mutableMapOf<Long, Int>()
     for (entry in this) {
-        if (entry is TrackHistoryEntry) {
-            counts[entry.trackId] = (counts[entry.trackId] ?: 0) + 1
+        when (entry) {
+            is TrackHistoryEntry ->
+                counts[entry.trackId] = (counts[entry.trackId] ?: 0) + 1
+            else -> {}
         }
     }
     return counts

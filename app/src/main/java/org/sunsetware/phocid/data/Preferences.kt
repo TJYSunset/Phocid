@@ -76,6 +76,8 @@ data class Preferences(
     val defaultShuffleModeTrack: DefaultShuffleMode = DefaultShuffleMode.KEEP_CURRENT,
     val defaultShuffleModeList: DefaultShuffleMode = DefaultShuffleMode.KEEP_CURRENT,
     val audioOffloading: Boolean = false,
+    val historyRecordMinPositionPercentage: Float = 0.3f,
+    val historyRecordMinPositionSeconds: Int = 25,
     // Indexing
     val advancedMetadataExtraction: Boolean = false,
     val disableArtworkColorExtraction: Boolean = false,

@@ -76,6 +76,8 @@ class PlaybackService : MediaLibraryService() {
     @Volatile private var reshuffleOnRepeat = false
     @Volatile private var defaultShuffleModeTrack = DefaultShuffleMode.KEEP_CURRENT
     @Volatile private var defaultShuffleModeList = DefaultShuffleMode.KEEP_CURRENT
+    @Volatile private var lastTransitionTrackId = null as Long?
+    @Volatile private var lastTransitionPositionMs = null as Long?
 
     override fun onCreate() {
         super.onCreate()
@@ -220,14 +222,46 @@ class PlaybackService : MediaLibraryService() {
                         val previousTrackId =
                             GlobalData.playerState.value.actualPlayQueue.getOrNull(lastIndex!!)
                         if (previousTrackId != null) {
-                            GlobalData.historyEntries.update { history ->
-                                history.appendEntry(
-                                    TrackHistoryEntry(previousTrackId, System.currentTimeMillis())
-                                )
+                            val preferences = GlobalData.preferences.value
+                            val positionMs =
+                                if (lastTransitionTrackId == previousTrackId)
+                                    lastTransitionPositionMs
+                                else null
+                            val durationMs =
+                                GlobalData.libraryIndex.value.tracks[previousTrackId]?.duration
+                                    ?.inWholeMilliseconds
+                            val percentThreshold =
+                                preferences.historyRecordMinPositionPercentage.coerceIn(0f, 1f)
+                            val timeThresholdMs =
+                                preferences.historyRecordMinPositionSeconds.toLong() * 1000L
+                            val percentCheck =
+                                if (durationMs != null && durationMs > 0 && positionMs != null) {
+                                    positionMs.toDouble() / durationMs.toDouble() >
+                                        percentThreshold
+                                } else {
+                                    percentThreshold <= 0f
+                                }
+                            val timeCheck =
+                                if (positionMs != null) {
+                                    positionMs > timeThresholdMs
+                                } else {
+                                    timeThresholdMs <= 0L
+                                }
+
+                            if (percentCheck || timeCheck) {
+                                val timestamp = System.currentTimeMillis()
+                                GlobalData.historyEntries.update { history ->
+                                    history.appendEntry(
+                                        TrackHistoryEntry(previousTrackId, timestamp)
+                                    )
+                                }
                             }
                         }
                     }
                 }
+
+                lastTransitionTrackId = null
+                lastTransitionPositionMs = null
 
                 if (
                     player.currentMediaItemIndex == 0 &&
@@ -268,6 +302,33 @@ class PlaybackService : MediaLibraryService() {
                                 )
                             }
                         }
+                    }
+                }
+            }
+
+            override fun onPositionDiscontinuity(
+                oldPosition: Player.PositionInfo,
+                newPosition: Player.PositionInfo,
+                reason: Int,
+            ) {
+                if (
+                    reason == Player.DISCONTINUITY_REASON_AUTO_TRANSITION ||
+                        reason == Player.DISCONTINUITY_REASON_SEEK
+                ) {
+                    val oldIndex = oldPosition.mediaItemIndex
+                    val newIndex = newPosition.mediaItemIndex
+                    if (
+                        oldIndex != newIndex &&
+                            oldIndex != C.INDEX_UNSET &&
+                            oldIndex in 0..<player.mediaItemCount
+                    ) {
+                        val trackId =
+                            player.getMediaItemAt(oldIndex).mediaId.toLongOrNull()
+                        lastTransitionTrackId = trackId
+                        lastTransitionPositionMs = oldPosition.positionMs
+                    } else {
+                        lastTransitionTrackId = null
+                        lastTransitionPositionMs = null
                     }
                 }
             }
