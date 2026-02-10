@@ -41,8 +41,6 @@
     <string name="list_multi_select_select_all">Select all</string>
     <string name="list_multi_select_select_inverse">Select inverse</string>
     <string name="list_multi_select_title">Selected {0, plural, one {# item} other {# items}}</string>
-    <string name="history_entry_album_subtitle">Album - {0}</string>
-    <string name="history_entry_playlist_subtitle">Playlist - {0}</string>
     <!-- The IETF language tag of the current translation, used for formatting -->
     <string name="locale">en</string>
     <string name="permission_dialog_body">Permission to read your audio files is required for basic functionality. Please grant to continue.</string>

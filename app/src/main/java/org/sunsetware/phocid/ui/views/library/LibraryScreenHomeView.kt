@@ -618,7 +618,15 @@ class LibraryScreenHomeViewState(
         ): LibraryScreenHomeViewItem? {
             val track = libraryIndex.tracks[trackId]
             val title = track?.displayTitle ?: UNKNOWN
-            val subtitle = track?.displayArtistWithAlbum ?: UNKNOWN
+            val subtitle =
+                if (track != null) {
+                    Strings.separate(
+                        Strings[R.string.tab_tracks],
+                        track.displayArtistOrNull ?: track.album,
+                    )
+                } else {
+                    UNKNOWN
+                }
             if (!matchesQuery(title, subtitle)) return null
             return LibraryScreenHomeViewItem(
                 key = "history-$keyPrefix-$trackId-$timestamp",
@@ -670,12 +678,13 @@ class LibraryScreenHomeViewState(
                         val albumKey = org.sunsetware.phocid.data.AlbumKey(entry.albumKey)
                         val album = albumKey?.let { libraryIndex.albums[it] }
                         val title = album?.name ?: UNKNOWN
+                        val albumArtist = album?.displayAlbumArtist
                         val subtitle =
-                            Strings[R.string.history_entry_album_subtitle]
-                                .icuFormat(
-                                    album?.displayAlbumArtist
-                                        ?: Strings[R.string.tab_albums]
-                                )
+                            if (albumArtist != null) {
+                                Strings.separate(Strings[R.string.tab_albums], albumArtist)
+                            } else {
+                                Strings[R.string.tab_albums]
+                            }
                         if (!matchesQuery(title, subtitle)) return@mapNotNull null
                         val artworkTrack = album?.tracks?.firstOrNull() ?: InvalidTrack
                         LibraryScreenHomeViewItem(
@@ -715,12 +724,13 @@ class LibraryScreenHomeViewState(
                     is PlaylistHistoryEntry -> {
                         val playlist = playlists[entry.playlistKey]
                         val title = playlist?.displayName ?: UNKNOWN
+                        val playlistStats = playlist?.displayStatistics
                         val subtitle =
-                            Strings[R.string.history_entry_playlist_subtitle]
-                                .icuFormat(
-                                    playlist?.displayStatistics
-                                        ?: Strings[R.string.tab_playlists]
-                                )
+                            if (playlistStats != null) {
+                                Strings.separate(Strings[R.string.tab_playlists], playlistStats)
+                            } else {
+                                Strings[R.string.tab_playlists]
+                            }
                         if (!matchesQuery(title, subtitle)) return@mapNotNull null
                         val artwork =
                             playlist?.specialType?.let { Artwork.Icon(it.icon, it.color) }

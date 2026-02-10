@@ -174,6 +174,15 @@ class PlaybackService : MediaLibraryService() {
 
     private fun createListener(player: CustomizedPlayer): Player.Listener {
         return object : Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if (playbackState == Player.STATE_ENDED && player.mediaItemCount > 0) {
+                    val trackId = player.currentMediaItem?.mediaId?.toLongOrNull()
+                    if (trackId != null) {
+                        recordHistoryIfEligible(trackId, player.currentPosition)
+                    }
+                }
+            }
+
             override fun onEvents(player: Player, events: Player.Events) {
                 GlobalData.playerState.update { player.capturePlayerState() }
                 GlobalData.playerTransientState.update { player.captureTransientState() }
@@ -222,40 +231,11 @@ class PlaybackService : MediaLibraryService() {
                         val previousTrackId =
                             GlobalData.playerState.value.actualPlayQueue.getOrNull(lastIndex!!)
                         if (previousTrackId != null) {
-                            val preferences = GlobalData.preferences.value
                             val positionMs =
                                 if (lastTransitionTrackId == previousTrackId)
                                     lastTransitionPositionMs
                                 else null
-                            val durationMs =
-                                GlobalData.libraryIndex.value.tracks[previousTrackId]?.duration
-                                    ?.inWholeMilliseconds
-                            val percentThreshold =
-                                preferences.historyRecordMinPositionPercentage.coerceIn(0f, 1f)
-                            val timeThresholdMs =
-                                preferences.historyRecordMinPositionSeconds.toLong() * 1000L
-                            val percentCheck =
-                                if (durationMs != null && durationMs > 0 && positionMs != null) {
-                                    positionMs.toDouble() / durationMs.toDouble() >
-                                        percentThreshold
-                                } else {
-                                    percentThreshold <= 0f
-                                }
-                            val timeCheck =
-                                if (positionMs != null) {
-                                    positionMs > timeThresholdMs
-                                } else {
-                                    timeThresholdMs <= 0L
-                                }
-
-                            if (percentCheck || timeCheck) {
-                                val timestamp = System.currentTimeMillis()
-                                GlobalData.historyEntries.update { history ->
-                                    history.appendEntry(
-                                        TrackHistoryEntry(previousTrackId, timestamp)
-                                    )
-                                }
-                            }
+                            recordHistoryIfEligible(previousTrackId, positionMs)
                         }
                     }
                 }
@@ -318,6 +298,20 @@ class PlaybackService : MediaLibraryService() {
                     val oldIndex = oldPosition.mediaItemIndex
                     val newIndex = newPosition.mediaItemIndex
                     if (
+                        reason == Player.DISCONTINUITY_REASON_SEEK &&
+                            oldIndex == newIndex &&
+                            newPosition.positionMs == 0L &&
+                            oldIndex != C.INDEX_UNSET &&
+                            oldIndex in 0..<player.mediaItemCount &&
+                            oldPosition.positionMs > 0
+                    ) {
+                        val trackId =
+                            player.getMediaItemAt(oldIndex).mediaId.toLongOrNull()
+                        if (trackId != null) {
+                            recordHistoryIfEligible(trackId, oldPosition.positionMs)
+                        }
+                    }
+                    if (
                         oldIndex != newIndex &&
                             oldIndex != C.INDEX_UNSET &&
                             oldIndex in 0..<player.mediaItemCount
@@ -331,6 +325,33 @@ class PlaybackService : MediaLibraryService() {
                         lastTransitionPositionMs = null
                     }
                 }
+            }
+        }
+    }
+
+    private fun recordHistoryIfEligible(trackId: Long, positionMs: Long?) {
+        val preferences = GlobalData.preferences.value
+        val durationMs =
+            GlobalData.libraryIndex.value.tracks[trackId]?.duration?.inWholeMilliseconds
+        val percentThreshold = preferences.historyRecordMinPositionPercentage.coerceIn(0f, 1f)
+        val timeThresholdMs = preferences.historyRecordMinPositionSeconds.toLong() * 1000L
+        val percentCheck =
+            if (durationMs != null && durationMs > 0 && positionMs != null) {
+                positionMs.toDouble() / durationMs.toDouble() > percentThreshold
+            } else {
+                percentThreshold <= 0f
+            }
+        val timeCheck =
+            if (positionMs != null) {
+                positionMs > timeThresholdMs
+            } else {
+                timeThresholdMs <= 0L
+            }
+
+        if (percentCheck || timeCheck) {
+            val timestamp = System.currentTimeMillis()
+            GlobalData.historyEntries.update { history ->
+                history.appendEntry(TrackHistoryEntry(trackId, timestamp))
             }
         }
     }
