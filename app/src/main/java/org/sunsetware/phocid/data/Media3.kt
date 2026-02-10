@@ -205,6 +205,9 @@ fun getChildMediaItems(
                 type.collectionType?.sortingOptions[collectionSettings?.first]?.keys ?: emptyList()
             val collectionSortAscending = collectionSettings?.second != false
             when (type) {
+                LibraryScreenTabType.HISTORY -> {
+                    return emptyList()
+                }
                 LibraryScreenTabType.TRACKS -> {
                     return libraryIndex.tracks.values
                         .sorted(

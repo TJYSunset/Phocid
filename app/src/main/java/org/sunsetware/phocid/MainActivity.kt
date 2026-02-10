@@ -56,6 +56,7 @@ import org.sunsetware.phocid.data.PlayerManager
 import org.sunsetware.phocid.data.Preferences
 import org.sunsetware.phocid.data.RealizedPlaylist
 import org.sunsetware.phocid.data.Track
+import org.sunsetware.phocid.data.HistoryStartContext
 import org.sunsetware.phocid.data.getArtworkColor
 import org.sunsetware.phocid.data.sorted
 import org.sunsetware.phocid.globals.Strings
@@ -356,19 +357,23 @@ class MainActivity : ComponentActivity(), IntentLauncher {
             SHORTCUT_PLAYLIST -> {
                 scanJob.join()
 
-                val playlist =
-                    playlists()[
-                        intent.extras?.getString(SHORTCUT_PLAYLIST_EXTRA_KEY)?.let {
-                            try {
-                                UUID.fromString(it)
-                            } catch (_: Exception) {
-                                null
-                            }
-                        }]
+                val playlistKey =
+                    intent.extras?.getString(SHORTCUT_PLAYLIST_EXTRA_KEY)?.let {
+                        try {
+                            UUID.fromString(it)
+                        } catch (_: Exception) {
+                            null
+                        }
+                    }
+                val playlist = playlistKey?.let { playlists()[it] }
                 if (playlist == null) {
                     uiManager.toast(Strings[R.string.toast_shortcut_playlist_not_found])
                 } else {
-                    playerManager.setTracks(playlist.entries.mapNotNull { it.track }, null)
+                    playerManager.setTracks(
+                        playlist.entries.mapNotNull { it.track },
+                        null,
+                        HistoryStartContext.Playlist(playlistKey),
+                    )
                 }
             }
             ACTION_VIEW -> {

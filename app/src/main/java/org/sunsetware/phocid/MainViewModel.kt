@@ -76,6 +76,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                         preferences,
                         libraryIndex,
                         playlistManager,
+                        GlobalData.historyEntries.asStateFlow(),
                     )
                 playerManager.initialize(application.applicationContext)
                 _initialized.update { true }

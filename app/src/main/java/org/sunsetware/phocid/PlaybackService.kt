@@ -44,8 +44,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.sunsetware.phocid.data.DefaultShuffleMode
-import org.sunsetware.phocid.data.PlayHistoryEntry
 import org.sunsetware.phocid.data.RadioGenerator
+import org.sunsetware.phocid.data.TrackHistoryEntry
+import org.sunsetware.phocid.data.appendEntry
 import org.sunsetware.phocid.data.capturePlayerState
 import org.sunsetware.phocid.data.captureTransientState
 import org.sunsetware.phocid.data.getChildMediaItems
@@ -219,14 +220,10 @@ class PlaybackService : MediaLibraryService() {
                         val previousTrackId =
                             GlobalData.playerState.value.actualPlayQueue.getOrNull(lastIndex!!)
                         if (previousTrackId != null) {
-                            GlobalData.playHistory.update { history ->
-                                val entry = history[previousTrackId] ?: PlayHistoryEntry()
-                                history +
-                                    (previousTrackId to
-                                        entry.copy(
-                                            playCount = entry.playCount + 1,
-                                            lastPlayed = System.currentTimeMillis(),
-                                        ))
+                            GlobalData.historyEntries.update { history ->
+                                history.appendEntry(
+                                    TrackHistoryEntry(previousTrackId, System.currentTimeMillis())
+                                )
                             }
                         }
                     }
@@ -257,12 +254,12 @@ class PlaybackService : MediaLibraryService() {
                             val libraryIndex = GlobalData.libraryIndex.value
                             val seedTrack = libraryIndex.tracks[seedTrackId]
                             if (seedTrack != null) {
-                                val playHistory = GlobalData.playHistory.value
+                                val historyEntries = GlobalData.historyEntries.value
                                 val newTracks =
                                     RadioGenerator.generate(
                                         seedTrack,
                                         libraryIndex,
-                                        playHistory,
+                                        historyEntries,
                                         preferences.radioMixRatio,
                                         preferences.radioBatchSize,
                                     )

@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Album
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -65,21 +66,28 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.sunsetware.phocid.MainViewModel
 import org.sunsetware.phocid.R
+import org.sunsetware.phocid.UNKNOWN
 import org.sunsetware.phocid.data.Album
 import org.sunsetware.phocid.data.AlbumArtist
+import org.sunsetware.phocid.data.AlbumHistoryEntry
 import org.sunsetware.phocid.data.Artist
 import org.sunsetware.phocid.data.ArtworkColorPreference
 import org.sunsetware.phocid.data.Folder
 import org.sunsetware.phocid.data.Genre
 import org.sunsetware.phocid.data.HighResArtworkPreference
+import org.sunsetware.phocid.data.HistoryList
+import org.sunsetware.phocid.data.HistoryStartContext
 import org.sunsetware.phocid.data.InvalidTrack
 import org.sunsetware.phocid.data.LibraryIndex
 import org.sunsetware.phocid.data.PlaylistManager
+import org.sunsetware.phocid.data.PlaylistHistoryEntry
 import org.sunsetware.phocid.data.Preferences
 import org.sunsetware.phocid.data.RealizedPlaylist
 import org.sunsetware.phocid.data.SortingOption
 import org.sunsetware.phocid.data.TabStylePreference
 import org.sunsetware.phocid.data.Track
+import org.sunsetware.phocid.data.TrackHistoryEntry
+import org.sunsetware.phocid.data.albumKey
 import org.sunsetware.phocid.data.hint
 import org.sunsetware.phocid.data.hintBy
 import org.sunsetware.phocid.data.search
@@ -109,6 +117,7 @@ import org.sunsetware.phocid.ui.views.playlistCollectionMultiSelectMenuItems
 import org.sunsetware.phocid.ui.views.trackMenuItemsLibrary
 import org.sunsetware.phocid.utils.coerceInOrMin
 import org.sunsetware.phocid.utils.combine
+import org.sunsetware.phocid.utils.trimAndNormalize
 
 @Immutable
 data class LibraryScreenHomeViewItem(
@@ -136,40 +145,68 @@ data class LibraryScreenHomeViewItem(
     }
 }
 
+@Immutable
+private data class HistoryItemsInput(
+    val libraryIndex: LibraryIndex,
+    val playlists: Map<UUID, RealizedPlaylist>,
+    val historyEntries: HistoryList,
+)
+
 class LibraryScreenHomeViewState(
     coroutineScope: CoroutineScope,
     preferences: StateFlow<Preferences>,
     libraryIndex: StateFlow<LibraryIndex>,
     playlistManager: PlaylistManager,
+    historyEntries: StateFlow<HistoryList>,
     searchQuery: StateFlow<String>,
 ) : AutoCloseable {
     val pagerState = DefaultPagerState { preferences.value.tabs.size }
     val tabStates =
         LibraryScreenTabType.entries.associateWith { tabType ->
             val items =
-                if (tabType != LibraryScreenTabType.PLAYLISTS) {
-                    preferences.combine(
-                        coroutineScope,
-                        libraryIndex,
-                        searchQuery,
-                        transform =
-                            when (tabType) {
-                                LibraryScreenTabType.TRACKS -> ::trackItems
-                                LibraryScreenTabType.ALBUMS -> ::albumItems
-                                LibraryScreenTabType.ARTISTS -> ::artistItems
-                                LibraryScreenTabType.ALBUM_ARTISTS -> ::albumArtistItems
-                                LibraryScreenTabType.GENRES -> ::genreItems
-                                LibraryScreenTabType.FOLDERS -> ::folderItems
-                                LibraryScreenTabType.PLAYLISTS -> throw Error() // Impossible
-                            },
-                    )
-                } else {
-                    preferences.combine(
-                        coroutineScope,
-                        playlistManager.playlists,
-                        searchQuery,
-                        transform = ::playlistItems,
-                    )
+                when (tabType) {
+                    LibraryScreenTabType.PLAYLISTS ->
+                        preferences.combine(
+                            coroutineScope,
+                            playlistManager.playlists,
+                            searchQuery,
+                            transform = ::playlistItems,
+                        )
+                    LibraryScreenTabType.HISTORY ->
+                        preferences
+                            .combine(
+                                coroutineScope,
+                                libraryIndex,
+                                playlistManager.playlists,
+                                historyEntries,
+                            ) { _, library, playlists, history ->
+                                HistoryItemsInput(library, playlists, history)
+                            }
+                            .combine(coroutineScope, searchQuery) { input, query ->
+                                historyItems(
+                                    input.libraryIndex,
+                                    input.playlists,
+                                    input.historyEntries,
+                                    query,
+                                )
+                            }
+                    else ->
+                        preferences.combine(
+                            coroutineScope,
+                            libraryIndex,
+                            searchQuery,
+                            transform =
+                                when (tabType) {
+                                    LibraryScreenTabType.TRACKS -> ::trackItems
+                                    LibraryScreenTabType.ALBUMS -> ::albumItems
+                                    LibraryScreenTabType.ARTISTS -> ::artistItems
+                                    LibraryScreenTabType.ALBUM_ARTISTS -> ::albumArtistItems
+                                    LibraryScreenTabType.GENRES -> ::genreItems
+                                    LibraryScreenTabType.FOLDERS -> ::folderItems
+                                    LibraryScreenTabType.PLAYLISTS -> throw Error()
+                                    LibraryScreenTabType.HISTORY -> throw Error()
+                                },
+                        )
                 }
 
             LibraryScreenHomeViewTabState(MultiSelectState(coroutineScope, items))
@@ -232,7 +269,7 @@ class LibraryScreenHomeViewState(
                         { listOf(track) + others.flatMap { it.tracks() } },
                         viewModel.playerManager,
                         viewModel.uiManager,
-                        continuation,
+                        continuation = continuation,
                     )
                 },
             ) { viewModel, onOpenMenu ->
@@ -241,7 +278,7 @@ class LibraryScreenHomeViewState(
                     index,
                     viewModel.playerManager,
                     viewModel.uiManager,
-                    onOpenMenu,
+                    onOpenMenu = onOpenMenu,
                 )
             }
         }
@@ -269,14 +306,20 @@ class LibraryScreenHomeViewState(
                 artwork = Artwork.Track(album.tracks.firstOrNull() ?: InvalidTrack),
                 tracks = { album.tracks },
                 menuItems = {
-                    collectionMenuItems({ album.tracks }, it.playerManager, it.uiManager)
+                    collectionMenuItems(
+                        { album.tracks },
+                        it.playerManager,
+                        it.uiManager,
+                        historySource = HistoryStartContext.Album(key),
+                    )
                 },
                 multiSelectMenuItems = { others, viewModel, continuation ->
                     collectionMenuItems(
                         { album.tracks + others.flatMap { it.tracks() } },
                         viewModel.playerManager,
                         viewModel.uiManager,
-                        continuation,
+                        historySource = HistoryStartContext.Album(key),
+                        continuation = continuation,
                     )
                 },
             ) { viewModel, _ ->
@@ -312,7 +355,7 @@ class LibraryScreenHomeViewState(
                         { artist.tracks + others.flatMap { it.tracks() } },
                         viewModel.playerManager,
                         viewModel.uiManager,
-                        continuation,
+                        continuation = continuation,
                     )
                 },
             ) { viewModel, _ ->
@@ -348,7 +391,7 @@ class LibraryScreenHomeViewState(
                         { albumArtist.tracks + others.flatMap { it.tracks() } },
                         viewModel.playerManager,
                         viewModel.uiManager,
-                        continuation,
+                        continuation = continuation,
                     )
                 },
             ) { viewModel, _ ->
@@ -384,7 +427,7 @@ class LibraryScreenHomeViewState(
                         { genre.tracks + others.flatMap { it.tracks() } },
                         viewModel.playerManager,
                         viewModel.uiManager,
-                        continuation,
+                        continuation = continuation,
                     )
                 },
             ) { viewModel, _ ->
@@ -447,7 +490,7 @@ class LibraryScreenHomeViewState(
                                 },
                                 viewModel.playerManager,
                                 viewModel.uiManager,
-                                continuation,
+                                continuation = continuation,
                             )
                         },
                     ) { viewModel, _ ->
@@ -477,7 +520,7 @@ class LibraryScreenHomeViewState(
                                 { listOf(track) + others.flatMap { it.tracks() } },
                                 viewModel.playerManager,
                                 viewModel.uiManager,
-                                continuation,
+                                continuation = continuation,
                             )
                         },
                     ) { viewModel, onOpenMenu ->
@@ -486,7 +529,7 @@ class LibraryScreenHomeViewState(
                             index,
                             viewModel.playerManager,
                             viewModel.uiManager,
-                            onOpenMenu,
+                            onOpenMenu = onOpenMenu,
                         )
                     }
             }
@@ -519,7 +562,12 @@ class LibraryScreenHomeViewState(
                         ?: Artwork.Track(playlist.entries.firstOrNull()?.track ?: InvalidTrack),
                 tracks = { playlist.validTracks },
                 menuItems = {
-                    collectionMenuItems({ playlist.validTracks }, it.playerManager, it.uiManager) +
+                    collectionMenuItems(
+                        { playlist.validTracks },
+                        it.playerManager,
+                        it.uiManager,
+                        historySource = HistoryStartContext.Playlist(key),
+                    ) +
                         MenuItem.Divider +
                         playlistCollectionMenuItems(
                             key,
@@ -533,7 +581,8 @@ class LibraryScreenHomeViewState(
                         { playlist.validTracks + others.flatMap { it.tracks() } },
                         viewModel.playerManager,
                         viewModel.uiManager,
-                        continuation,
+                        historySource = HistoryStartContext.Playlist(key),
+                        continuation = continuation,
                     ) +
                         playlistCollectionMultiSelectMenuItems(
                             { setOf(key) + others.map { it.key as UUID } },
@@ -545,6 +594,176 @@ class LibraryScreenHomeViewState(
                 viewModel.uiManager.openPlaylistCollectionView(key)
             }
         }
+    }
+
+    private fun historyItems(
+        libraryIndex: LibraryIndex,
+        playlists: Map<UUID, RealizedPlaylist>,
+        historyEntries: HistoryList,
+        searchQuery: String,
+    ): List<LibraryScreenHomeViewItem> {
+        val normalizedQuery = searchQuery.trimAndNormalize().lowercase()
+        val items =
+            historyEntries.asReversed().mapNotNull { entry ->
+                when (entry) {
+                    is TrackHistoryEntry -> {
+                        val track = libraryIndex.tracks[entry.trackId]
+                        val title = track?.displayTitle ?: UNKNOWN
+                        val subtitle = track?.displayArtistWithAlbum ?: UNKNOWN
+                        val matchesQuery =
+                            normalizedQuery.isEmpty() ||
+                                listOf(title, subtitle).any {
+                                    it.trimAndNormalize().lowercase().contains(normalizedQuery)
+                                }
+                        if (!matchesQuery) return@mapNotNull null
+                        LibraryScreenHomeViewItem(
+                            key = "history-track-${entry.trackId}-${entry.timestamp}",
+                            title = title,
+                            subtitle = subtitle,
+                            scrollHint = title.firstOrNull()?.toString() ?: "",
+                            artwork = Artwork.Track(track ?: InvalidTrack),
+                            tracks = { listOfNotNull(track) },
+                            menuItems = {
+                                if (track == null) emptyList()
+                                else
+                                    trackMenuItemsLibrary(
+                                        track,
+                                        { listOf(track) to 0 },
+                                        it.playerManager,
+                                        it.uiManager,
+                                    )
+                            },
+                            multiSelectMenuItems = { others, viewModel, continuation ->
+                                if (track == null) emptyList()
+                                else
+                                    collectionMenuItems(
+                                        { listOf(track) + others.flatMap { it.tracks() } },
+                                        viewModel.playerManager,
+                                        viewModel.uiManager,
+                                        continuation = continuation,
+                                    )
+                            },
+                        ) { viewModel, onOpenMenu ->
+                            if (track != null) {
+                                viewModel.preferences.value.libraryTrackClickAction
+                                    .invokeOrOpenMenu(
+                                        listOf(track),
+                                        0,
+                                        viewModel.playerManager,
+                                        viewModel.uiManager,
+                                        onOpenMenu = onOpenMenu,
+                                    )
+                            }
+                        }
+                    }
+                    is AlbumHistoryEntry -> {
+                        val albumKey = org.sunsetware.phocid.data.AlbumKey(entry.albumKey)
+                        val album = albumKey?.let { libraryIndex.albums[it] }
+                        val title = album?.name ?: UNKNOWN
+                        val subtitle =
+                            album?.displayAlbumArtist
+                                ?: Strings[R.string.tab_albums]
+                        val matchesQuery =
+                            normalizedQuery.isEmpty() ||
+                                listOf(title, subtitle).any {
+                                    it.trimAndNormalize().lowercase().contains(normalizedQuery)
+                                }
+                        if (!matchesQuery) return@mapNotNull null
+                        val artworkTrack = album?.tracks?.firstOrNull() ?: InvalidTrack
+                        LibraryScreenHomeViewItem(
+                            key = "history-album-${entry.albumKey}-${entry.timestamp}",
+                            title = title,
+                            subtitle = subtitle,
+                            scrollHint = title.firstOrNull()?.toString() ?: "",
+                            artwork = Artwork.Track(artworkTrack),
+                            tracks = { album?.tracks ?: emptyList() },
+                            menuItems = {
+                                if (album == null) emptyList()
+                                else
+                                    collectionMenuItems(
+                                        { album.tracks },
+                                        it.playerManager,
+                                        it.uiManager,
+                                        historySource = HistoryStartContext.Album(album.albumKey),
+                                    )
+                            },
+                            multiSelectMenuItems = { others, viewModel, continuation ->
+                                if (album == null) emptyList()
+                                else
+                                    collectionMenuItems(
+                                        { album.tracks + others.flatMap { it.tracks() } },
+                                        viewModel.playerManager,
+                                        viewModel.uiManager,
+                                        historySource = HistoryStartContext.Album(album.albumKey),
+                                        continuation = continuation,
+                                    )
+                            },
+                        ) { viewModel, _ ->
+                            if (albumKey != null) {
+                                viewModel.uiManager.openAlbumCollectionView(albumKey)
+                            }
+                        }
+                    }
+                    is PlaylistHistoryEntry -> {
+                        val playlist = playlists[entry.playlistKey]
+                        val title = playlist?.displayName ?: UNKNOWN
+                        val subtitle =
+                            playlist?.displayStatistics
+                                ?: Strings[R.string.tab_playlists]
+                        val matchesQuery =
+                            normalizedQuery.isEmpty() ||
+                                listOf(title, subtitle).any {
+                                    it.trimAndNormalize().lowercase().contains(normalizedQuery)
+                                }
+                        if (!matchesQuery) return@mapNotNull null
+                        val artwork =
+                            playlist?.specialType?.let { Artwork.Icon(it.icon, it.color) }
+                                ?: Artwork.Track(
+                                    playlist?.entries?.firstOrNull()?.track ?: InvalidTrack
+                                )
+                        LibraryScreenHomeViewItem(
+                            key = "history-playlist-${entry.playlistKey}-${entry.timestamp}",
+                            title = title,
+                            subtitle = subtitle,
+                            scrollHint = title.firstOrNull()?.toString() ?: "",
+                            artwork = artwork,
+                            tracks = { playlist?.validTracks ?: emptyList() },
+                            menuItems = {
+                                if (playlist == null) emptyList()
+                                else
+                                    collectionMenuItems(
+                                        { playlist.validTracks },
+                                        it.playerManager,
+                                        it.uiManager,
+                                        historySource =
+                                            HistoryStartContext.Playlist(entry.playlistKey),
+                                    )
+                            },
+                            multiSelectMenuItems = { others, viewModel, continuation ->
+                                if (playlist == null) emptyList()
+                                else
+                                    collectionMenuItems(
+                                        {
+                                            playlist.validTracks +
+                                                others.flatMap { it.tracks() }
+                                        },
+                                        viewModel.playerManager,
+                                        viewModel.uiManager,
+                                        historySource =
+                                            HistoryStartContext.Playlist(entry.playlistKey),
+                                        continuation = continuation,
+                                    )
+                            },
+                        ) { viewModel, _ ->
+                            if (playlist != null) {
+                                viewModel.uiManager.openPlaylistCollectionView(entry.playlistKey)
+                            }
+                        }
+                    }
+                }
+            }
+
+        return items
     }
 }
 
@@ -873,5 +1092,13 @@ enum class LibraryScreenTabType(
         LibraryScreenCollectionType.FOLDER,
         Folder.SortingOptions,
         Icons.Outlined.Folder,
+    ),
+    HISTORY(
+        R.string.tab_history,
+        "history",
+        MediaMetadata.MEDIA_TYPE_MIXED,
+        null,
+        mapOf("Recent" to SortingOption(R.string.sorting_date_added, emptyList())),
+        Icons.Outlined.History,
     ),
 }

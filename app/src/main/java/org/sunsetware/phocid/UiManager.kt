@@ -36,6 +36,7 @@ import org.sunsetware.phocid.data.PersistentUiState
 import org.sunsetware.phocid.data.PlayerTimerSettings
 import org.sunsetware.phocid.data.PlaylistManager
 import org.sunsetware.phocid.data.Preferences
+import org.sunsetware.phocid.data.HistoryList
 import org.sunsetware.phocid.data.SaveManager
 import org.sunsetware.phocid.data.Track
 import org.sunsetware.phocid.data.loadCbor
@@ -78,6 +79,7 @@ class UiManager(
     private val preferences: StateFlow<Preferences>,
     private val libraryIndex: StateFlow<LibraryIndex>,
     private val playlistManager: PlaylistManager,
+    private val historyEntries: StateFlow<HistoryList>,
     var intentLauncher: WeakReference<IntentLauncher> = WeakReference<IntentLauncher>(null),
 ) : AutoCloseable {
     private val _topLevelScreenStack = MutableStateFlow(emptyList<TopLevelScreen>())
@@ -96,6 +98,7 @@ class UiManager(
             preferences,
             libraryIndex,
             playlistManager,
+            historyEntries,
             libraryScreenSearchQuery,
         )
 

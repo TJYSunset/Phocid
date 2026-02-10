@@ -1,15 +1,18 @@
 package org.sunsetware.phocid.data
 
 import org.sunsetware.phocid.utils.Random
+import org.sunsetware.phocid.data.HistoryList
+import org.sunsetware.phocid.data.trackPlayCounts
 
 object RadioGenerator {
     fun generate(
         seedTrack: Track,
         libraryIndex: LibraryIndex,
-        playHistory: PlayHistory,
+        historyEntries: HistoryList,
         mixRatio: Float,
         batchSize: Int,
     ): List<Track> {
+        val playCounts = historyEntries.trackPlayCounts()
         val allTracks = libraryIndex.tracks.values.filter { it.id != seedTrack.id }
         if (allTracks.isEmpty()) return emptyList()
 
@@ -27,12 +30,12 @@ object RadioGenerator {
         val contextualTopTracks =
             if (relatedTracks.isNotEmpty()) {
                 relatedTracks
-                    .filter { playHistory.containsKey(it.id) }
-                    .sortedByDescending { playHistory[it.id]?.playCount ?: 0 }
+                    .filter { playCounts.containsKey(it.id) }
+                    .sortedByDescending { playCounts[it.id] ?: 0 }
             } else {
                 allTracks
-                    .filter { playHistory.containsKey(it.id) }
-                    .sortedByDescending { playHistory[it.id]?.playCount ?: 0 }
+                    .filter { playCounts.containsKey(it.id) }
+                    .sortedByDescending { playCounts[it.id] ?: 0 }
             }
 
         val topPlayedCount = (batchSize * mixRatio).toInt().coerceAtMost(batchSize)
@@ -59,8 +62,8 @@ object RadioGenerator {
         if (result.size < batchSize) {
             val globalTop =
                 allTracks
-                    .filter { playHistory.containsKey(it.id) && !usedIds.contains(it.id) }
-                    .sortedByDescending { playHistory[it.id]?.playCount ?: 0 }
+                    .filter { playCounts.containsKey(it.id) && !usedIds.contains(it.id) }
+                    .sortedByDescending { playCounts[it.id] ?: 0 }
             for (track in globalTop) {
                 if (result.size >= batchSize) break
                 if (usedIds.add(track.id)) {

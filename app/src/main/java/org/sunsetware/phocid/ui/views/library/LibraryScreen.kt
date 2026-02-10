@@ -110,12 +110,14 @@ import org.sunsetware.phocid.MainViewModel
 import org.sunsetware.phocid.R
 import org.sunsetware.phocid.TNUM
 import org.sunsetware.phocid.data.ArtworkColorPreference
+import org.sunsetware.phocid.data.HistoryStartContext
 import org.sunsetware.phocid.data.HighResArtworkPreference
 import org.sunsetware.phocid.data.InvalidTrack
 import org.sunsetware.phocid.data.LibraryIndex
 import org.sunsetware.phocid.data.PlayerManager
 import org.sunsetware.phocid.data.SortingOption
 import org.sunsetware.phocid.data.sorted
+import org.sunsetware.phocid.data.albumKey
 import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.ui.components.AnimatedForwardBackwardTransition
 import org.sunsetware.phocid.ui.components.Artwork
@@ -336,6 +338,16 @@ fun LibraryScreen(
                 searchQuery = homeSearchQueryBuffer,
                 onSearchQueryChange = { query -> homeSearchQueryBuffer = query },
                 onPlayAll = {
+                    val historySource =
+                        when (val info = collectionInfos.lastOrNull()) {
+                            is AlbumCollectionViewInfo ->
+                                HistoryStartContext.Album(info.album.albumKey)
+                            is AlbumSliceCollectionViewInfo ->
+                                HistoryStartContext.Album(info.albumSlice.album.albumKey)
+                            is PlaylistCollectionViewInfo ->
+                                HistoryStartContext.Playlist(info.key)
+                            else -> null
+                        }
                     playerManager.setTracks(
                         currentCollection?.multiSelectState?.items?.value?.flatMap {
                             it.value.info.playTracks
@@ -350,6 +362,7 @@ fun LibraryScreen(
                                 )
                             },
                         null,
+                        historySource = historySource,
                     )
                 },
                 selectedCount = currentSelectedCount,

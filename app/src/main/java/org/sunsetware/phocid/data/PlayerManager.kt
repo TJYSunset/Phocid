@@ -145,7 +145,26 @@ class PlayerManager(
         mediaController.play()
     }
 
-    fun setTracks(tracks: List<Track>, index: Int?) {
+    fun setTracks(
+        tracks: List<Track>,
+        index: Int?,
+        historySource: HistoryStartContext? = null,
+    ) {
+        if (historySource != null && tracks.isNotEmpty()) {
+            val timestamp = System.currentTimeMillis()
+            GlobalData.historyEntries.update { history ->
+                when (historySource) {
+                    is HistoryStartContext.Album ->
+                        history.appendEntry(
+                            AlbumHistoryEntry(historySource.albumKey.toString(), timestamp)
+                        )
+                    is HistoryStartContext.Playlist ->
+                        history.appendEntry(
+                            PlaylistHistoryEntry(historySource.playlistKey, timestamp)
+                        )
+                }
+            }
+        }
         GlobalData.radioSeedTrackId.update { null }
         if (index != null)
             mediaController.setMediaItems(tracks.map { it.getMediaItem(null) }, index, 0)
@@ -225,12 +244,12 @@ class PlayerManager(
     fun startRadio(seedTrack: Track) {
         val preferences = GlobalData.preferences.value
         val libraryIndex = GlobalData.libraryIndex.value
-        val playHistory = GlobalData.playHistory.value
+        val historyEntries = GlobalData.historyEntries.value
         val radioTracks =
             RadioGenerator.generate(
                 seedTrack,
                 libraryIndex,
-                playHistory,
+                historyEntries,
                 preferences.radioMixRatio,
                 preferences.radioBatchSize,
             )

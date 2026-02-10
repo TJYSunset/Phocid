@@ -28,6 +28,7 @@ import org.sunsetware.phocid.data.PlayerManager
 import org.sunsetware.phocid.data.SpecialPlaylistLookup
 import org.sunsetware.phocid.data.Track
 import org.sunsetware.phocid.data.albumKey
+import org.sunsetware.phocid.data.HistoryStartContext
 import org.sunsetware.phocid.data.playlistShortcut
 import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.ui.views.library.LibraryTrackClickAction
@@ -118,11 +119,12 @@ inline fun trackMenuItemsLibrary(
     crossinline playContext: () -> Pair<List<Track>, Int>,
     playerManager: PlayerManager,
     uiManager: UiManager,
+    historySource: HistoryStartContext? = null,
 ): List<MenuItem> {
     return listOf(LibraryTrackClickAction.PLAY_ALL, LibraryTrackClickAction.PLAY).map {
         MenuItem.Button(Strings[it.stringId], it.icon!!) {
             val (tracks, index) = playContext()
-            it.invoke(tracks, index, playerManager, uiManager)
+            it.invoke(tracks, index, playerManager, uiManager, historySource)
         }
     } + trackMenuItems(track, playerManager, uiManager)
 }
@@ -163,11 +165,12 @@ inline fun collectionMenuItems(
     crossinline tracks: () -> List<Track>,
     playerManager: PlayerManager,
     uiManager: UiManager,
+    historySource: HistoryStartContext? = null,
     crossinline continuation: () -> Unit = {},
 ): List<MenuItem.Button> {
     return listOf(
         MenuItem.Button(Strings[R.string.track_play], Icons.Filled.PlayArrow) {
-            playerManager.setTracks(tracks(), null)
+            playerManager.setTracks(tracks(), null, historySource)
             continuation()
         }
     ) + collectionMenuItemsWithoutPlay(tracks, playerManager, uiManager, continuation)

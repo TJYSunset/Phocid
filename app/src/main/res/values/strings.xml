@@ -324,6 +324,7 @@
     <string name="tab_artists">Artists</string>
     <string name="tab_folders">Folders</string>
     <string name="tab_genres">Genres</string>
+    <string name="tab_history">History</string>
     <string name="tab_playlists">Playlists</string>
     <string name="tab_tracks">Tracks</string>
     <string name="toast_cant_open_system_equalizer">Can’t open system equalizer</string>

@@ -55,6 +55,7 @@ import org.sunsetware.phocid.data.Artist
 import org.sunsetware.phocid.data.ArtistSlice
 import org.sunsetware.phocid.data.Folder
 import org.sunsetware.phocid.data.Genre
+import org.sunsetware.phocid.data.HistoryStartContext
 import org.sunsetware.phocid.data.InvalidTrack
 import org.sunsetware.phocid.data.LibraryIndex
 import org.sunsetware.phocid.data.Preferences
@@ -127,6 +128,7 @@ sealed class LibraryScreenCollectionViewItemInfo :
         override val title: String,
         override val subtitle: String,
         override val lead: LibraryScreenCollectionViewItemLead,
+        val historySource: HistoryStartContext? = null,
     ) : LibraryScreenCollectionViewItemInfo() {
         override val sortable
             get() = track
@@ -154,6 +156,7 @@ sealed class LibraryScreenCollectionViewItemInfo :
                 items.take(index).sumOf { it.playTracks.size },
                 viewModel.playerManager,
                 viewModel.uiManager,
+                historySource,
                 onOpenMenu,
             )
         }
@@ -171,6 +174,7 @@ sealed class LibraryScreenCollectionViewItemInfo :
                 },
                 viewModel.playerManager,
                 viewModel.uiManager,
+                historySource,
             )
         }
 
@@ -183,7 +187,7 @@ sealed class LibraryScreenCollectionViewItemInfo :
                 { multiSelectTracks + others.flatMap { it.multiSelectTracks } },
                 viewModel.playerManager,
                 viewModel.uiManager,
-                continuation,
+                continuation = continuation,
             )
         }
     }
@@ -241,7 +245,7 @@ sealed class LibraryScreenCollectionViewItemInfo :
                 { multiSelectTracks + others.flatMap { it.multiSelectTracks } },
                 viewModel.playerManager,
                 viewModel.uiManager,
-                continuation,
+                continuation = continuation,
             )
         }
     }
@@ -280,6 +284,7 @@ sealed class LibraryScreenCollectionViewItemInfo :
                 items.take(index).sumOf { it.playTracks.size },
                 viewModel.playerManager,
                 viewModel.uiManager,
+                HistoryStartContext.Playlist(playlistKey),
                 onOpenMenu,
             )
         }
@@ -298,6 +303,7 @@ sealed class LibraryScreenCollectionViewItemInfo :
                     },
                     viewModel.playerManager,
                     viewModel.uiManager,
+                    HistoryStartContext.Playlist(playlistKey),
                 )
         }
 
@@ -310,7 +316,7 @@ sealed class LibraryScreenCollectionViewItemInfo :
                 { multiSelectTracks + others.flatMap { it.multiSelectTracks } },
                 viewModel.playerManager,
                 viewModel.uiManager,
-                continuation,
+                continuation = continuation,
             ) +
                 playlistTrackMenuItems(
                     playlistKey,
@@ -542,6 +548,7 @@ data class AlbumCollectionViewInfo(val album: Album) : CollectionViewInfo() {
                     title = track.displayTitle,
                     subtitle = Strings.separate(track.displayArtist, track.duration.format()),
                     lead = LibraryScreenCollectionViewItemLead.Text(track.displayNumber),
+                    historySource = HistoryStartContext.Album(album.albumKey),
                 )
             }
 
@@ -820,6 +827,7 @@ data class AlbumSliceCollectionViewInfo(val albumSlice: AlbumSlice) : Collection
                     title = track.displayTitle,
                     subtitle = track.duration.format(),
                     lead = LibraryScreenCollectionViewItemLead.Text(track.displayNumber),
+                    historySource = HistoryStartContext.Album(albumSlice.album.albumKey),
                 )
             }
 

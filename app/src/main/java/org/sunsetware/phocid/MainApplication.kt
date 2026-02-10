@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.sunsetware.phocid.data.LibraryIndex
-import org.sunsetware.phocid.data.PlayHistory
+import org.sunsetware.phocid.data.HistoryList
 import org.sunsetware.phocid.data.PlayerState
 import org.sunsetware.phocid.data.PlaylistManager
 import org.sunsetware.phocid.data.Preferences
@@ -65,10 +65,10 @@ class MainApplication : Application() {
                         loadCbor<PlayerState>(context, PLAYER_STATE_FILE_NAME, isCache = false)
                             ?: PlayerState()
                     )
-                playHistory =
+                historyEntries =
                     MutableStateFlow(
-                        loadCbor<PlayHistory>(context, PLAY_HISTORY_FILE_NAME, isCache = false)
-                            ?: emptyMap()
+                        loadCbor<HistoryList>(context, HISTORY_FILE_NAME, isCache = false)
+                            ?: emptyList()
                     )
 
                 // LibraryIndex() is expensive, so extracting only the relevant
@@ -103,7 +103,7 @@ class MainApplication : Application() {
                 saveManagers +=
                     SaveManager(context, ioScope, playerState, PLAYER_STATE_FILE_NAME, false)
                 saveManagers +=
-                    SaveManager(context, ioScope, playHistory, PLAY_HISTORY_FILE_NAME, false)
+                    SaveManager(context, ioScope, historyEntries, HISTORY_FILE_NAME, false)
 
                 defaultScope.launch {
                     playerState.onEach { MainAppWidget().updateAll(context) }.collect()
