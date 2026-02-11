@@ -162,6 +162,8 @@ class PlaylistEditScreen(private val playlistKey: UUID) : TopLevelScreen() {
                     lazyListState,
                     { (it + 1).toLocalizedString() },
                     preferences.alwaysShowHintOnScroll,
+                    alwaysVisible = preferences.alwaysShowScrollbar,
+                    width = preferences.scrollbarWidthDp.dp,
                 ) {
                     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
                         itemsIndexed(
@@ -303,12 +305,12 @@ class PlaylistEditScreenSortDialog(private val playlistKey: UUID) : Dialog() {
                     playlists[playlistKey]?.displayName
                 ),
             onConfirm = {
-                playlistManager.updatePlaylist(playlistKey) {
+                playlistManager.updatePlaylist(playlistKey) { playlist ->
                     val trackIndex =
                         viewModel.libraryIndex.value.tracks.values.associateBy { it.path }
-                    it.copy(
+                    playlist.copy(
                         entries =
-                            it.entries.sortedBy(
+                            playlist.entries.sortedBy(
                                 viewModel.preferences.value.sortCollator,
                                 Track.SortingOptions[activeSortingOptionId]!!.keys,
                                 sortAscending,

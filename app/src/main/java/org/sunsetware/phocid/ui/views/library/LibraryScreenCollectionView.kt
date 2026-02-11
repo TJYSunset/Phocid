@@ -915,6 +915,8 @@ fun LibraryScreenCollectionView(
                         ?.scrollHint
                 },
                 preferences.alwaysShowHintOnScroll,
+                alwaysVisible = preferences.alwaysShowScrollbar,
+                width = preferences.scrollbarWidthDp.dp,
             ) {
                 LazyColumn(state = tracksLazyListState, modifier = Modifier.fillMaxSize()) {
                     if (info.artwork != null && aspectRatio?.let { it < 3f / 2 } == true) {

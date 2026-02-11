@@ -142,8 +142,11 @@ import org.sunsetware.phocid.data.HighResArtworkPreference
 import org.sunsetware.phocid.data.LyricsDisplayPreference
 import org.sunsetware.phocid.data.PlayerManager
 import org.sunsetware.phocid.data.Preferences
+import org.sunsetware.phocid.data.QueueDensityPreference
 import org.sunsetware.phocid.data.ShapePreference
+import org.sunsetware.phocid.data.SwipeDirectionPreference
 import org.sunsetware.phocid.data.TabStylePreference
+import org.sunsetware.phocid.data.clampScrollbarWidthDp
 import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.ui.components.Scrollbar
 import org.sunsetware.phocid.ui.components.UtilityListItem
@@ -167,6 +170,7 @@ object PreferencesScreen : TopLevelScreen() {
 
     @Composable
     override fun Compose(viewModel: MainViewModel) {
+        val preferences by viewModel.preferences.collectAsStateWithLifecycle()
         Scaffold(
             topBar = {
                 key(MaterialTheme.colorScheme) {
@@ -188,7 +192,13 @@ object PreferencesScreen : TopLevelScreen() {
                 modifier = Modifier.fillMaxSize().padding(scaffoldPadding),
                 color = MaterialTheme.colorScheme.background,
             ) {
-                Scrollbar(lazyListState, { null }, false) {
+                Scrollbar(
+                    lazyListState,
+                    { null },
+                    false,
+                    alwaysVisible = preferences.alwaysShowScrollbar,
+                    width = preferences.scrollbarWidthDp.dp,
+                ) {
                     LazyColumn(state = lazyListState) {
                         items(pages) { page ->
                             UtilityListItemWithCustomSubtitle(
@@ -279,7 +289,13 @@ private class PreferencesSubscreen(private val page: Page) : TopLevelScreen() {
                 modifier = Modifier.fillMaxSize().padding(scaffoldPadding),
                 color = MaterialTheme.colorScheme.background,
             ) {
-                Scrollbar(lazyListState, { null }, false) {
+                Scrollbar(
+                    lazyListState,
+                    { null },
+                    false,
+                    alwaysVisible = preferences.alwaysShowScrollbar,
+                    width = preferences.scrollbarWidthDp.dp,
+                ) {
                     LazyColumn(state = lazyListState) {
                         items(page.items) { item ->
                             when (item) {
@@ -550,6 +566,28 @@ private val Interface =
                 value = { it.alwaysShowHintOnScroll },
                 onSetValue = { preferences, new -> preferences.copy(alwaysShowHintOnScroll = new) },
             ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_always_show_scrollbar] },
+                subtitle = { null },
+                icon = Icons.Filled.Commit,
+                value = { it.alwaysShowScrollbar },
+                onSetValue = { preferences, new -> preferences.copy(alwaysShowScrollbar = new) },
+            ),
+            Item.Slider(
+                title = { Strings[R.string.preferences_scrollbar_width] },
+                numberFormatter = {
+                    Strings[R.string.preferences_scrollbar_width_number].icuFormat(it)
+                },
+                icon = Icons.Filled.Commit,
+                value = { it.scrollbarWidthDp },
+                default = 4f,
+                min = 2f,
+                max = 16f,
+                steps = 16 - 2 - 1,
+                onSetValue = { preferences, new ->
+                    preferences.copy(scrollbarWidthDp = clampScrollbarWidthDp(new))
+                },
+            ),
             Item.TextInput(
                 title = { Strings[R.string.preferences_conjunction_symbol] },
                 subtitle = { Strings[R.string.preferences_conjunction_symbol_subtitle] },
@@ -692,6 +730,24 @@ private val NowPlaying =
                 icon = Icons.Filled.ClearAll,
                 value = { it.swipeToRemoveFromQueue },
                 onSetValue = { preferences, new -> preferences.copy(swipeToRemoveFromQueue = new) },
+            ),
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_queue_swipe_direction] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.Swipe,
+                options = SwipeDirectionPreference.entries,
+                value = { it.swipeToRemoveDirection },
+                onSetValue = { preferences, new ->
+                    preferences.copy(swipeToRemoveDirection = new)
+                },
+            ),
+            Item.SingleChoice(
+                title = { Strings[R.string.preferences_queue_density] },
+                itemName = { Strings[it.stringId] },
+                icon = Icons.Filled.Tune,
+                options = QueueDensityPreference.entries,
+                value = { it.queueDensity },
+                onSetValue = { preferences, new -> preferences.copy(queueDensity = new) },
             ),
             Item.SingleChoice(
                 title = { Strings[R.string.preferences_lyrics_display] },

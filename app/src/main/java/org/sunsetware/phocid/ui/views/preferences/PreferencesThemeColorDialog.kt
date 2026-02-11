@@ -123,6 +123,21 @@ class PreferencesThemeColorDialog() : Dialog() {
                         viewModel.updatePreferences { it.copy(coloredGlobalTheme = checked) }
                     },
                 )
+                UtilityListHeader(Strings[R.string.preferences_player_theme_sections])
+                UtilitySwitchListItem(
+                    title = Strings[R.string.preferences_colored_player_queue],
+                    checked = preferences.coloredPlayerQueue,
+                    onCheckedChange = { checked ->
+                        viewModel.updatePreferences { it.copy(coloredPlayerQueue = checked) }
+                    },
+                )
+                UtilitySwitchListItem(
+                    title = Strings[R.string.preferences_colored_player_controls],
+                    checked = preferences.coloredPlayerControls,
+                    onCheckedChange = { checked ->
+                        viewModel.updatePreferences { it.copy(coloredPlayerControls = checked) }
+                    },
+                )
             }
         }
     }

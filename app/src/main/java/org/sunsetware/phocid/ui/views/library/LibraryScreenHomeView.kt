@@ -820,6 +820,8 @@ fun LibraryScreenHomeView(
                         cardShape = preferences.shapePreference.cardShape,
                         coloredCards = preferences.coloredCards,
                         alwaysShowHintOnScroll = preferences.alwaysShowHintOnScroll,
+                        alwaysShowScrollbar = preferences.alwaysShowScrollbar,
+                        scrollbarWidthDp = preferences.scrollbarWidthDp,
                     )
                 } else {
                     // Not providing a composable will cause internal crash in pager
@@ -929,6 +931,8 @@ private fun LibraryList(
     cardShape: Shape,
     coloredCards: Boolean,
     alwaysShowHintOnScroll: Boolean,
+    alwaysShowScrollbar: Boolean,
+    scrollbarWidthDp: Float,
 ) {
     val viewModel = viewModel<MainViewModel>()
     val haptics = LocalHapticFeedback.current
@@ -936,7 +940,13 @@ private fun LibraryList(
     if (items.isEmpty()) {
         EmptyListIndicator()
     } else if (gridSize == 0) {
-        Scrollbar(gridState, { items.getOrNull(it)?.value?.scrollHint }, alwaysShowHintOnScroll) {
+        Scrollbar(
+            gridState,
+            { items.getOrNull(it)?.value?.scrollHint },
+            alwaysShowHintOnScroll,
+            alwaysVisible = alwaysShowScrollbar,
+            width = scrollbarWidthDp.dp,
+        ) {
             LazyVerticalGrid(
                 state = gridState,
                 columns = GridCells.Fixed(1),
@@ -975,7 +985,13 @@ private fun LibraryList(
             }
         }
     } else {
-        Scrollbar(gridState, { items.getOrNull(it)?.value?.scrollHint }, alwaysShowHintOnScroll) {
+        Scrollbar(
+            gridState,
+            { items.getOrNull(it)?.value?.scrollHint },
+            alwaysShowHintOnScroll,
+            alwaysVisible = alwaysShowScrollbar,
+            width = scrollbarWidthDp.dp,
+        ) {
             LazyVerticalGrid(
                 state = gridState,
                 columns = GridCells.Fixed(gridSize),
