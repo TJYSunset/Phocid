@@ -71,8 +71,8 @@ class PreferencesFolderPickerDialog(
         ) {
             Column {
                 Row(
-                    verticalAlignment = Alignment.Companion.CenterVertically,
-                    modifier = Modifier.Companion.padding(bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 16.dp),
                 ) {
                     IconButton(
                         onClick = {
@@ -80,7 +80,7 @@ class PreferencesFolderPickerDialog(
                             lazyListState.requestScrollToItem(0)
                         },
                         enabled = currentPath.isNotEmpty(),
-                        modifier = Modifier.Companion.padding(start = 12.dp, end = 4.dp),
+                        modifier = Modifier.padding(start = 12.dp, end = 4.dp),
                     ) {
                         Icon(
                             Icons.Filled.ArrowUpward,
@@ -90,15 +90,15 @@ class PreferencesFolderPickerDialog(
                     SingleLineText(
                         FilenameUtils.getName(currentPath).takeIf { it.isNotEmpty() } ?: "/",
                         style = Typography.bodyLarge,
-                        overflow = TextOverflow.Companion.Ellipsis,
-                        modifier = Modifier.Companion.padding(end = 16.dp),
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(end = 16.dp),
                     )
                 }
                 if (currentFolder?.let { it.childFolders.size + it.childTracks.size > 0 } == true) {
                     LazyColumn(
                         state = lazyListState,
                         modifier =
-                            Modifier.Companion.background(
+                            Modifier.background(
                                     MaterialTheme.colorScheme.surfaceContainer
                                 )
                                 .fillMaxHeight(),
@@ -110,11 +110,11 @@ class PreferencesFolderPickerDialog(
                                     Icon(
                                         Icons.Filled.Folder,
                                         null,
-                                        modifier = Modifier.Companion.padding(end = 16.dp),
+                                        modifier = Modifier.padding(end = 16.dp),
                                     )
                                 },
                                 modifier =
-                                    Modifier.Companion.clickable {
+                                    Modifier.clickable {
                                         currentPath = childFolder
                                         lazyListState.requestScrollToItem(0)
                                     },
@@ -127,7 +127,7 @@ class PreferencesFolderPickerDialog(
                                     Icon(
                                         Icons.Filled.MusicNote,
                                         null,
-                                        modifier = Modifier.Companion.padding(end = 16.dp),
+                                        modifier = Modifier.padding(end = 16.dp),
                                     )
                                 },
                             )

@@ -1,5 +1,6 @@
 package org.sunsetware.phocid.ui.views.player
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -67,7 +68,7 @@ sealed class PlayerScreenQueue {
         currentTrackIndex: Int,
         lazyListState: LazyListState,
         trackOverflowMenuItems: (Track, Int) -> List<MenuItem>,
-        dragModifier: Modifier,
+        @SuppressLint("ModifierParameter") dragModifier: Modifier,
         nestedScrollConnection: NestedScrollConnection,
         containerColor: Color,
         contentColor: Color,
@@ -111,7 +112,7 @@ class PlayerScreenQueueDefaultBase(
         currentTrackIndex: Int,
         lazyListState: LazyListState,
         trackOverflowMenuItems: (Track, Int) -> List<MenuItem>,
-        dragModifier: Modifier,
+        @SuppressLint("ModifierParameter") dragModifier: Modifier,
         nestedScrollConnection: NestedScrollConnection,
         containerColor: Color,
         contentColor: Color,

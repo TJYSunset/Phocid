@@ -79,7 +79,7 @@ class UiManager(
     private val preferences: StateFlow<Preferences>,
     private val libraryIndex: StateFlow<LibraryIndex>,
     private val playlistManager: PlaylistManager,
-    private val historyEntries: StateFlow<HistoryList>,
+    historyEntries: StateFlow<HistoryList>,
     var intentLauncher: WeakReference<IntentLauncher> = WeakReference<IntentLauncher>(null),
 ) : AutoCloseable {
     private val _topLevelScreenStack = MutableStateFlow(emptyList<TopLevelScreen>())

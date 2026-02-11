@@ -1,5 +1,6 @@
 package org.sunsetware.phocid.ui.views.player
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
@@ -76,7 +77,7 @@ sealed class PlayerScreenControls {
         shuffle: Boolean,
         currentPosition: () -> Long,
         overflowMenuItems: List<MenuItem>,
-        dragModifier: Modifier,
+        @SuppressLint("ModifierParameter") dragModifier: Modifier,
         containerColor: Color,
         contentColor: Color,
         colorfulBackground: Boolean,
@@ -234,7 +235,7 @@ class PlayerScreenControlsDefaultBase(
         shuffle: Boolean,
         currentPosition: () -> Long,
         overflowMenuItems: List<MenuItem>,
-        dragModifier: Modifier,
+        @SuppressLint("ModifierParameter") dragModifier: Modifier,
         containerColor: Color,
         contentColor: Color,
         colorfulBackground: Boolean,

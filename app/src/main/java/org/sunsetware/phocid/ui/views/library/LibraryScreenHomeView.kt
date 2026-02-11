@@ -117,7 +117,6 @@ import org.sunsetware.phocid.ui.views.playlistCollectionMultiSelectMenuItems
 import org.sunsetware.phocid.ui.views.trackMenuItemsLibrary
 import org.sunsetware.phocid.utils.coerceInOrMin
 import org.sunsetware.phocid.utils.combine
-import org.sunsetware.phocid.utils.icuFormat
 import org.sunsetware.phocid.utils.trimAndNormalize
 
 @Immutable
@@ -260,7 +259,7 @@ class LibraryScreenHomeViewState(
                 menuItems = {
                     trackMenuItemsLibrary(
                         track,
-                        { tracks.map { it.first } to index },
+                        { tracks.map { item -> item.first } to index },
                         it.playerManager,
                         it.uiManager,
                     )
@@ -511,7 +510,7 @@ class LibraryScreenHomeViewState(
                         menuItems = {
                             trackMenuItemsLibrary(
                                 track,
-                                { filteredSortedChildTracks.map { it.first } to index },
+                                { filteredSortedChildTracks.map { item -> item.first } to index },
                                 it.playerManager,
                                 it.uiManager,
                             )
@@ -945,7 +944,7 @@ private fun LibraryList(
             ) {
                 itemsIndexed(items, { _, (info, _) -> info.key }) { index, (info, selected) ->
                     with(info) {
-                        var menuState = remember { mutableStateOf(false) }
+                        val menuState = remember { mutableStateOf(false) }
                         LibraryListItemHorizontal(
                             title = title,
                             subtitle = subtitle,
@@ -985,7 +984,7 @@ private fun LibraryList(
             ) {
                 itemsIndexed(items, { _, (info, _) -> info.key }) { index, (info, selected) ->
                     with(info) {
-                        var menuState = remember { mutableStateOf(false) }
+                        val menuState = remember { mutableStateOf(false) }
                         OverflowMenu(menuItems(viewModel), state = menuState)
                         LibraryListItemCard(
                             title = title,

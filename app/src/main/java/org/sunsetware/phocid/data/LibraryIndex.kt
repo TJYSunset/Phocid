@@ -108,7 +108,7 @@ data class Track(
     val uri
         get() = ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, id)
 
-    val displayTitle
+    val displayTitle: String
         get() = title ?: FilenameUtils.getBaseName(path)
 
     val displayArtistOrNull
@@ -152,7 +152,7 @@ data class Track(
     override val searchableStrings =
         listOfNotNull(displayTitle, displayArtist, album, displayAlbumArtist, fileName)
 
-    override val sortTitle
+    override val sortTitle: String?
         get() = displayTitle
 
     override val sortArtist
@@ -170,7 +170,7 @@ data class Track(
     override val sortTrackNumber
         get() = trackNumber ?: 0
 
-    override val sortTrackNumberDisplay: String?
+    override val sortTrackNumberDisplay: String
         get() = displayNumber
 
     override val sortGenre
@@ -487,8 +487,8 @@ data class AlbumKey(
     override fun toString(): String {
         return listOf(Base64.encode(name.string.toByteArray(Charsets.UTF_8)))
             .plus(
-                albumArtists.map {
-                    it.string?.let { Base64.encode(it.toByteArray(Charsets.UTF_8)) }
+                albumArtists.map { albumArtist ->
+                    albumArtist.string?.let { Base64.encode(it.toByteArray(Charsets.UTF_8)) }
                 }
             )
             .joinToString(" ")
@@ -914,7 +914,7 @@ data class Folder(
     override val sortTrackNumber
         get() = 0
 
-    override val sortTrackNumberDisplay: String?
+    override val sortTrackNumberDisplay: String
         get() = Strings[R.string.track_number_not_available]
 
     override val sortGenre
@@ -1189,7 +1189,7 @@ private fun getAlbumArtists(
         .associateWith { name ->
             val albumArtistAlbums =
                 albums.values
-                    .filter { it.albumArtists.any { it.equals(name, true) } }
+                    .filter { album -> album.albumArtists.any { it.equals(name, true) } }
                     .sorted(collator, Album.CollectionSortingOptions.values.first().keys, true)
             val albumArtistTracks = albumArtistAlbums.flatMap { it.tracks }
             AlbumArtist(name, albumArtistTracks, albumArtistAlbums)
@@ -1234,7 +1234,7 @@ private fun getGenres(
 }
 
 private fun getFolders(tracks: Collection<Track>, collator: Collator): Map<String, Folder> {
-    val folders = mutableMapOf<String, MutableFolder>("" to MutableFolder(""))
+    val folders = mutableMapOf("" to MutableFolder(""))
     tracks.sorted(collator, Folder.SortingOptions.values.first().keys, true).forEach { track ->
         val parentPath = FilenameUtils.getPathNoEndSeparator(track.path)
         val parentFolder = folders.getOrPut(parentPath) { MutableFolder(parentPath) }
@@ -1388,7 +1388,7 @@ suspend fun scanTracks(
         }
     }
 
-    val activityManager = context.getSystemService<ActivityManager>(ActivityManager::class.java)
+    val activityManager = context.getSystemService(ActivityManager::class.java)
     val freeMemory =
         ActivityManager.MemoryInfo()
             .also { memoryInfo -> activityManager.getMemoryInfo(memoryInfo) }
@@ -1413,9 +1413,7 @@ suspend fun scanTracks(
             (0..<parallelism).map {
                 launch {
                     while (true) {
-                        val crudeTrack = crudeTracks.poll()
-                        if (crudeTrack == null) break
-
+                        val crudeTrack = crudeTracks.poll() ?: break
                         progressCurrent.incrementAndGet()
                         try {
                             tracks +=
@@ -1491,7 +1489,7 @@ private fun scanTrack(
     var duration = crudeTrack.duration
     var format = crudeTrack.format
     var sampleRate = crudeTrack.sampleRate
-    var bitRate = crudeTrack.bitRate
+    val bitRate = crudeTrack.bitRate
     var bitDepth = crudeTrack.bitDepth
     var unsyncedLyrics = crudeTrack.unsyncedLyrics
     var comment = crudeTrack.comment

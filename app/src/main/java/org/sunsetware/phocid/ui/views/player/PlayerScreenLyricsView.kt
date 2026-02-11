@@ -181,7 +181,7 @@ object PlayerScreenLyricsViewDefault : PlayerScreenLyricsView() {
                     val paddingPx = (padding * 2).roundToPx()
                     val spacing = TextUnit(8f, TextUnitType.Sp).roundToPx()
 
-                    var placeables = mutableListOf<Pair<Placeable, Int>>()
+                    val placeables = mutableListOf<Pair<Placeable, Int>>()
                     var cursor = 0
                     val positions = mutableListOf<Int>()
                     for (measurable in measurables) {

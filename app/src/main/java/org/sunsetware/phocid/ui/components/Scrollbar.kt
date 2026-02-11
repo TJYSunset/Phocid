@@ -232,7 +232,7 @@ inline fun ScrollbarThumb(
                         }
                         val isYInRange = {
                             val relativeY = down.position.y / size.height
-                            relativeY >= start && relativeY <= end
+                            relativeY in start..end
                         }
                         if (alpha() > 0 && isXInRange() && isYInRange()) {
                             isThumbDragging = true

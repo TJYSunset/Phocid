@@ -197,8 +197,8 @@ class AddToPlaylistDialog(private val tracks: List<Track> = emptyList()) : Dialo
                         checked = selectedPlaylists.contains(key.toString()),
                         onCheckedChange = {
                             val key = key.toString()
-                            if (!selectedPlaylists.contains(key)) selectedPlaylists += key
-                            else selectedPlaylists -= key
+                            if (!selectedPlaylists.contains(key)) selectedPlaylists + key
+                            else selectedPlaylists - key
                         },
                         textModifier =
                             if (alreadyContainsTrack) Modifier.alpha(INACTIVE_ALPHA) else Modifier,

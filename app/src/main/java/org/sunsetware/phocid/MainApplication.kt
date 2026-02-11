@@ -44,7 +44,6 @@ class MainApplication : Application() {
                     return getString(id)
                 }
             }
-
         Thread.setDefaultUncaughtExceptionHandler(::onUncaughtException)
 
         with(GlobalData) {

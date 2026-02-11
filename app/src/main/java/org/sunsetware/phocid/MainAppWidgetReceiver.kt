@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.text.layoutDirection
@@ -23,7 +24,6 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
-import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
@@ -54,9 +54,9 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.MoreExecutors
 import java.util.Locale
-import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import org.sunsetware.phocid.data.Track
 import org.sunsetware.phocid.data.WidgetLayout
@@ -89,7 +89,7 @@ class MainAppWidget : GlanceAppWidget() {
         while (!GlobalData.initialized.get()) {
             delay(1)
         }
-        val coroutineScope = CoroutineScope(coroutineContext + Dispatchers.IO)
+        val coroutineScope = CoroutineScope(currentCoroutineContext() + Dispatchers.IO)
         val trackAndArtworkState =
             GlobalData.libraryIndex.combine(
                 coroutineScope,
@@ -114,7 +114,7 @@ class MainAppWidget : GlanceAppWidget() {
             }
 
         provideContent {
-            val resources = LocalContext.current.resources
+            val resources = LocalResources.current
 
             val preferences by GlobalData.preferences.collectAsState()
             val playerTransientState by GlobalData.playerTransientState.collectAsState()

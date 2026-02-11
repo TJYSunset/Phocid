@@ -66,6 +66,4 @@ class CustomizedBitmapLoader(private val context: Context) : BitmapLoader {
 }
 
 private val DefaultExecutorService =
-    Suppliers.memoize<ListeningExecutorService?>(
-        Supplier { MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()) }
-    )
+    Suppliers.memoize<ListeningExecutorService?> { MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()) }
