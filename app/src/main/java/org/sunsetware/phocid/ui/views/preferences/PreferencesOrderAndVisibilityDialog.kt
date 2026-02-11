@@ -16,17 +16,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
-import androidx.core.view.HapticFeedbackConstantsCompat
-import androidx.core.view.ViewCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.sunsetware.phocid.Dialog
 import org.sunsetware.phocid.MainViewModel
@@ -34,10 +28,10 @@ import org.sunsetware.phocid.R
 import org.sunsetware.phocid.data.Preferences
 import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.ui.components.DialogBase
+import org.sunsetware.phocid.ui.components.rememberReorderController
 import org.sunsetware.phocid.ui.components.UtilityCheckBoxListItem
 import org.sunsetware.phocid.utils.swap
 import sh.calvin.reorderable.ReorderableItem
-import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Stable
 class PreferencesOrderAndVisibilityDialog<T : Any>(
@@ -50,35 +44,32 @@ class PreferencesOrderAndVisibilityDialog<T : Any>(
 
     @Composable
     override fun Compose(viewModel: MainViewModel) {
-        val view = LocalView.current
-
         val preferences by viewModel.preferences.collectAsStateWithLifecycle()
-
-        var reorderingItems by remember { mutableStateOf(null as List<Pair<T, Boolean>>?) }
-        var reorderInfo by remember { mutableStateOf(null as Pair<Int, Int>?) }
-        val reorderableLazyListState =
-            rememberReorderableLazyListState(lazyListState) { from, to ->
-                ViewCompat.performHapticFeedback(
-                    view,
-                    HapticFeedbackConstantsCompat.SEGMENT_FREQUENT_TICK,
-                )
-                reorderInfo =
-                    if (reorderInfo == null)
-                        value(preferences).indexOfFirst { it.first == from.key } to to.index
-                    else reorderInfo!!.first to to.index
-
-                reorderingItems =
-                    reorderingItems?.toMutableList()?.apply { add(to.index, removeAt(from.index)) }
-            }
-
-        LaunchedEffect(value(preferences)) { reorderingItems = null }
+        val items = remember(preferences) { value(preferences) }
+        val reorderController =
+            rememberReorderController(
+                lazyListState = lazyListState,
+                items = items,
+                keySelector = { it.first },
+                onCommitMove = { from, to ->
+                    viewModel.updatePreferences { preferences ->
+                        onSetValue(
+                            preferences,
+                            value(preferences).toMutableList().apply { add(to, removeAt(from)) },
+                        )
+                    }
+                },
+            )
 
         DialogBase(title = title, onConfirmOrDismiss = { viewModel.uiManager.closeDialog() }) {
             LazyColumn(state = lazyListState) {
-                itemsIndexed(reorderingItems ?: value(preferences), { _, (type, _) -> type }) {
+                itemsIndexed(
+                    reorderController.reorderingItems ?: items,
+                    { _, (type, _) -> type },
+                ) {
                     index,
                     (type, visibility) ->
-                    ReorderableItem(reorderableLazyListState, type) { isDragging ->
+                    ReorderableItem(reorderController.reorderableLazyListState, type) {
                         UtilityCheckBoxListItem(
                             text = itemName(type),
                             checked = visibility,
@@ -134,32 +125,10 @@ class PreferencesOrderAndVisibilityDialog<T : Any>(
                                     modifier =
                                         Modifier.padding(horizontal = 12.dp)
                                             .draggableHandle(
-                                                onDragStarted = {
-                                                    ViewCompat.performHapticFeedback(
-                                                        view,
-                                                        HapticFeedbackConstantsCompat.DRAG_START,
-                                                    )
-                                                    reorderInfo = null
-                                                    reorderingItems = value(preferences)
-                                                },
-                                                onDragStopped = {
-                                                    ViewCompat.performHapticFeedback(
-                                                        view,
-                                                        HapticFeedbackConstantsCompat.GESTURE_END,
-                                                    )
-                                                    reorderInfo?.let { (from, to) ->
-                                                        viewModel.updatePreferences { preferences ->
-                                                            onSetValue(
-                                                                preferences,
-                                                                value(preferences)
-                                                                    .toMutableList()
-                                                                    .apply {
-                                                                        add(to, removeAt(from))
-                                                                    },
-                                                            )
-                                                        }
-                                                    }
-                                                },
+                                                onDragStarted =
+                                                    reorderController.onDragStarted,
+                                                onDragStopped =
+                                                    reorderController.onDragStopped,
                                             ),
                                 )
                             },

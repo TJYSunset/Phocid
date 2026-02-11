@@ -37,11 +37,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.view.HapticFeedbackConstantsCompat
-import androidx.core.view.ViewCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.util.UUID
 import kotlinx.coroutines.flow.filterNotNull
@@ -53,7 +50,6 @@ import org.sunsetware.phocid.R
 import org.sunsetware.phocid.TopLevelScreen
 import org.sunsetware.phocid.UNKNOWN
 import org.sunsetware.phocid.data.InvalidTrack
-import org.sunsetware.phocid.data.RealizedPlaylistEntry
 import org.sunsetware.phocid.data.Track
 import org.sunsetware.phocid.data.sortedBy
 import org.sunsetware.phocid.globals.Strings
@@ -64,13 +60,13 @@ import org.sunsetware.phocid.ui.components.LibraryListItemHorizontal
 import org.sunsetware.phocid.ui.components.OverflowMenu
 import org.sunsetware.phocid.ui.components.Scrollbar
 import org.sunsetware.phocid.ui.components.SortingOptionPicker
+import org.sunsetware.phocid.ui.components.rememberReorderController
 import org.sunsetware.phocid.ui.views.MenuItem
 import org.sunsetware.phocid.ui.views.playlistCollectionMenuItemsWithoutEdit
 import org.sunsetware.phocid.utils.icuFormat
 import org.sunsetware.phocid.utils.swap
 import org.sunsetware.phocid.utils.toLocalizedString
 import sh.calvin.reorderable.ReorderableItem
-import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Stable
 class PlaylistEditScreen(private val playlistKey: UUID) : TopLevelScreen() {
@@ -78,42 +74,30 @@ class PlaylistEditScreen(private val playlistKey: UUID) : TopLevelScreen() {
 
     @Composable
     override fun Compose(viewModel: MainViewModel) {
-        val view = LocalView.current
-
         val preferences by viewModel.preferences.collectAsStateWithLifecycle()
         val uiManager = viewModel.uiManager
         val playlistManager = viewModel.playlistManager
         val playlists by playlistManager.playlists.collectAsStateWithLifecycle()
         val playlist = playlists[playlistKey]
+        val playlistEntries = playlist?.entries ?: emptyList()
         val playlistName by
             remember {
                     playlistManager.playlists.map { it[playlistKey]?.displayName }.filterNotNull()
                 }
                 .collectAsState(playlist?.displayName)
-
-        var reorderingPlaylist by remember { mutableStateOf(null as List<RealizedPlaylistEntry>?) }
-        var reorderInfo by remember { mutableStateOf(null as Pair<Int, Int>?) }
-        val reorderableLazyListState =
-            rememberReorderableLazyListState(lazyListState) { from, to ->
-                ViewCompat.performHapticFeedback(
-                    view,
-                    HapticFeedbackConstantsCompat.SEGMENT_FREQUENT_TICK,
-                )
-                if (playlist != null) {
-                    reorderInfo =
-                        if (reorderInfo == null)
-                            playlist.entries.indexOfFirst { it.key == from.key } to to.index
-                        else reorderInfo!!.first to to.index
-
-                    reorderingPlaylist =
-                        reorderingPlaylist?.toMutableList()?.apply {
-                            add(to.index, removeAt(from.index))
-                        }
-                }
-            }
+        val reorderController =
+            rememberReorderController(
+                lazyListState = lazyListState,
+                items = playlistEntries,
+                keySelector = { it.key },
+                onCommitMove = { from, to ->
+                    playlistManager.updatePlaylist(playlistKey) {
+                        it.copy(entries = it.entries.toMutableList().apply { add(to, removeAt(from)) })
+                    }
+                },
+            )
 
         LaunchedEffect(playlist) {
-            reorderingPlaylist = null
             if (playlist == null) {
                 uiManager.closeTopLevelScreen(this@PlaylistEditScreen)
             }
@@ -181,15 +165,15 @@ class PlaylistEditScreen(private val playlistKey: UUID) : TopLevelScreen() {
                 ) {
                     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
                         itemsIndexed(
-                            reorderingPlaylist ?: playlist?.entries ?: emptyList(),
+                            reorderController.reorderingItems ?: playlistEntries,
                             { _, entry -> entry.key },
                         ) { index, entry ->
                             ReorderableItem(
-                                reorderableLazyListState,
+                                reorderController.reorderableLazyListState,
                                 entry.key,
                                 animateItemModifier =
                                     Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
-                            ) { isDragging ->
+                            ) {
                                 Box {
                                     LibraryListItemHorizontal(
                                         title = entry.track?.displayTitle ?: UNKNOWN,
@@ -280,38 +264,10 @@ class PlaylistEditScreen(private val playlistKey: UUID) : TopLevelScreen() {
                                                 .width(56.dp)
                                                 .height(72.dp)
                                                 .draggableHandle(
-                                                    onDragStarted = {
-                                                        ViewCompat.performHapticFeedback(
-                                                            view,
-                                                            HapticFeedbackConstantsCompat.DRAG_START,
-                                                        )
-                                                        reorderInfo = null
-                                                        reorderingPlaylist = playlist?.entries
-                                                    },
-                                                    onDragStopped = {
-                                                        ViewCompat.performHapticFeedback(
-                                                            view,
-                                                            HapticFeedbackConstantsCompat
-                                                                .GESTURE_END,
-                                                        )
-                                                        reorderInfo?.let { (from, to) ->
-                                                            playlistManager.updatePlaylist(
-                                                                playlistKey
-                                                            ) {
-                                                                it.copy(
-                                                                    entries =
-                                                                        it.entries
-                                                                            .toMutableList()
-                                                                            .apply {
-                                                                                add(
-                                                                                    to,
-                                                                                    removeAt(from),
-                                                                                )
-                                                                            }
-                                                                )
-                                                            }
-                                                        }
-                                                    },
+                                                    onDragStarted =
+                                                        reorderController.onDragStarted,
+                                                    onDragStopped =
+                                                        reorderController.onDragStopped,
                                                 )
                                     )
                                 }

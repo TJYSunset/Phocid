@@ -21,12 +21,6 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddBox
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.filled.Speed
-import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -42,6 +36,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -64,7 +59,6 @@ import org.sunsetware.phocid.MainViewModel
 import org.sunsetware.phocid.R
 import org.sunsetware.phocid.UiManager
 import org.sunsetware.phocid.data.InvalidTrack
-import org.sunsetware.phocid.data.LibraryIndex
 import org.sunsetware.phocid.data.Lyrics
 import org.sunsetware.phocid.data.PlayerManager
 import org.sunsetware.phocid.data.Track
@@ -72,7 +66,6 @@ import org.sunsetware.phocid.data.getArtworkColor
 import org.sunsetware.phocid.data.isFavorite
 import org.sunsetware.phocid.data.loadLyrics
 import org.sunsetware.phocid.data.parseLrc
-import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.ui.components.DragLock
 import org.sunsetware.phocid.ui.theme.LocalThemeAccent
 import org.sunsetware.phocid.ui.theme.contentColor
@@ -80,11 +73,8 @@ import org.sunsetware.phocid.ui.theme.customColorScheme
 import org.sunsetware.phocid.ui.theme.emphasizedEnter
 import org.sunsetware.phocid.ui.theme.emphasizedStandard
 import org.sunsetware.phocid.ui.theme.pureBackgroundColor
-import org.sunsetware.phocid.ui.views.MenuItem
-import org.sunsetware.phocid.ui.views.SpeedAndPitchDialog
-import org.sunsetware.phocid.ui.views.TimerDialog
-import org.sunsetware.phocid.ui.views.playlist.NewPlaylistDialog
-import org.sunsetware.phocid.ui.views.trackMenuItems
+import org.sunsetware.phocid.ui.views.playerMenuItems
+import org.sunsetware.phocid.ui.views.queueMenuItems
 import org.sunsetware.phocid.utils.combine
 import org.sunsetware.phocid.utils.map
 import org.sunsetware.phocid.utils.wrap
@@ -333,6 +323,28 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
         val contentColor =
             if (preferences.colorfulPlayerBackground) artworkColor.value.contentColor()
             else MaterialTheme.colorScheme.primary
+        val uiState =
+            remember(
+                containerColor,
+                contentColor,
+                playerLayout,
+                components,
+                useLyricsView,
+                lyricsViewVisibility,
+                overlayVisibility,
+                useCountdown,
+            ) {
+                PlayerScreenUiState(
+                    containerColor = containerColor,
+                    contentColor = contentColor,
+                    playerLayout = playerLayout,
+                    components = components,
+                    useLyricsView = useLyricsView,
+                    lyricsViewVisibility = lyricsViewVisibility,
+                    overlayVisibility = overlayVisibility,
+                    useCountdown = useCountdown,
+                )
+            }
 
         Scaffold(
             topBar = {
@@ -340,7 +352,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                     modifier =
                         Modifier.fillMaxWidth()
                             .windowInsetsTopHeight(WindowInsets.statusBars)
-                            .background(containerColor)
+                            .background(uiState.containerColor)
                 )
             },
             bottomBar = {
@@ -358,21 +370,22 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                     Modifier.fillMaxSize()
                         .padding(scaffoldPadding)
                         .consumeWindowInsets(scaffoldPadding)
-                        .background(containerColor)
+                        .background(uiState.containerColor)
             ) {
                 Layout(
                     content = {
                         Box {
-                            components.topBarStandalone.Compose(
-                                containerColor = containerColor,
-                                contentColor = contentColor,
-                                lyricsViewVisibility = useLyricsView,
+                            uiState.components.topBarStandalone.Compose(
+                                containerColor = uiState.containerColor,
+                                contentColor = uiState.contentColor,
+                                lyricsViewVisibility = uiState.useLyricsView,
                                 lyricsAutoScrollButtonVisibility =
-                                    useLyricsView &&
+                                    uiState.useLyricsView &&
                                         !lyricsViewAutoScroll &&
                                         currentTrackLyrics is PlayerScreenLyrics.Synced,
-                                lyricsButtonEnabled = useLyricsView || currentTrackLyrics != null,
-                                overlayVisibility = overlayVisibility,
+                                lyricsButtonEnabled =
+                                    uiState.useLyricsView || currentTrackLyrics != null,
+                                overlayVisibility = uiState.overlayVisibility,
                                 onBack = { uiManager.back() },
                                 onEnableLyricsViewAutoScroll = { lyricsViewAutoScroll = true },
                                 onToggleLyricsView = {
@@ -382,16 +395,17 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                             )
                         }
                         Box {
-                            components.topBarOverlay.Compose(
-                                containerColor = containerColor,
-                                contentColor = contentColor,
-                                lyricsViewVisibility = useLyricsView,
+                            uiState.components.topBarOverlay.Compose(
+                                containerColor = uiState.containerColor,
+                                contentColor = uiState.contentColor,
+                                lyricsViewVisibility = uiState.useLyricsView,
                                 lyricsAutoScrollButtonVisibility =
-                                    useLyricsView &&
+                                    uiState.useLyricsView &&
                                         !lyricsViewAutoScroll &&
                                         currentTrackLyrics is PlayerScreenLyrics.Synced,
-                                lyricsButtonEnabled = useLyricsView || currentTrackLyrics != null,
-                                overlayVisibility = overlayVisibility,
+                                lyricsButtonEnabled =
+                                    uiState.useLyricsView || currentTrackLyrics != null,
+                                overlayVisibility = uiState.overlayVisibility,
                                 onBack = { uiManager.back() },
                                 onEnableLyricsViewAutoScroll = { lyricsViewAutoScroll = true },
                                 onToggleLyricsView = {
@@ -401,7 +415,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                             )
                         }
                         Box {
-                            components.artwork.Compose(
+                            uiState.components.artwork.Compose(
                                 playerTransientStateVersion = playerTransientStateVersion,
                                 carouselArtworkCache = viewModel.carouselArtworkCache,
                                 swipeThreshold =
@@ -422,7 +436,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                             )
                         }
                         Box {
-                            components.lyricsView.Compose(
+                            uiState.components.lyricsView.Compose(
                                 lyrics = currentTrackLyrics,
                                 autoScroll = { lyricsViewAutoScroll },
                                 currentPosition = { playerManager.currentPosition },
@@ -431,17 +445,17 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                             )
                         }
                         Box {
-                            components.lyricsOverlay.Compose(
+                            uiState.components.lyricsOverlay.Compose(
                                 lyrics = (currentTrackLyrics as? PlayerScreenLyrics.Synced)?.value,
                                 currentPosition = { playerManager.currentPosition },
                                 preferences = preferences,
-                                containerColor = containerColor,
-                                contentColor = contentColor,
-                                overlayVisibility = overlayVisibility,
+                                containerColor = uiState.containerColor,
+                                contentColor = uiState.contentColor,
+                                overlayVisibility = uiState.overlayVisibility,
                             )
                         }
                         Box {
-                            components.controls.Compose(
+                            uiState.components.controls.Compose(
                                 currentTrack = currentTrack,
                                 currentTrackIsFavorite = currentTrackIsFavorite,
                                 isPlaying = isPlaying,
@@ -457,10 +471,10 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                         currentTrackIndex,
                                     ),
                                 dragModifier = controlsDragModifier,
-                                containerColor = containerColor,
-                                contentColor = contentColor,
+                                containerColor = uiState.containerColor,
+                                contentColor = uiState.contentColor,
                                 colorfulBackground = preferences.colorfulPlayerBackground,
-                                useCountdown = useCountdown,
+                                useCountdown = uiState.useCountdown,
                                 onSeekToFraction = { playerManager.seekToFraction(it) },
                                 onToggleRepeat = { playerManager.toggleRepeat() },
                                 onSeekToPreviousSmart = { playerManager.seekToPreviousSmart() },
@@ -481,7 +495,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                             )
                         }
                         Box {
-                            components.queue.Compose(
+                            uiState.components.queue.Compose(
                                 playQueue = playQueue,
                                 currentTrackIndex = currentTrackIndex,
                                 lazyListState = playQueueLazyListState,
@@ -490,8 +504,8 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 },
                                 dragModifier = controlsDragModifier,
                                 nestedScrollConnection = nestedScrollConnection,
-                                containerColor = containerColor,
-                                contentColor = contentColor,
+                                containerColor = uiState.containerColor,
+                                contentColor = uiState.contentColor,
                                 colorfulBackground = preferences.colorfulPlayerBackground,
                                 dragIndicatorVisibility =
                                     playQueueDragState.position == 1f || playQueueDragTarget == 1f,
@@ -529,7 +543,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                     modifier = Modifier.fillMaxSize(),
                 ) { measurables, constraints ->
                     layout(constraints.maxWidth, constraints.maxHeight) {
-                        with(playerLayout) {
+                        with(uiState.playerLayout) {
                             place(
                                 topBarStandalone = measurables[0],
                                 topBarOverlay = measurables[1],
@@ -544,7 +558,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 height = constraints.maxHeight,
                                 density = density,
                                 queueDragState = playQueueDragState,
-                                lyricsViewVisibility = lyricsViewVisibility,
+                                lyricsViewVisibility = uiState.lyricsViewVisibility,
                             )
                         }
                     }
@@ -552,49 +566,6 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
             }
         }
     }
-}
-
-private fun playerMenuItems(
-    playerManager: PlayerManager,
-    uiManager: UiManager,
-    libraryIndex: LibraryIndex,
-    currentTrack: Track,
-    currentTrackIndex: Int,
-): List<MenuItem> {
-    return listOf(
-        MenuItem.Button(Strings[R.string.player_clear_queue], Icons.Filled.Clear) {
-            playerManager.clearTracks()
-        },
-        MenuItem.Button(Strings[R.string.player_save_queue], Icons.Filled.AddBox) {
-            val state = playerManager.state.value
-            val tracks = state.actualPlayQueue.mapNotNull { libraryIndex.tracks[it] }
-            uiManager.openDialog(NewPlaylistDialog(tracks))
-        },
-        MenuItem.Button(Strings[R.string.player_timer], Icons.Filled.Timer) {
-            uiManager.openDialog(TimerDialog())
-        },
-        MenuItem.Button(Strings[R.string.player_speed_and_pitch], Icons.Filled.Speed) {
-            uiManager.openDialog(SpeedAndPitchDialog())
-        },
-    ) +
-        MenuItem.Divider +
-        MenuItem.Button(Strings[R.string.track_remove_from_queue], Icons.Filled.Remove) {
-            playerManager.removeTrack(currentTrackIndex)
-        } +
-        trackMenuItems(currentTrack, playerManager, uiManager)
-}
-
-private fun queueMenuItems(
-    playerManager: PlayerManager,
-    uiManager: UiManager,
-    track: Track,
-    index: Int,
-): List<MenuItem> {
-    return listOf(
-        MenuItem.Button(Strings[R.string.track_remove_from_queue], Icons.Filled.Remove) {
-            playerManager.removeTrack(index)
-        }
-    ) + trackMenuItems(track, playerManager, uiManager)
 }
 
 @Immutable
@@ -613,6 +584,18 @@ data class PlayerScreenComponents(
     val lyricsOverlay: PlayerScreenLyricsOverlay,
     val controls: PlayerScreenControls,
     val queue: PlayerScreenQueue,
+)
+
+@Immutable
+data class PlayerScreenUiState(
+    val containerColor: Color,
+    val contentColor: Color,
+    val playerLayout: PlayerScreenLayout,
+    val components: PlayerScreenComponents,
+    val useLyricsView: Boolean,
+    val lyricsViewVisibility: Float,
+    val overlayVisibility: Float,
+    val useCountdown: Boolean,
 )
 
 @Serializable

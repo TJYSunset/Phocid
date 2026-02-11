@@ -5,8 +5,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.Album
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DriveFileRenameOutline
 import androidx.compose.material.icons.filled.Edit
@@ -15,7 +17,10 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PlaylistRemove
 import androidx.compose.material.icons.filled.Radio
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -24,6 +29,7 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import java.util.UUID
 import org.sunsetware.phocid.R
 import org.sunsetware.phocid.UiManager
+import org.sunsetware.phocid.data.LibraryIndex
 import org.sunsetware.phocid.data.PlayerManager
 import org.sunsetware.phocid.data.SpecialPlaylistLookup
 import org.sunsetware.phocid.data.Track
@@ -31,11 +37,14 @@ import org.sunsetware.phocid.data.albumKey
 import org.sunsetware.phocid.data.HistoryStartContext
 import org.sunsetware.phocid.data.playlistShortcut
 import org.sunsetware.phocid.globals.Strings
+import org.sunsetware.phocid.ui.views.SpeedAndPitchDialog
+import org.sunsetware.phocid.ui.views.TimerDialog
 import org.sunsetware.phocid.ui.views.library.LibraryTrackClickAction
 import org.sunsetware.phocid.ui.views.library.openAlbumCollectionView
 import org.sunsetware.phocid.ui.views.library.openArtistCollectionView
 import org.sunsetware.phocid.ui.views.playlist.AddToPlaylistDialog
 import org.sunsetware.phocid.ui.views.playlist.DeletePlaylistDialog
+import org.sunsetware.phocid.ui.views.playlist.NewPlaylistDialog
 import org.sunsetware.phocid.ui.views.playlist.PlaylistEditScreen
 import org.sunsetware.phocid.ui.views.playlist.PlaylistIoScreen
 import org.sunsetware.phocid.ui.views.playlist.RemoveFromPlaylistDialog
@@ -111,6 +120,51 @@ fun trackMenuItems(
         }
 
     return queue + playlist + radio + share + MenuItem.Divider + artists + album + details
+}
+
+@Stable
+fun playerMenuItems(
+    playerManager: PlayerManager,
+    uiManager: UiManager,
+    libraryIndex: LibraryIndex,
+    currentTrack: Track,
+    currentTrackIndex: Int,
+): List<MenuItem> {
+    return listOf(
+        MenuItem.Button(Strings[R.string.player_clear_queue], Icons.Filled.Clear) {
+            playerManager.clearTracks()
+        },
+        MenuItem.Button(Strings[R.string.player_save_queue], Icons.Filled.AddBox) {
+            val state = playerManager.state.value
+            val tracks = state.actualPlayQueue.mapNotNull { libraryIndex.tracks[it] }
+            uiManager.openDialog(NewPlaylistDialog(tracks))
+        },
+        MenuItem.Button(Strings[R.string.player_timer], Icons.Filled.Timer) {
+            uiManager.openDialog(TimerDialog())
+        },
+        MenuItem.Button(Strings[R.string.player_speed_and_pitch], Icons.Filled.Speed) {
+            uiManager.openDialog(SpeedAndPitchDialog())
+        },
+    ) +
+        MenuItem.Divider +
+        MenuItem.Button(Strings[R.string.track_remove_from_queue], Icons.Filled.Remove) {
+            playerManager.removeTrack(currentTrackIndex)
+        } +
+        trackMenuItems(currentTrack, playerManager, uiManager)
+}
+
+@Stable
+fun queueMenuItems(
+    playerManager: PlayerManager,
+    uiManager: UiManager,
+    track: Track,
+    index: Int,
+): List<MenuItem> {
+    return listOf(
+        MenuItem.Button(Strings[R.string.track_remove_from_queue], Icons.Filled.Remove) {
+            playerManager.removeTrack(index)
+        }
+    ) + trackMenuItems(track, playerManager, uiManager)
 }
 
 @Stable

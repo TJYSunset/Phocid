@@ -829,7 +829,7 @@ private val Radio =
                 default = 0.5f,
                 min = 0f,
                 max = 1f,
-                steps = 100 - 1 - 1,
+                steps = 100 - 1,
                 onSetValue = { preferences, new -> preferences.copy(radioMixRatio = new) },
             ),
             Item.Toggle(
