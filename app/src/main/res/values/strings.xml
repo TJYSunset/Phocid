@@ -23,9 +23,15 @@
     <!-- Adjective, not noun -->
     <string name="commons_selected">Selected</string>
     <string name="commons_sync">Sync</string>
+    <string name="commons_undo">Undo</string>
     <string name="history_clear">Clear history</string>
-    <string name="history_clear_dialog_body">This will remove all history entries.</string>
+    <string name="history_clear_dialog_body">Choose a range of history to remove.</string>
+    <string name="history_clear_dialog_count">Entries to remove: {0}</string>
     <string name="history_clear_dialog_title">Clear history?</string>
+    <string name="history_clear_last_24_hours">Last 24 hours</string>
+    <string name="history_clear_last_7_days">Last 7 days</string>
+    <string name="history_clear_all">All history</string>
+    <string name="history_clear_snackbar">{0, plural, one {# entry} other {# entries}} removed</string>
     <string name="count_album">{0, plural, one {# album} other {# albums}}</string>
     <string name="count_folder">{0, plural, one {# folder} other {# folders}}</string>
     <string name="count_invalid_track">{0, plural, one {# invalid track} other {# invalid tracks}}</string>

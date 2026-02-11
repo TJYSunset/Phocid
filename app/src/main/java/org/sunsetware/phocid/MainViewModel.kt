@@ -22,6 +22,9 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import org.sunsetware.phocid.data.Lyrics
 import org.sunsetware.phocid.data.PlayerManager
 import org.sunsetware.phocid.data.Preferences
+import org.sunsetware.phocid.data.HistoryClearRange
+import org.sunsetware.phocid.data.HistoryList
+import org.sunsetware.phocid.data.cutoffMillis
 import org.sunsetware.phocid.data.scanTracks
 import org.sunsetware.phocid.globals.GlobalData
 import org.sunsetware.phocid.ui.components.ArtworkCache
@@ -45,6 +48,9 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     val libraryIndex
         get() = GlobalData.libraryIndex
 
+    val historyEntries
+        get() = GlobalData.historyEntries.asStateFlow()
+
     val playlistManager
         get() = GlobalData.playlistManager
 
@@ -60,6 +66,9 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     val libraryScanState = _libraryScanState.asStateFlow()
     private val _libraryScanProgress = MutableStateFlow(null as Pair<Int, Int>?)
     val libraryScanProgress = _libraryScanProgress.asStateFlow()
+
+    private val _historyUndoEvent = MutableStateFlow(null as HistoryUndoEvent?)
+    val historyUndoEvent = _historyUndoEvent.asStateFlow()
 
     fun initialize() {
         if (!initializationStarted.getAndSet(true)) {
@@ -181,7 +190,35 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
-    fun clearHistory() {
-        GlobalData.historyEntries.update { emptyList() }
+    fun clearHistory(range: HistoryClearRange) {
+        val now = System.currentTimeMillis()
+        val cutoff = range.cutoffMillis(now)
+        val previous = GlobalData.historyEntries.value
+        val remaining =
+            if (cutoff == null) {
+                emptyList()
+            } else {
+                previous.filter { it.timestamp < cutoff }
+            }
+        val removedCount = previous.size - remaining.size
+        if (removedCount > 0) {
+            _historyUndoEvent.update { HistoryUndoEvent(previous, removedCount) }
+            GlobalData.historyEntries.update { remaining }
+        }
+    }
+
+    fun undoClearHistory() {
+        val event = _historyUndoEvent.value ?: return
+        GlobalData.historyEntries.update { event.previousEntries }
+        _historyUndoEvent.update { null }
+    }
+
+    fun consumeHistoryUndoEvent() {
+        _historyUndoEvent.update { null }
     }
 }
+
+data class HistoryUndoEvent(
+    val previousEntries: HistoryList,
+    val removedCount: Int,
+)

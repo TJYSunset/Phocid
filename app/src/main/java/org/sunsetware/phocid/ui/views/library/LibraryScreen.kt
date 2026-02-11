@@ -128,6 +128,7 @@ import org.sunsetware.phocid.ui.components.BinaryDragState
 import org.sunsetware.phocid.ui.components.DragLock
 import org.sunsetware.phocid.ui.components.FloatingToolbar
 import org.sunsetware.phocid.ui.components.IndefiniteSnackbar
+import org.sunsetware.phocid.ui.components.ActionSnackbar
 import org.sunsetware.phocid.ui.components.LibraryListItemHorizontal
 import org.sunsetware.phocid.ui.components.MultiSelectManager
 import org.sunsetware.phocid.ui.components.OverflowMenu
@@ -322,6 +323,8 @@ fun LibraryScreen(
         rememberFloatingToolbarItems(floatingToolbarDataSource, currentMultiSelectState)
     val isScanningLibrary by viewModel.libraryScanState.collectAsStateWithLifecycle()
     var scanSnackbarVisibility by remember { mutableStateOf(false) }
+    val historyUndoEvent by viewModel.historyUndoEvent.collectAsStateWithLifecycle()
+    var historyUndoVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(isScanningLibrary) {
         when (isScanningLibrary) {
@@ -340,6 +343,17 @@ fun LibraryScreen(
 
     LaunchedEffect(homeSearchQueryBuffer) {
         uiManager.libraryScreenSearchQuery.update { homeSearchQueryBuffer }
+    }
+
+    LaunchedEffect(historyUndoEvent) {
+        if (historyUndoEvent != null) {
+            historyUndoVisible = true
+            delay(5.seconds)
+            if (historyUndoVisible) {
+                historyUndoVisible = false
+                viewModel.consumeHistoryUndoEvent()
+            }
+        }
     }
 
     Scaffold(
@@ -426,6 +440,24 @@ fun LibraryScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
+                AnimatedVisibility(
+                    visible = historyUndoVisible && historyUndoEvent != null,
+                    enter = EnterFromBottom,
+                    exit = ExitToBottom,
+                ) {
+                    val removedCount = historyUndoEvent!!.removedCount
+                    ActionSnackbar(
+                        text =
+                            Strings[R.string.history_clear_snackbar]
+                                .icuFormat(removedCount),
+                        actionText = Strings[R.string.commons_undo],
+                        onAction = {
+                            historyUndoVisible = false
+                            viewModel.undoClearHistory()
+                        },
+                    )
+                }
+
                 AnimatedVisibility(
                     visible = scanSnackbarVisibility,
                     enter = EnterFromBottom,
