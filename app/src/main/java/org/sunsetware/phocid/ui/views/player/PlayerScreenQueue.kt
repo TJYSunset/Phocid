@@ -42,6 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
 import org.sunsetware.phocid.R
+import org.sunsetware.phocid.data.QueueDensityPreference
+import org.sunsetware.phocid.data.SwipeDirectionPreference
 import org.sunsetware.phocid.data.Track
 import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.globals.format
@@ -49,6 +51,7 @@ import org.sunsetware.phocid.ui.components.LibraryListHeader
 import org.sunsetware.phocid.ui.components.LibraryListItemHorizontal
 import org.sunsetware.phocid.ui.components.OverflowMenu
 import org.sunsetware.phocid.ui.components.Scrollbar
+import org.sunsetware.phocid.ui.components.SwipeDirection
 import org.sunsetware.phocid.ui.components.SwipeToDismiss
 import org.sunsetware.phocid.ui.components.negativePadding
 import org.sunsetware.phocid.ui.theme.contentColor
@@ -75,8 +78,12 @@ sealed class PlayerScreenQueue {
         colorfulBackground: Boolean,
         dragIndicatorVisibility: Boolean,
         swipeToRemoveFromQueue: Boolean,
+        swipeDirection: SwipeDirectionPreference,
         swipeThreshold: Dp,
+        queueDensity: QueueDensityPreference,
         alwaysShowHintOnScroll: Boolean,
+        alwaysShowScrollbar: Boolean,
+        scrollbarWidthDp: Float,
         onTogglePlayQueue: () -> Unit,
         onMoveTrack: (Int, Int) -> Unit,
         onRemoveTrack: (Int) -> Unit,
@@ -119,14 +126,29 @@ class PlayerScreenQueueDefaultBase(
         colorfulBackground: Boolean,
         dragIndicatorVisibility: Boolean,
         swipeToRemoveFromQueue: Boolean,
+        swipeDirection: SwipeDirectionPreference,
         swipeThreshold: Dp,
+        queueDensity: QueueDensityPreference,
         alwaysShowHintOnScroll: Boolean,
+        alwaysShowScrollbar: Boolean,
+        scrollbarWidthDp: Float,
         onTogglePlayQueue: () -> Unit,
         onMoveTrack: (Int, Int) -> Unit,
         onRemoveTrack: (Int) -> Unit,
         onSeekTo: (Int) -> Unit,
     ) {
         val view = LocalView.current
+        val itemHeight =
+            when (queueDensity) {
+                QueueDensityPreference.COMPACT -> 60.dp
+                QueueDensityPreference.COMFORTABLE -> 72.dp
+            }
+        val swipeDirectionBehavior =
+            when (swipeDirection) {
+                SwipeDirectionPreference.BOTH -> SwipeDirection.BOTH
+                SwipeDirectionPreference.START_TO_END -> SwipeDirection.START_TO_END
+                SwipeDirectionPreference.END_TO_START -> SwipeDirection.END_TO_START
+            }
 
         val upNextCount = playQueue.size - currentTrackIndex - 1
         val upNextDuration =
@@ -190,6 +212,8 @@ class PlayerScreenQueueDefaultBase(
                     lazyListState,
                     { (it - currentTrackIndex).toLocalizedString() },
                     alwaysShowHintOnScroll,
+                    alwaysVisible = alwaysShowScrollbar,
+                    width = scrollbarWidthDp.dp,
                 ) {
                     LazyColumn(
                         state = lazyListState,
@@ -208,11 +232,13 @@ class PlayerScreenQueueDefaultBase(
                                     index,
                                     swipeToRemoveFromQueue,
                                     swipeThreshold,
+                                    swipeDirectionBehavior,
                                     onRemoveTrack,
                                 ) {
                                     LibraryListItemHorizontal(
                                         title = track.displayTitle,
                                         subtitle = track.displayArtistWithAlbum,
+                                        itemHeight = itemHeight,
                                         lead = {
                                             AnimatedContent(
                                                 targetState =
@@ -245,7 +271,7 @@ class PlayerScreenQueueDefaultBase(
                                         modifier =
                                             Modifier.align(Alignment.CenterStart)
                                                 .width(56.dp)
-                                                .height(72.dp)
+                                                .height(itemHeight)
                                                 .draggableHandle(
                                                     onDragStarted = {
                                                         ViewCompat.performHapticFeedback(

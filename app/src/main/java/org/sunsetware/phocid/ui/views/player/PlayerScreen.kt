@@ -304,6 +304,7 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
 
     val playerLayout = preferences.playerScreenLayout.layout
     val components = preferences.playerScreenLayout.components
+    val appColorScheme = MaterialTheme.colorScheme
 
     MaterialTheme(
         colorScheme =
@@ -323,10 +324,30 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
         val contentColor =
             if (preferences.colorfulPlayerBackground) artworkColor.value.contentColor()
             else MaterialTheme.colorScheme.primary
+        val baseContainerColor = appColorScheme.surfaceContainerHighest
+        val baseContentColor = appColorScheme.primary
+        val controlsContainerColor =
+            if (preferences.coloredPlayerControls) containerColor else baseContainerColor
+        val controlsContentColor =
+            if (preferences.coloredPlayerControls) contentColor else baseContentColor
+        val controlsColorfulBackground =
+            preferences.colorfulPlayerBackground && preferences.coloredPlayerControls
+        val queueContainerColor =
+            if (preferences.coloredPlayerQueue) containerColor else baseContainerColor
+        val queueContentColor =
+            if (preferences.coloredPlayerQueue) contentColor else baseContentColor
+        val queueColorfulBackground =
+            preferences.colorfulPlayerBackground && preferences.coloredPlayerQueue
         val uiState =
             remember(
                 containerColor,
                 contentColor,
+                controlsContainerColor,
+                controlsContentColor,
+                controlsColorfulBackground,
+                queueContainerColor,
+                queueContentColor,
+                queueColorfulBackground,
                 playerLayout,
                 components,
                 useLyricsView,
@@ -337,6 +358,12 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                 PlayerScreenUiState(
                     containerColor = containerColor,
                     contentColor = contentColor,
+                    controlsContainerColor = controlsContainerColor,
+                    controlsContentColor = controlsContentColor,
+                    controlsColorfulBackground = controlsColorfulBackground,
+                    queueContainerColor = queueContainerColor,
+                    queueContentColor = queueContentColor,
+                    queueColorfulBackground = queueColorfulBackground,
                     playerLayout = playerLayout,
                     components = components,
                     useLyricsView = useLyricsView,
@@ -471,9 +498,9 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                         currentTrackIndex,
                                     ),
                                 dragModifier = controlsDragModifier,
-                                containerColor = uiState.containerColor,
-                                contentColor = uiState.contentColor,
-                                colorfulBackground = preferences.colorfulPlayerBackground,
+                                containerColor = uiState.controlsContainerColor,
+                                contentColor = uiState.controlsContentColor,
+                                colorfulBackground = uiState.controlsColorfulBackground,
                                 useCountdown = uiState.useCountdown,
                                 onSeekToFraction = { playerManager.seekToFraction(it) },
                                 onToggleRepeat = { playerManager.toggleRepeat() },
@@ -504,15 +531,19 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 },
                                 dragModifier = controlsDragModifier,
                                 nestedScrollConnection = nestedScrollConnection,
-                                containerColor = uiState.containerColor,
-                                contentColor = uiState.contentColor,
-                                colorfulBackground = preferences.colorfulPlayerBackground,
+                                containerColor = uiState.queueContainerColor,
+                                contentColor = uiState.queueContentColor,
+                                colorfulBackground = uiState.queueColorfulBackground,
                                 dragIndicatorVisibility =
                                     playQueueDragState.position == 1f || playQueueDragTarget == 1f,
                                 swipeToRemoveFromQueue = preferences.swipeToRemoveFromQueue,
+                                swipeDirection = preferences.swipeToRemoveDirection,
                                 swipeThreshold =
                                     DEFAULT_SWIPE_THRESHOLD * preferences.swipeThresholdMultiplier,
+                                queueDensity = preferences.queueDensity,
                                 alwaysShowHintOnScroll = preferences.alwaysShowHintOnScroll,
+                                alwaysShowScrollbar = preferences.alwaysShowScrollbar,
+                                scrollbarWidthDp = preferences.scrollbarWidthDp,
                                 onTogglePlayQueue = {
                                     playQueueDragState.animateTo(
                                         if (playQueueDragState.position <= 0) 1f else 0f
@@ -590,6 +621,12 @@ data class PlayerScreenComponents(
 data class PlayerScreenUiState(
     val containerColor: Color,
     val contentColor: Color,
+    val controlsContainerColor: Color,
+    val controlsContentColor: Color,
+    val controlsColorfulBackground: Boolean,
+    val queueContainerColor: Color,
+    val queueContentColor: Color,
+    val queueColorfulBackground: Boolean,
     val playerLayout: PlayerScreenLayout,
     val components: PlayerScreenComponents,
     val useLyricsView: Boolean,
