@@ -140,6 +140,7 @@
     <string name="preferences">Preferences</string>
     <string name="preferences_about">About</string>
     <string name="preferences_always_show_hint_on_scroll">Always show thumb index on scroll</string>
+    <string name="preferences_always_show_scrollbar">Always show scrollbar</string>
     <string name="preferences_artwork_color">Artwork color extraction</string>
     <!-- "Muted" as in opposite of vibrant -->
     <string name="preferences_artwork_color_muted_first">Prefer muted</string>
@@ -154,6 +155,8 @@
     <string name="preferences_colored_player">Color player screen based on artwork</string>
     <string name="preferences_colored_player_subtitle">Might be overridden by “Interface › Theme color › Change theme color based on artwork”</string>
     <string name="preferences_colorful_player_background">Colored player background</string>
+    <string name="preferences_colored_player_controls">Color player controls based on artwork</string>
+    <string name="preferences_colored_player_queue">Color player queue based on artwork</string>
     <string name="preferences_conjunction_symbol">Metadata separator</string>
     <string name="preferences_conjunction_symbol_subtitle">Only applies to new queued tracks</string>
     <string name="preferences_dark_theme">Dark theme</string>
@@ -240,6 +243,7 @@
     <string name="preferences_notification_buttons">Notification buttons</string>
     <string name="preferences_notification_buttons_none">None</string>
     <string name="preferences_now_playing">Now playing</string>
+    <string name="preferences_player_theme_sections">Player sections</string>
     <string name="preferences_pause_on_focus_loss">Pause on audio focus loss</string>
     <string name="preferences_play_on_output_device_connection">Play on headphones connection</string>
     <string name="preferences_playback">Playback</string>
@@ -254,9 +258,18 @@
     <string name="preferences_playlist_io_settings_ignore_location">Ignore file location</string>
     <string name="preferences_playlist_io_settings_remove_invalid">Remove unresolved tracks</string>
     <string name="preferences_pure_background_color">Pure black/white background</string>
+    <string name="preferences_queue_density">Queue density</string>
+    <string name="preferences_queue_density_compact">Compact</string>
+    <string name="preferences_queue_density_comfortable">Comfortable</string>
+    <string name="preferences_queue_swipe_direction">Queue swipe direction</string>
+    <string name="preferences_queue_swipe_direction_both">Both directions</string>
+    <string name="preferences_queue_swipe_direction_start_to_end">Start to end</string>
+    <string name="preferences_queue_swipe_direction_end_to_start">End to start</string>
     <string name="preferences_reshuffle_on_repeat">Reshuffle on repeat (experimental)</string>
     <string name="preferences_scan_progress_timeout">Show scan progress after</string>
     <string name="preferences_scrollable_tabs">Scrollable tabs</string>
+    <string name="preferences_scrollbar_width">Scrollbar width</string>
+    <string name="preferences_scrollbar_width_number">{0, number, ::.0} dp</string>
     <string name="preferences_shape">Artwork shape</string>
     <string name="preferences_shape_circle">Circle</string>
     <string name="preferences_shape_rounded_square">Rounded square</string>

@@ -51,6 +51,8 @@ data class Preferences(
         },
     val highResArtworkPreference: HighResArtworkPreference = HighResArtworkPreference.PLAYER_ONLY,
     val alwaysShowHintOnScroll: Boolean = false,
+    val alwaysShowScrollbar: Boolean = false,
+    val scrollbarWidthDp: Float = SCROLLBAR_DEFAULT_WIDTH_DP,
     val conjunctionSymbol: String = "",
     // Home screen
     val tabOrderAndVisibility: List<Pair<LibraryScreenTabType, Boolean>> =
@@ -66,7 +68,11 @@ data class Preferences(
     /** Use artwork color as theme color */
     val coloredPlayer: Boolean = true,
     val colorfulPlayerBackground: Boolean = true,
+    val coloredPlayerQueue: Boolean = true,
+    val coloredPlayerControls: Boolean = true,
     val swipeToRemoveFromQueue: Boolean = false,
+    val swipeToRemoveDirection: SwipeDirectionPreference = SwipeDirectionPreference.BOTH,
+    val queueDensity: QueueDensityPreference = QueueDensityPreference.COMFORTABLE,
     val lyricsDisplay: LyricsDisplayPreference = LyricsDisplayPreference.DEFAULT,
     val lyricsSizeMultiplier: Float = 1f,
     // Playback
@@ -204,6 +210,14 @@ data class Preferences(
             .freeze() as RuleBasedCollator
 }
 
+const val SCROLLBAR_DEFAULT_WIDTH_DP = 4f
+const val SCROLLBAR_MIN_WIDTH_DP = 2f
+const val SCROLLBAR_MAX_WIDTH_DP = 16f
+
+fun clampScrollbarWidthDp(value: Float): Float {
+    return value.coerceIn(SCROLLBAR_MIN_WIDTH_DP, SCROLLBAR_MAX_WIDTH_DP)
+}
+
 @Serializable
 enum class TabStylePreference(val stringId: Int) {
     TEXT_AND_ICON(R.string.preferences_tab_style_text_and_icon),
@@ -216,6 +230,19 @@ enum class DarkThemePreference(val stringId: Int, val boolean: Boolean?) {
     SYSTEM(R.string.preferences_dark_theme_system, null),
     DARK(R.string.preferences_dark_theme_dark, true),
     LIGHT(R.string.preferences_dark_theme_light, false),
+}
+
+@Serializable
+enum class QueueDensityPreference(val stringId: Int) {
+    COMFORTABLE(R.string.preferences_queue_density_comfortable),
+    COMPACT(R.string.preferences_queue_density_compact),
+}
+
+@Serializable
+enum class SwipeDirectionPreference(val stringId: Int) {
+    BOTH(R.string.preferences_queue_swipe_direction_both),
+    START_TO_END(R.string.preferences_queue_swipe_direction_start_to_end),
+    END_TO_START(R.string.preferences_queue_swipe_direction_end_to_start),
 }
 
 @Serializable
