@@ -12,7 +12,9 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 import kotlinx.coroutines.Dispatchers
@@ -20,11 +22,18 @@ import kotlinx.coroutines.launch
 import org.sunsetware.phocid.ui.theme.emphasizedExit
 
 /** Yes, [androidx.compose.material3.SwipeToDismissBox] is yet another Google's useless s***. */
+enum class SwipeDirection {
+    BOTH,
+    START_TO_END,
+    END_TO_START,
+}
+
 @Composable
 inline fun <T> SwipeToDismiss(
     key: T,
     enabled: Boolean,
     swipeThreshold: Dp,
+    direction: SwipeDirection = SwipeDirection.BOTH,
     crossinline onDismiss: (T) -> Unit,
     crossinline content: @Composable BoxScope.() -> Unit,
 ) {
@@ -32,7 +41,20 @@ inline fun <T> SwipeToDismiss(
     val dispatcher = Dispatchers.Main.limitedParallelism(1)
     val updatedKey by rememberUpdatedState(key)
     val updatedSwipeThreshold by rememberUpdatedState(swipeThreshold)
+    val layoutDirection = LocalLayoutDirection.current
     val offset = remember { Animatable(0f) }
+
+    val directionSign = {
+        if (layoutDirection == LayoutDirection.Ltr) 1f else -1f
+    }
+    val isDirectionAllowed = { value: Float ->
+        val sign = directionSign()
+        when (direction) {
+            SwipeDirection.BOTH -> true
+            SwipeDirection.START_TO_END -> value * sign >= 0f
+            SwipeDirection.END_TO_START -> value * sign <= 0f
+        }
+    }
 
     Box(
         modifier =
@@ -49,7 +71,9 @@ inline fun <T> SwipeToDismiss(
                                 val positionalThreshold =
                                     updatedSwipeThreshold.roundToPx().coerceAtMost(size.width / 2)
                                 val value = offset.value
-                                if (value.absoluteValue >= positionalThreshold) {
+                                if (value.absoluteValue >= positionalThreshold &&
+                                    isDirectionAllowed(value)
+                                ) {
                                     coroutineScope.launch(dispatcher) {
                                         offset.animateTo(value.sign * size.width, emphasizedExit())
                                         onDismiss(updatedKey)
@@ -62,7 +86,10 @@ inline fun <T> SwipeToDismiss(
                             },
                         ) { change, dragAmount ->
                             coroutineScope.launch(dispatcher) {
-                                offset.snapTo(offset.value + dragAmount)
+                                val newValue = offset.value + dragAmount
+                                if (isDirectionAllowed(newValue)) {
+                                    offset.snapTo(newValue)
+                                }
                             }
                         }
                     }

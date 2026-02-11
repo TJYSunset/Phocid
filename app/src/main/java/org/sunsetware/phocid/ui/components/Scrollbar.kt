@@ -290,6 +290,7 @@ inline fun Scrollbar(
     state: LazyListState,
     crossinline hint: (Int) -> String?,
     alwaysShowHintOnScroll: Boolean,
+    alwaysVisible: Boolean = false,
     width: Dp = SCROLLBAR_DEFAULT_WIDTH,
     color: Color = SCROLLBAR_DEFAULT_COLOR,
     noinline content: @Composable () -> Unit,
@@ -318,18 +319,22 @@ inline fun Scrollbar(
     val isScrollbarDragging = remember { AtomicBoolean(false) }
 
     val alpha = remember { Animatable(0f) }
-    LaunchedEffect(Unit) {
-        // Reading state.isScrollInProgress outside of LaunchedEffect will trigger a recomposition
-        while (isActive) {
-            val isScrolling =
-                (thumbRange.first > 0 || thumbRange.second < 1) &&
-                    (state.isScrollInProgress || isScrollbarDragging.get())
-            if (alpha.targetValue != 1f && isScrolling) {
-                coroutineScope.launch { alpha.animateTo(1f, scrollbarEnter) }
-            } else if (alpha.targetValue != 0f && !isScrolling) {
-                coroutineScope.launch { alpha.animateTo(0f, scrollbarExit) }
+    LaunchedEffect(alwaysVisible) {
+        if (alwaysVisible) {
+            alpha.snapTo(1f)
+        } else {
+            // Reading state.isScrollInProgress outside of LaunchedEffect will trigger a recomposition
+            while (isActive) {
+                val isScrolling =
+                    (thumbRange.first > 0 || thumbRange.second < 1) &&
+                        (state.isScrollInProgress || isScrollbarDragging.get())
+                if (alpha.targetValue != 1f && isScrolling) {
+                    coroutineScope.launch { alpha.animateTo(1f, scrollbarEnter) }
+                } else if (alpha.targetValue != 0f && !isScrolling) {
+                    coroutineScope.launch { alpha.animateTo(0f, scrollbarExit) }
+                }
+                delay(17.milliseconds)
             }
-            delay(17.milliseconds)
         }
     }
 
@@ -337,7 +342,7 @@ inline fun Scrollbar(
         width,
         color,
         alwaysShowHintOnScroll,
-        { alpha.value },
+        { if (alwaysVisible) 1f else alpha.value },
         { thumbRange },
         { totalItemsCount },
         { state.requestScrollToItem(it) },
@@ -357,6 +362,7 @@ inline fun Scrollbar(
     state: LazyGridState,
     crossinline hint: (Int) -> String?,
     alwaysShowHintOnScroll: Boolean,
+    alwaysVisible: Boolean = false,
     width: Dp = SCROLLBAR_DEFAULT_WIDTH,
     color: Color = SCROLLBAR_DEFAULT_COLOR,
     noinline content: @Composable () -> Unit,
@@ -399,18 +405,22 @@ inline fun Scrollbar(
     val isScrollbarDragging = remember { AtomicBoolean(false) }
 
     val alpha = remember { Animatable(0f) }
-    LaunchedEffect(Unit) {
-        // Reading state.isScrollInProgress outside of LaunchedEffect will trigger a recomposition
-        while (isActive) {
-            val isScrolling =
-                (thumbRange.first > 0 || thumbRange.second < 1) &&
-                    (state.isScrollInProgress || isScrollbarDragging.get())
-            if (alpha.targetValue != 1f && isScrolling) {
-                coroutineScope.launch { alpha.animateTo(1f, scrollbarEnter) }
-            } else if (alpha.targetValue != 0f && !isScrolling) {
-                coroutineScope.launch { alpha.animateTo(0f, scrollbarExit) }
+    LaunchedEffect(alwaysVisible) {
+        if (alwaysVisible) {
+            alpha.snapTo(1f)
+        } else {
+            // Reading state.isScrollInProgress outside of LaunchedEffect will trigger a recomposition
+            while (isActive) {
+                val isScrolling =
+                    (thumbRange.first > 0 || thumbRange.second < 1) &&
+                        (state.isScrollInProgress || isScrollbarDragging.get())
+                if (alpha.targetValue != 1f && isScrolling) {
+                    coroutineScope.launch { alpha.animateTo(1f, scrollbarEnter) }
+                } else if (alpha.targetValue != 0f && !isScrolling) {
+                    coroutineScope.launch { alpha.animateTo(0f, scrollbarExit) }
+                }
+                delay(17.milliseconds)
             }
-            delay(17.milliseconds)
         }
     }
 
@@ -418,7 +428,7 @@ inline fun Scrollbar(
         width,
         color,
         alwaysShowHintOnScroll,
-        { alpha.value },
+        { if (alwaysVisible) 1f else alpha.value },
         { thumbRange },
         { totalItemsCount },
         { state.requestScrollToItem(it) },

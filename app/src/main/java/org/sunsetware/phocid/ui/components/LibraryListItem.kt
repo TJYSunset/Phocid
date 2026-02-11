@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.sunsetware.phocid.R
 import org.sunsetware.phocid.globals.Strings
@@ -57,6 +58,7 @@ inline fun LibraryListItemHorizontal(
     crossinline lead: @Composable () -> Unit,
     crossinline actions: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    itemHeight: Dp = 72.dp,
     deemphasized: Boolean = false,
     marquee: Boolean = false,
     selected: Boolean = false,
@@ -71,7 +73,7 @@ inline fun LibraryListItemHorizontal(
     Row(
         modifier =
             modifier
-                .height(72.dp)
+                .height(itemHeight)
                 .background(
                     MaterialTheme.colorScheme.secondaryContainer.copy(alpha = backgroundAlpha)
                 )
