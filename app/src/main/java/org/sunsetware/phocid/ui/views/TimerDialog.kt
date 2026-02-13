@@ -44,10 +44,10 @@ class TimerDialog : Dialog() {
         val playerManager = viewModel.playerManager
         val uiManager = viewModel.uiManager
         var durationMinutes by remember {
-            mutableLongStateOf(uiManager.playerTimerSettings.get().duration.inWholeMinutes)
+            mutableLongStateOf(uiManager.playerTimerSettings.value.duration.inWholeMinutes)
         }
         var finishLastTrack by remember {
-            mutableStateOf(uiManager.playerTimerSettings.get().finishLastTrack)
+            mutableStateOf(uiManager.playerTimerSettings.value.finishLastTrack)
         }
         var isTimerActive by remember { mutableStateOf(playerManager.getTimerState() != null) }
         var activeTimerRemainingSeconds by remember { mutableLongStateOf(0) }
@@ -77,7 +77,7 @@ class TimerDialog : Dialog() {
                     playerManager.setTimer(
                         PlayerTimerSettings(durationMinutes.minutes, finishLastTrack)
                     )
-                    uiManager.playerTimerSettings.set(
+                    uiManager.updatePlayerTimerSettings(
                         PlayerTimerSettings(durationMinutes.minutes, finishLastTrack)
                     )
                     uiManager.toast(Strings[R.string.toast_timer_set].icuFormat(durationMinutes))

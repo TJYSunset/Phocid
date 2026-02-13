@@ -12,6 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.sunsetware.phocid.data.LibraryIndex
@@ -30,6 +32,13 @@ import org.sunsetware.phocid.utils.icuFormat
 import org.sunsetware.phocid.utils.map
 
 class MainApplication : Application() {
+    private data class WidgetPlayerStateKey(
+        val queue: List<Long>,
+        val currentIndex: Int,
+        val shuffle: Boolean,
+        val repeat: Int,
+    )
+
     private val mainScope = MainScope()
     private val defaultScope = CoroutineScope(mainScope.coroutineContext + Dispatchers.Default)
     private val ioScope = CoroutineScope(mainScope.coroutineContext + Dispatchers.IO)
@@ -105,7 +114,18 @@ class MainApplication : Application() {
                     SaveManager(context, ioScope, historyEntries, HISTORY_FILE_NAME, false)
 
                 defaultScope.launch {
-                    playerState.onEach { MainAppWidget().updateAll(context) }.collect()
+                    playerState
+                        .map {
+                            WidgetPlayerStateKey(
+                                it.actualPlayQueue,
+                                it.currentIndex,
+                                it.shuffle,
+                                it.repeat,
+                            )
+                        }
+                        .distinctUntilChanged()
+                        .onEach { MainAppWidget().updateAll(context) }
+                        .collect()
                 }
 
                 initialized.set(true)

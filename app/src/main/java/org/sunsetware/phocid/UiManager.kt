@@ -7,29 +7,25 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.unit.Dp
 import androidx.core.content.ContextCompat
 import java.lang.ref.WeakReference
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicLong
-import java.util.concurrent.atomic.AtomicReference
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.sunsetware.phocid.data.LibraryIndex
 import org.sunsetware.phocid.data.PersistentUiState
@@ -146,9 +142,11 @@ class UiManager(
 
     val overrideStatusBarLightColor = MutableStateFlow(null as Boolean?)
 
-    val playerTimerSettings = AtomicReference(PlayerTimerSettings())
+    private val _playerTimerSettings = MutableStateFlow(PlayerTimerSettings())
+    val playerTimerSettings = _playerTimerSettings.asStateFlow()
 
-    val playlistIoSyncHelpShown = AtomicReference(false)
+    private val _playlistIoSyncHelpShown = MutableStateFlow(false)
+    val playlistIoSyncHelpShown = _playlistIoSyncHelpShown.asStateFlow()
 
     private val libraryScreenActiveMultiSelectState =
         _libraryScreenCollectionViewStack.combine(
@@ -188,19 +186,24 @@ class UiManager(
         SaveManager(
             context,
             coroutineScope,
-            flow {
-                    while (currentCoroutineContext().isActive) {
-                        emit(
-                            PersistentUiState(
-                                libraryScreenHomeViewState.pagerState.currentPage,
-                                playerScreenUseLyricsView.value,
-                                playerScreenUseCountdown.value,
-                                playerTimerSettings.get(),
-                                playlistIoSyncHelpShown.get(),
-                            )
-                        )
-                        delay(1.seconds)
-                    }
+            snapshotFlow { libraryScreenHomeViewState.pagerState.currentPage }
+                .combine(playerScreenUseLyricsView) { page, useLyrics ->
+                    Pair(page, useLyrics)
+                }
+                .combine(playerScreenUseCountdown) { previous, useCountdown ->
+                    Triple(previous.first, previous.second, useCountdown)
+                }
+                .combine(playerTimerSettings) { previous, timerSettings ->
+                    Pair(previous, timerSettings)
+                }
+                .combine(playlistIoSyncHelpShown) { previous, syncHelpShown ->
+                    PersistentUiState(
+                        previous.first.first,
+                        previous.first.second,
+                        previous.first.third,
+                        previous.second,
+                        syncHelpShown,
+                    )
                 }
                 .distinctUntilChanged(),
             UI_STATE_FILE_NAME,
@@ -217,8 +220,8 @@ class UiManager(
         }
         playerScreenUseLyricsView.update { persistentState.playerScreenUseLyricsView }
         playerScreenUseCountdown.update { persistentState.playerScreenUseCountdown }
-        playerTimerSettings.set(persistentState.playerTimerSettings)
-        playlistIoSyncHelpShown.set(persistentState.playlistIoSyncHelpShown)
+        _playerTimerSettings.update { persistentState.playerTimerSettings }
+        _playlistIoSyncHelpShown.update { persistentState.playlistIoSyncHelpShown }
     }
 
     override fun close() {
@@ -296,6 +299,16 @@ class UiManager(
 
     fun closeDialog() {
         _dialog.update { null }
+    }
+
+    fun updatePlayerTimerSettings(settings: PlayerTimerSettings) {
+        _playerTimerSettings.update { settings }
+    }
+
+    fun markPlaylistIoSyncHelpShown(): Boolean {
+        if (_playlistIoSyncHelpShown.value) return false
+        _playlistIoSyncHelpShown.update { true }
+        return true
     }
 
     fun toast(text: String, shortDuration: Boolean = true) {

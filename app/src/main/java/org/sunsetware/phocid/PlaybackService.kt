@@ -82,7 +82,7 @@ class PlaybackService : MediaLibraryService() {
     override fun onCreate() {
         super.onCreate()
         while (!GlobalData.initialized.get()) {
-            Thread.sleep(1)
+            Thread.sleep(50)
         }
 
         val player = CustomizedPlayer(this)

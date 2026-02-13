@@ -14,13 +14,12 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionToken
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.sunsetware.phocid.AUDIO_SESSION_ID_KEY
 import org.sunsetware.phocid.PlaybackService
 import org.sunsetware.phocid.SET_TIMER_COMMAND
@@ -29,6 +28,8 @@ import org.sunsetware.phocid.TIMER_TARGET_KEY
 import org.sunsetware.phocid.globals.GlobalData
 import org.sunsetware.phocid.utils.coerceInOrMin
 import org.sunsetware.phocid.utils.wrap
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 @Stable
 class PlayerManager(
@@ -52,18 +53,20 @@ class PlayerManager(
         val sessionToken =
             SessionToken(context, ComponentName(context, PlaybackService::class.java))
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
-        val completed = AtomicBoolean(false)
-        controllerFuture.addListener(
-            {
-                mediaController = controllerFuture.get()
-                mediaController.prepare()
-                completed.set(true)
-            },
-            ContextCompat.getMainExecutor(context),
-        )
-
-        while (!completed.get()) {
-            delay(1)
+        suspendCancellableCoroutine { continuation ->
+            controllerFuture.addListener(
+                {
+                    try {
+                        mediaController = controllerFuture.get()
+                        mediaController.prepare()
+                        if (continuation.isActive) continuation.resume(Unit)
+                    } catch (ex: Exception) {
+                        if (continuation.isActive) continuation.resumeWithException(ex)
+                    }
+                },
+                ContextCompat.getMainExecutor(context),
+            )
+            continuation.invokeOnCancellation { controllerFuture.cancel(true) }
         }
     }
 

@@ -14,9 +14,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.sunsetware.phocid.data.Lyrics
@@ -29,6 +31,8 @@ import org.sunsetware.phocid.data.scanTracks
 import org.sunsetware.phocid.globals.GlobalData
 import org.sunsetware.phocid.ui.components.ArtworkCache
 import org.sunsetware.phocid.ui.views.library.LibraryScreenTabInfo
+import kotlin.coroutines.resume
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 class MainViewModel(private val application: Application) : AndroidViewModel(application) {
     private val _initialized = MutableStateFlow(false)
@@ -74,7 +78,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         if (!initializationStarted.getAndSet(true)) {
             viewModelScope.launch {
                 while (!GlobalData.initialized.get()) {
-                    delay(1)
+                    delay(50)
                 }
                 playerManager =
                     PlayerManager(GlobalData.playerState, GlobalData.playerTransientState)
@@ -110,7 +114,6 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                         _libraryScanState.update { force }
 
                         if (force || preferences.value.alwaysRescanMediaStore) {
-                            val mediaScannerSignal = AtomicBoolean(false)
                             // Try to obtain all external storage paths through hack.
                             // Result from getExternalStorageDirectory() is still kept in case the
                             // hack no longer works.
@@ -123,15 +126,16 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                                     .plus(Environment.getExternalStorageDirectory().path)
                                     .distinct()
                                     .toTypedArray()
-                            MediaScannerConnection.scanFile(
-                                application.applicationContext,
-                                storages,
-                                arrayOf("audio/*"),
-                            ) { _, _ ->
-                                mediaScannerSignal.set(true)
-                            }
-                            while (!mediaScannerSignal.get()) {
-                                delay(1)
+                            suspendCancellableCoroutine<Unit> { continuation ->
+                                val resumed = AtomicBoolean(false)
+                                MediaScannerConnection.scanFile(
+                                    application.applicationContext,
+                                    storages,
+                                    arrayOf("audio/*"),
+                                ) { _, _ ->
+                                    if (resumed.compareAndSet(false, true) && continuation.isActive)
+                                        continuation.resume(Unit)
+                                }
                             }
                         }
 
@@ -150,11 +154,8 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                             }
                         if (newTrackIndex != null) {
                             GlobalData.unfilteredTrackIndex.update { newTrackIndex }
-                            while (
-                                GlobalData.libraryIndex.value.flowVersion <
-                                    newTrackIndex.flowVersion
-                            ) {
-                                delay(1)
+                            GlobalData.libraryIndex.first {
+                                it.flowVersion >= newTrackIndex.flowVersion
                             }
                             Log.d("Phocid", "Library scan completed")
                         } else {
@@ -166,9 +167,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                         _libraryScanState.update { null }
                     }
                 } else {
-                    while (scanMutex.isLocked) {
-                        delay(1)
-                    }
+                    scanMutex.withLock {}
                 }
             }
         }

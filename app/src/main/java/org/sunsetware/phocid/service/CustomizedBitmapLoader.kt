@@ -13,7 +13,6 @@ import androidx.media3.datasource.BitmapUtil
 import androidx.media3.datasource.DataSourceUtil
 import androidx.media3.datasource.DataSpec
 import androidx.media3.datasource.DefaultDataSource
-import com.google.common.base.Supplier
 import com.google.common.base.Suppliers
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.ListeningExecutorService

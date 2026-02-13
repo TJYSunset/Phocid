@@ -72,7 +72,7 @@ class WidgetConfigureActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         while (!GlobalData.initialized.get()) {
-            Thread.sleep(1)
+            Thread.sleep(50)
         }
 
         enableEdgeToEdge(

@@ -154,10 +154,7 @@ private constructor(tabType: PlaylistIoScreenTabType, initialExportSelection: Se
 
         // Show sync help dialog on first use
         LaunchedEffect(currentTabType) {
-            if (
-                currentTabType == PlaylistIoScreenTabType.Sync &&
-                    !uiManager.playlistIoSyncHelpShown.getAndSet(true)
-            ) {
+            if (currentTabType == PlaylistIoScreenTabType.Sync && uiManager.markPlaylistIoSyncHelpShown()) {
                 uiManager.openDialog(PlaylistIoSyncHelpDialog())
             }
         }

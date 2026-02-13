@@ -7,15 +7,11 @@ import android.util.Log
 import java.io.File
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,22 +31,22 @@ class SaveManager<T : Any>(
 ) : AutoCloseable {
     private val job =
         coroutineScope.launch {
-            withContext(Dispatchers.IO) {
-                var lastSavedVersion = 0
-                flow
-                    .withIndex()
-                    .conflate()
-                    .onEach { (version, value) ->
-                        if (lastSavedVersion < version) {
-                            if (saveCbor(kType, context, fileName, isCache, value)) {
-                                lastSavedVersion = version
+            var lastSavedVersion = 0
+            flow
+                .withIndex()
+                .conflate()
+                .cancellable()
+                .collect { (version, value) ->
+                    if (lastSavedVersion < version) {
+                        if (
+                            withContext(Dispatchers.IO) {
+                                saveCbor(kType, context, fileName, isCache, value)
                             }
+                        ) {
+                            lastSavedVersion = version
                         }
-                        delay(1.seconds)
                     }
-                    .cancellable()
-                    .collect()
-            }
+                }
         }
 
     override fun close() {
