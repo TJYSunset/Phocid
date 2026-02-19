@@ -28,7 +28,7 @@ import androidx.media3.session.SessionResult
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -40,7 +40,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.sunsetware.phocid.data.DefaultShuffleMode
@@ -186,7 +185,16 @@ class PlaybackService : MediaLibraryService() {
             override fun onEvents(player: Player, events: Player.Events) {
                 GlobalData.playerState.update { player.capturePlayerState() }
                 GlobalData.playerTransientState.update { player.captureTransientState() }
-                mediaSession?.setMediaButtonPreferences(commandButtons(player))
+
+                if (
+                    events.containsAny(
+                        Player.EVENT_IS_PLAYING_CHANGED,
+                        Player.EVENT_MEDIA_ITEM_TRANSITION,
+                        Player.EVENT_REPEAT_MODE_CHANGED,
+                    )
+                ) {
+                    mediaSession?.setMediaButtonPreferences(commandButtons(player))
+                }
 
                 if (
                     events.containsAny(
@@ -194,21 +202,7 @@ class PlaybackService : MediaLibraryService() {
                         Player.EVENT_MEDIA_ITEM_TRANSITION,
                     )
                 ) {
-                    runBlocking {
-                        timerMutex.withLock {
-                            if (
-                                timerTarget >= 0 &&
-                                    SystemClock.elapsedRealtime() >= timerTarget &&
-                                    timerFinishLastTrack
-                            ) {
-                                player.pause()
-                                timerTarget = -1
-                                mediaSession?.updateSessionExtras { putLong(TIMER_TARGET_KEY, -1) }
-                                timerJob?.cancel()
-                                timerJob = null
-                            }
-                        }
-                    }
+                    mainScope.launch { processTimerTick(player) }
                 }
             }
 
@@ -565,8 +559,8 @@ class PlaybackService : MediaLibraryService() {
         )
 
     private fun commandButtons(player: Player): List<CommandButton> {
-        return GlobalData.preferences.value.notificationButtons.map {
-            it.build(
+        return GlobalData.preferences.value.notificationButtons.map { button ->
+            button.build(
                 player,
                 GlobalData.libraryIndex.value.tracks[
                         player.currentMediaItem?.mediaId?.toLongOrNull()]
@@ -575,33 +569,38 @@ class PlaybackService : MediaLibraryService() {
         }
     }
 
+    private suspend fun processTimerTick(player: Player): Long? {
+        return timerMutex.withLock {
+            if (timerTarget < 0) {
+                timerJob = null
+                return@withLock null
+            }
+
+            val remainingMs = timerTarget - SystemClock.elapsedRealtime()
+            val shouldFinishNow = remainingMs <= 0 && (!timerFinishLastTrack || !player.isPlaying)
+            if (shouldFinishNow) {
+                player.pause()
+                timerTarget = -1
+                mediaSession?.updateSessionExtras { putLong(TIMER_TARGET_KEY, -1) }
+                timerJob = null
+                return@withLock null
+            }
+
+            return@withLock remainingMs.coerceIn(250L, 60_000L)
+        }
+    }
+
     private fun newTimerJob(player: Player): Job {
         return mainScope.launch {
             while (isActive) {
-                timerMutex.withLock {
-                    if (
-                        timerTarget >= 0 &&
-                            SystemClock.elapsedRealtime() >= timerTarget &&
-                            (!timerFinishLastTrack || !player.isPlaying)
-                    ) {
-                        player.pause()
-                        timerTarget = -1
-                        mediaSession?.updateSessionExtras { putLong(TIMER_TARGET_KEY, -1) }
-                        timerJob?.cancel()
-                        timerJob = null
-                    } else if (timerTarget < 0) {
-                        timerJob?.cancel()
-                        timerJob = null
-                    }
-                }
-
-                delay(1.seconds)
+                val nextDelayMs = processTimerTick(player) ?: break
+                delay(nextDelayMs.milliseconds)
             }
         }
     }
 
     private fun onSetTimer(player: CustomizedPlayer, session: MediaSession, args: Bundle) {
-        runBlocking {
+        mainScope.launch {
             timerMutex.withLock {
                 val target = args.getLong(TIMER_TARGET_KEY, -1)
                 val finishLastTrack = args.getBoolean(TIMER_FINISH_LAST_TRACK_KEY, true)

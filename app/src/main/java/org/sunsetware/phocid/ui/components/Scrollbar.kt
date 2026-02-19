@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -20,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -49,9 +49,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.ceil
-import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import org.sunsetware.phocid.TNUM
 import org.sunsetware.phocid.ui.theme.EXIT_DURATION
@@ -319,22 +317,22 @@ inline fun Scrollbar(
     val isScrollbarDragging = remember { AtomicBoolean(false) }
 
     val alpha = remember { Animatable(0f) }
-    LaunchedEffect(alwaysVisible) {
+    LifecycleLaunchedEffect(alwaysVisible) {
         if (alwaysVisible) {
             alpha.snapTo(1f)
         } else {
-            // Reading state.isScrollInProgress outside of LaunchedEffect will trigger a recomposition
-            while (isActive) {
-                val isScrolling =
+            snapshotFlow {
                     (thumbRange.first > 0 || thumbRange.second < 1) &&
                         (state.isScrollInProgress || isScrollbarDragging.get())
-                if (alpha.targetValue != 1f && isScrolling) {
-                    coroutineScope.launch { alpha.animateTo(1f, scrollbarEnter) }
-                } else if (alpha.targetValue != 0f && !isScrolling) {
-                    coroutineScope.launch { alpha.animateTo(0f, scrollbarExit) }
                 }
-                delay(17.milliseconds)
-            }
+                .distinctUntilChanged()
+                .collect { isScrolling ->
+                    if (alpha.targetValue != 1f && isScrolling) {
+                        coroutineScope.launch { alpha.animateTo(1f, scrollbarEnter) }
+                    } else if (alpha.targetValue != 0f && !isScrolling) {
+                        coroutineScope.launch { alpha.animateTo(0f, scrollbarExit) }
+                    }
+                }
         }
     }
 
@@ -405,22 +403,22 @@ inline fun Scrollbar(
     val isScrollbarDragging = remember { AtomicBoolean(false) }
 
     val alpha = remember { Animatable(0f) }
-    LaunchedEffect(alwaysVisible) {
+    LifecycleLaunchedEffect(alwaysVisible) {
         if (alwaysVisible) {
             alpha.snapTo(1f)
         } else {
-            // Reading state.isScrollInProgress outside of LaunchedEffect will trigger a recomposition
-            while (isActive) {
-                val isScrolling =
+            snapshotFlow {
                     (thumbRange.first > 0 || thumbRange.second < 1) &&
                         (state.isScrollInProgress || isScrollbarDragging.get())
-                if (alpha.targetValue != 1f && isScrolling) {
-                    coroutineScope.launch { alpha.animateTo(1f, scrollbarEnter) }
-                } else if (alpha.targetValue != 0f && !isScrolling) {
-                    coroutineScope.launch { alpha.animateTo(0f, scrollbarExit) }
                 }
-                delay(17.milliseconds)
-            }
+                .distinctUntilChanged()
+                .collect { isScrolling ->
+                    if (alpha.targetValue != 1f && isScrolling) {
+                        coroutineScope.launch { alpha.animateTo(1f, scrollbarEnter) }
+                    } else if (alpha.targetValue != 0f && !isScrolling) {
+                        coroutineScope.launch { alpha.animateTo(0f, scrollbarExit) }
+                    }
+                }
         }
     }
 

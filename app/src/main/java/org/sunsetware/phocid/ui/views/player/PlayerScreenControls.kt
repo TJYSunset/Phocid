@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.media3.common.Player
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -55,6 +56,7 @@ import org.sunsetware.phocid.data.Track
 import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.globals.format
 import org.sunsetware.phocid.ui.components.LibraryListItemHorizontal
+import org.sunsetware.phocid.ui.components.LifecycleLaunchedEffect
 import org.sunsetware.phocid.ui.components.OverflowMenu
 import org.sunsetware.phocid.ui.components.ProgressSlider
 import org.sunsetware.phocid.ui.components.SingleLineText
@@ -261,7 +263,10 @@ class PlayerScreenControlsDefaultBase(
         var isDraggingProgressSlider by remember { mutableStateOf(false) }
 
         // Update progress
-        LaunchedEffect(currentTrack) {
+        LifecycleLaunchedEffect(
+            currentTrack,
+            minActiveState = Lifecycle.State.RESUMED,
+        ) {
             val frameTime = (1f / context.display.refreshRate).toDouble().milliseconds
 
             while (isActive) {

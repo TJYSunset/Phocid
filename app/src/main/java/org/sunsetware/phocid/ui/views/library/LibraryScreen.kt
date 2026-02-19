@@ -97,6 +97,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
@@ -130,6 +131,7 @@ import org.sunsetware.phocid.ui.components.FloatingToolbar
 import org.sunsetware.phocid.ui.components.IndefiniteSnackbar
 import org.sunsetware.phocid.ui.components.ActionSnackbar
 import org.sunsetware.phocid.ui.components.LibraryListItemHorizontal
+import org.sunsetware.phocid.ui.components.LifecycleLaunchedEffect
 import org.sunsetware.phocid.ui.components.MultiSelectManager
 import org.sunsetware.phocid.ui.components.OverflowMenu
 import org.sunsetware.phocid.ui.components.SingleLineText
@@ -174,6 +176,7 @@ fun LibraryScreen(
     isObscured: Boolean,
     viewModel: MainViewModel = viewModel(),
 ) {
+//    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val density = LocalDensity.current
     val playerManager = viewModel.playerManager
@@ -825,8 +828,12 @@ private fun BottomBar(
     val animatedThemeAccent = animateColorAsState(LocalThemeAccent.current)
 
     // Update progress
-    LaunchedEffect(currentTrack, isObscured) {
-        if (isObscured) return@LaunchedEffect
+    LifecycleLaunchedEffect(
+        currentTrack,
+        isObscured,
+        minActiveState = Lifecycle.State.RESUMED,
+    ) {
+        if (isObscured) return@LifecycleLaunchedEffect
 
         val frameTime = (1f / context.display.refreshRate).toDouble().milliseconds
 

@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.time.Duration.Companion.milliseconds
@@ -43,6 +44,7 @@ import kotlinx.coroutines.launch
 import org.sunsetware.phocid.R
 import org.sunsetware.phocid.data.Preferences
 import org.sunsetware.phocid.globals.Strings
+import org.sunsetware.phocid.ui.components.LifecycleLaunchedEffect
 import org.sunsetware.phocid.ui.theme.EXIT_DURATION
 import org.sunsetware.phocid.ui.theme.INACTIVE_ALPHA
 import org.sunsetware.phocid.ui.theme.Typography
@@ -83,7 +85,10 @@ object PlayerScreenLyricsViewDefault : PlayerScreenLyricsView() {
         val linePositions = remember { AtomicReference(emptyList<Int>()) }
         var currentLineIndex by remember { mutableStateOf(null as Int?) }
 
-        LaunchedEffect(lyrics) {
+        LifecycleLaunchedEffect(
+            lyrics,
+            minActiveState = Lifecycle.State.RESUMED,
+        ) {
             currentLineIndex = null
             if (lyrics is PlayerScreenLyrics.Synced) {
                 while (isActive) {
@@ -105,7 +110,7 @@ object PlayerScreenLyricsViewDefault : PlayerScreenLyricsView() {
                                 }
                         }
                     }
-                    delay(42.milliseconds) // 24 fps
+                    delay(83.milliseconds)
                 }
             }
         }

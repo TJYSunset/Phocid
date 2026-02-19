@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,12 +27,14 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import org.sunsetware.phocid.data.Lyrics
 import org.sunsetware.phocid.data.LyricsDisplayPreference
 import org.sunsetware.phocid.data.Preferences
+import org.sunsetware.phocid.ui.components.LifecycleLaunchedEffect
 import org.sunsetware.phocid.ui.theme.EXIT_DURATION
 import org.sunsetware.phocid.ui.theme.INACTIVE_ALPHA
 import org.sunsetware.phocid.ui.theme.Typography
@@ -77,7 +78,11 @@ object PlayerScreenLyricsOverlayDefault : PlayerScreenLyricsOverlay() {
         var visibility by remember { mutableStateOf(false) }
         val alpha = animateFloatAsState(if (visibility) 1f else 0f)
 
-        LaunchedEffect(lyrics, preferences) {
+        LifecycleLaunchedEffect(
+            lyrics,
+            preferences,
+            minActiveState = Lifecycle.State.RESUMED,
+        ) {
             if (lyrics != null && preferences.lyricsDisplay != LyricsDisplayPreference.DISABLED) {
                 while (isActive) {
                     currentLineIndex = getLineIndex()
@@ -91,7 +96,7 @@ object PlayerScreenLyricsOverlayDefault : PlayerScreenLyricsOverlay() {
                                 currentLine.isNotEmpty() || nextLine.isNotEmpty()
                         }
 
-                    delay(42.milliseconds) // 24 fps
+                    delay(83.milliseconds)
                 }
             } else {
                 currentLineIndex = null
@@ -104,18 +109,21 @@ object PlayerScreenLyricsOverlayDefault : PlayerScreenLyricsOverlay() {
         val density = LocalDensity.current
         CompositionLocalProvider(
             LocalDensity provides
-                Density(density.density, density.fontScale * preferences.lyricsSizeMultiplier)
+                Density(density.density, density.fontScale * preferences.lyricsSizeMultiplier),
         ) {
             Box(
-                modifier = Modifier.fillMaxSize().alpha(overlayVisibility),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(overlayVisibility),
                 contentAlignment = Alignment.BottomCenter,
             ) {
                 Box(
                     modifier =
-                        Modifier.alpha(alpha.value)
+                        Modifier
+                            .alpha(alpha.value)
                             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                             .background(containerColor, RoundedCornerShape(4.dp))
-                            .padding(8.dp)
+                            .padding(8.dp),
                 ) {
                     when (preferences.lyricsDisplay) {
                         LyricsDisplayPreference.DISABLED -> {}

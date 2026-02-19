@@ -27,6 +27,7 @@ import org.sunsetware.phocid.data.loadCbor
 import org.sunsetware.phocid.globals.GlobalData
 import org.sunsetware.phocid.globals.StringSource
 import org.sunsetware.phocid.globals.Strings
+import org.sunsetware.phocid.ui.components.ArtworkMemoryCache
 import org.sunsetware.phocid.utils.combine
 import org.sunsetware.phocid.utils.icuFormat
 import org.sunsetware.phocid.utils.map
@@ -133,6 +134,21 @@ class MainApplication : Application() {
         }
     }
 
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        when {
+            level >= TRIM_MEMORY_BACKGROUND ->
+                ArtworkMemoryCache.trimToSize(5)
+            level >= TRIM_MEMORY_UI_HIDDEN ->
+                ArtworkMemoryCache.clear()
+        }
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        ArtworkMemoryCache.clear()
+    }
+
     private fun onUncaughtException(@Suppress("unused") thread: Thread, ex: Throwable) {
         Log.e("Phocid", "Uncaught exception", ex)
         val file = File(getExternalFilesDir(null), "crash.txt")
@@ -148,8 +164,7 @@ class MainApplication : Application() {
             try {
                 Runtime.getRuntime().exec("logcat -d").inputStream.bufferedReader().use { reader ->
                     while (true) {
-                        val line = reader.readLine()
-                        if (line == null) break
+                        val line = reader.readLine() ?: break
                         writer.write(line)
                         writer.write("\n")
                     }
