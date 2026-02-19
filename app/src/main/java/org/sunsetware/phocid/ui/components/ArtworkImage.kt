@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.lerp
@@ -69,16 +68,24 @@ fun ArtworkImage(
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Crop,
     highResCache: ArtworkCache? = null,
+    suppressLoading: Boolean = false,
 ) {
     val context = LocalContext.current
     val darkTheme = LocalDarkTheme.current
+    val requestKey =
+        remember(artwork, highRes) {
+            (artwork as? Artwork.Track)?.track?.let {
+                "${it.id}|${it.path}|${it.version}|highRes=$highRes"
+            }
+        }
     var image by
-        remember(artwork) {
+        remember(artwork, highRes) {
             mutableStateOf(
                 if (highRes && highResCache != null && artwork is Artwork.Track) {
                     highResCache.get(artwork.track)?.value?.asImageBitmap()
+                        ?: requestKey?.let { ArtworkMemoryCache.get(it)?.asImageBitmap() }
                 } else {
-                    null as ImageBitmap?
+                    requestKey?.let { ArtworkMemoryCache.get(it)?.asImageBitmap() }
                 }
             )
         }
@@ -87,28 +94,34 @@ fun ArtworkImage(
             is Artwork.Track -> Icons.Outlined.MusicNote
             is Artwork.Icon -> artwork.icon
         }
-    val imageVisibility = remember(artwork) { Animatable(if (image == null) 0f else 1f) }
+    val imageVisibility = remember(artwork, highRes) { Animatable(if (image == null) 0f else 1f) }
 
-    LaunchedEffect(artwork) {
-        if (artwork is Artwork.Track && image == null) {
-            withContext(Dispatchers.IO) {
-                image =
-                    if (highRes && highResCache != null) {
-                        highResCache
-                            .getOrPut(artwork.track) {
-                                Boxed(
-                                    loadArtwork(context, artwork.track.id, artwork.track.path, true)
-                                )
-                            }
-                            .value
-                            ?.asImageBitmap()
-                    } else {
-                        loadArtwork(context, artwork.track.id, artwork.track.path, highRes)
-                            ?.asImageBitmap()
+    LaunchedEffect(artwork, highRes, suppressLoading) {
+        if (!suppressLoading && artwork is Artwork.Track && image == null && requestKey != null) {
+            val loaded =
+                withContext(Dispatchers.IO) {
+                    ArtworkMemoryCache.getOrPut(requestKey) {
+                        if (highRes && highResCache != null) {
+                            highResCache
+                                .getOrPut(artwork.track) {
+                                    Boxed(
+                                        loadArtwork(
+                                            context,
+                                            artwork.track.id,
+                                            artwork.track.path,
+                                            true,
+                                        )
+                                    )
+                                }
+                                .value
+                        } else {
+                            loadArtwork(context, artwork.track.id, artwork.track.path, highRes)
+                        }
                     }
-                if (image != null) {
-                    imageVisibility.animateTo(1f, emphasizedStandard())
                 }
+            image = loaded?.asImageBitmap()
+            if (image != null) {
+                imageVisibility.animateTo(1f, emphasizedStandard())
             }
         }
     }

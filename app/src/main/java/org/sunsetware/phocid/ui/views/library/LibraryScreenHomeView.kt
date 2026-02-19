@@ -43,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
@@ -936,6 +937,7 @@ private fun LibraryList(
 ) {
     val viewModel = viewModel<MainViewModel>()
     val haptics = LocalHapticFeedback.current
+    var isScrollbarThumbDragging by remember { mutableStateOf(false) }
 
     if (items.isEmpty()) {
         EmptyListIndicator()
@@ -946,6 +948,7 @@ private fun LibraryList(
             alwaysShowHintOnScroll,
             alwaysVisible = alwaysShowScrollbar,
             width = scrollbarWidthDp.dp,
+            isThumbDragging = { isScrollbarThumbDragging = it },
         ) {
             LazyVerticalGrid(
                 state = gridState,
@@ -965,6 +968,7 @@ private fun LibraryList(
                                     shape = artworkShape,
                                     highRes = highResArtworkPreference.small,
                                     modifier = Modifier.fillMaxSize(),
+                                    suppressLoading = isScrollbarThumbDragging,
                                 )
                             },
                             actions = { OverflowMenu(menuItems(viewModel), state = menuState) },
@@ -991,6 +995,7 @@ private fun LibraryList(
             alwaysShowHintOnScroll,
             alwaysVisible = alwaysShowScrollbar,
             width = scrollbarWidthDp.dp,
+            isThumbDragging = { isScrollbarThumbDragging = it },
         ) {
             LazyVerticalGrid(
                 state = gridState,
@@ -1016,6 +1021,7 @@ private fun LibraryList(
                                     shape = RoundedCornerShape(0.dp),
                                     highRes = highResArtworkPreference.library,
                                     modifier = Modifier.fillMaxSize(),
+                                    suppressLoading = isScrollbarThumbDragging,
                                 )
                             },
                             modifier =

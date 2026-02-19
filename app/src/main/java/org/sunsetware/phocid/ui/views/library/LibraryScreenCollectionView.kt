@@ -902,6 +902,8 @@ fun LibraryScreenCollectionView(
     val aspectRatio = size?.let { it.first / it.second }
     val haptics = LocalHapticFeedback.current
 
+    var isScrollbarThumbDragging by remember { mutableStateOf(false) }
+
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         if (info.artwork == null && info.cards?.items?.isEmpty() != false && info.items.isEmpty()) {
             EmptyListIndicator()
@@ -917,6 +919,7 @@ fun LibraryScreenCollectionView(
                 preferences.alwaysShowHintOnScroll,
                 alwaysVisible = preferences.alwaysShowScrollbar,
                 width = preferences.scrollbarWidthDp.dp,
+                isThumbDragging = { isScrollbarThumbDragging = it },
             ) {
                 LazyColumn(state = tracksLazyListState, modifier = Modifier.fillMaxSize()) {
                     if (info.artwork != null && aspectRatio?.let { it < 3f / 2 } == true) {
@@ -1047,6 +1050,7 @@ fun LibraryScreenCollectionView(
                                             shape = preferences.shapePreference.artworkShape,
                                             highRes = preferences.highResArtworkPreference.small,
                                             modifier = Modifier.fillMaxSize(),
+                                            suppressLoading = isScrollbarThumbDragging,
                                         )
                                     }
                                 }

@@ -158,12 +158,14 @@ class PlaylistEditScreen(private val playlistKey: UUID) : TopLevelScreen() {
                 modifier = Modifier.fillMaxSize().padding(scaffoldPadding),
                 color = MaterialTheme.colorScheme.background,
             ) {
+                var isScrollbarThumbDragging by remember { mutableStateOf(false) }
                 Scrollbar(
                     lazyListState,
                     { (it + 1).toLocalizedString() },
                     preferences.alwaysShowHintOnScroll,
                     alwaysVisible = preferences.alwaysShowScrollbar,
                     width = preferences.scrollbarWidthDp.dp,
+                    isThumbDragging = { isScrollbarThumbDragging = it },
                 ) {
                     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
                         itemsIndexed(
@@ -192,6 +194,7 @@ class PlaylistEditScreen(private val playlistKey: UUID) : TopLevelScreen() {
                                                 highRes =
                                                     preferences.highResArtworkPreference.small,
                                                 modifier = Modifier.fillMaxSize(),
+                                                suppressLoading = isScrollbarThumbDragging,
                                             )
                                         },
                                         actions = {
