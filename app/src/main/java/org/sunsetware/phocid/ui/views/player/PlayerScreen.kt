@@ -486,6 +486,11 @@ fun PlayerScreen(dragLock: DragLock, viewModel: MainViewModel = viewModel()) {
                                 currentTrack = currentTrack,
                                 currentTrackIsFavorite = currentTrackIsFavorite,
                                 isPlaying = isPlaying,
+                                smoothProgressBarAnimation =
+                                    preferences.smoothProgressBarAnimation ||
+                                        preferences.enableSquigglyProgressBar,
+                                enableSquigglyProgressBar =
+                                    preferences.enableSquigglyProgressBar,
                                 repeat = repeat,
                                 shuffle = shuffle,
                                 currentPosition = { playerManager.currentPosition },

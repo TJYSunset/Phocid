@@ -51,6 +51,7 @@ fun ProgressSlider(
     value: Float,
     onValueChange: (Float) -> Unit,
     animate: Boolean,
+    squiggly: Boolean,
     modifier: Modifier = Modifier,
     onValueChangeFinished: (() -> Unit)? = null,
     color: Color = LocalContentColor.current,
@@ -79,14 +80,60 @@ fun ProgressSlider(
         interactionSource = interactionSource,
         thumb = { ProgressSliderThumb(interactionSource, colors) },
         track = { sliderState ->
-            ProgressSliderTrack(
-                colors = colors,
-                sliderState = sliderState,
-                animate = animate,
-                modifier = Modifier.height(2.dp),
-            )
+            if (squiggly) {
+                ProgressSliderTrack(
+                    colors = colors,
+                    sliderState = sliderState,
+                    animate = animate,
+                    modifier = Modifier.height(2.dp),
+                )
+            } else {
+                ProgressSliderTrackSimple(
+                    colors = colors,
+                    sliderState = sliderState,
+                    modifier = Modifier.height(2.dp),
+                )
+            }
         },
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ProgressSliderTrackSimple(
+    sliderState: SliderState,
+    modifier: Modifier = Modifier,
+    colors: SliderColors = SliderDefaults.colors(),
+) {
+    Canvas(modifier = modifier.fillMaxWidth().height(16.dp)) {
+        val progress =
+            with(sliderState) {
+                lerpInv(
+                        valueRange.start,
+                        valueRange.endInclusive,
+                        value.coerceInOrMin(valueRange.start, valueRange.endInclusive),
+                    )
+                    .coerceIn(0f, 1f)
+            }
+        val y = center.y
+        val stroke = 2.dp.toPx()
+        drawLine(
+            color = colors.inactiveTrackColor,
+            start = Offset(0f, y),
+            end = Offset(size.width, y),
+            strokeWidth = stroke,
+            cap = StrokeCap.Round,
+            alpha = colors.inactiveTrackColor.alpha,
+        )
+        drawLine(
+            color = colors.activeTrackColor,
+            start = Offset(0f, y),
+            end = Offset(size.width * progress, y),
+            strokeWidth = stroke,
+            cap = StrokeCap.Round,
+            alpha = colors.activeTrackColor.alpha,
+        )
+    }
 }
 
 @Composable

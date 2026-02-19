@@ -405,6 +405,7 @@ fun LibraryScreen(
                 libraryIndex,
                 viewModel.carouselArtworkCache,
                 DEFAULT_SWIPE_THRESHOLD * preferences.swipeThresholdMultiplier,
+                preferences.smoothProgressBarAnimation || preferences.enableSquigglyProgressBar,
                 preferences.highResArtworkPreference,
                 preferences.artworkColorPreference,
                 preferences.shapePreference.artworkShape,
@@ -794,6 +795,7 @@ private fun BottomBar(
     libraryIndex: LibraryIndex,
     carouselArtworkCache: ArtworkCache,
     swipeThreshold: Dp,
+    smoothProgressBarAnimation: Boolean,
     highResArtworkPreference: HighResArtworkPreference,
     artworkColorPreference: ArtworkColorPreference,
     artworkShape: Shape,
@@ -830,12 +832,19 @@ private fun BottomBar(
     // Update progress
     LifecycleLaunchedEffect(
         currentTrack,
+        isPlaying,
         isObscured,
+        smoothProgressBarAnimation,
         minActiveState = Lifecycle.State.RESUMED,
     ) {
         if (isObscured) return@LifecycleLaunchedEffect
 
-        val frameTime = (1f / context.display.refreshRate).toDouble().milliseconds
+        val frameTime =
+            if (smoothProgressBarAnimation) {
+                (1f / 60f).toDouble().seconds
+            } else {
+                1.seconds
+            }
 
         while (isActive) {
             progress =
@@ -843,6 +852,9 @@ private fun BottomBar(
                 else
                     playerManager.currentPosition.toFloat() /
                         currentTrack!!.duration.inWholeMilliseconds
+            if (!isPlaying) {
+                break
+            }
             delay(frameTime)
         }
     }

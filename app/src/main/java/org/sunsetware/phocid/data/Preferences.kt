@@ -73,6 +73,8 @@ data class Preferences(
     val swipeToRemoveFromQueue: Boolean = false,
     val swipeToRemoveDirection: SwipeDirectionPreference = SwipeDirectionPreference.BOTH,
     val queueDensity: QueueDensityPreference = QueueDensityPreference.COMFORTABLE,
+    val smoothProgressBarAnimation: Boolean = true,
+    val enableSquigglyProgressBar: Boolean = true,
     val lyricsDisplay: LyricsDisplayPreference = LyricsDisplayPreference.DEFAULT,
     val lyricsSizeMultiplier: Float = 1f,
     // Playback

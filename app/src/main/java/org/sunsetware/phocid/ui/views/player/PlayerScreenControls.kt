@@ -75,6 +75,8 @@ sealed class PlayerScreenControls {
         currentTrack: Track,
         currentTrackIsFavorite: Boolean,
         isPlaying: Boolean,
+        smoothProgressBarAnimation: Boolean,
+        enableSquigglyProgressBar: Boolean,
         repeat: Int,
         shuffle: Boolean,
         currentPosition: () -> Long,
@@ -233,6 +235,8 @@ class PlayerScreenControlsDefaultBase(
         currentTrack: Track,
         currentTrackIsFavorite: Boolean,
         isPlaying: Boolean,
+        smoothProgressBarAnimation: Boolean,
+        enableSquigglyProgressBar: Boolean,
         repeat: Int,
         shuffle: Boolean,
         currentPosition: () -> Long,
@@ -265,9 +269,16 @@ class PlayerScreenControlsDefaultBase(
         // Update progress
         LifecycleLaunchedEffect(
             currentTrack,
+            isPlaying,
+            smoothProgressBarAnimation,
             minActiveState = Lifecycle.State.RESUMED,
         ) {
-            val frameTime = (1f / context.display.refreshRate).toDouble().milliseconds
+            val frameTime =
+                if (smoothProgressBarAnimation) {
+                    (1f / 60f).toDouble().seconds
+                } else {
+                    1.seconds
+                }
 
             while (isActive) {
                 val currentPosition = currentPosition()
@@ -275,6 +286,9 @@ class PlayerScreenControlsDefaultBase(
                     progress =
                         (currentPosition.toFloat() / (currentTrack.duration.inWholeMilliseconds))
                             .takeIf { !it.isNaN() } ?: 0f
+                }
+                if (!isPlaying) {
+                    break
                 }
                 delay(frameTime)
             }
@@ -328,6 +342,7 @@ class PlayerScreenControlsDefaultBase(
                                     onSeekToFraction(progress)
                                 },
                                 animate = isPlaying && !isDraggingProgressSlider,
+                                squiggly = enableSquigglyProgressBar,
                                 modifier = Modifier.padding(horizontal = 16.dp).weight(1f),
                             )
                             SingleLineText(

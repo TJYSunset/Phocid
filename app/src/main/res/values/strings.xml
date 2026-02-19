@@ -265,6 +265,10 @@
     <string name="preferences_queue_swipe_direction_both">Both directions</string>
     <string name="preferences_queue_swipe_direction_start_to_end">Start to end</string>
     <string name="preferences_queue_swipe_direction_end_to_start">End to start</string>
+    <string name="preferences_smooth_progress_bar_animation">Smooth progress bar animation</string>
+    <string name="preferences_smooth_progress_bar_animation_subtitle">When disabled, progress updates once per second to reduce foreground power usage.</string>
+    <string name="preferences_enable_squiggly_progress_bar">Enable squiggly progress bar</string>
+    <string name="preferences_enable_squiggly_progress_bar_subtitle">When enabled, smooth progress bar animation is always enabled.</string>
     <string name="preferences_reshuffle_on_repeat">Reshuffle on repeat (experimental)</string>
     <string name="preferences_scan_progress_timeout">Show scan progress after</string>
     <string name="preferences_scrollable_tabs">Scrollable tabs</string>

@@ -51,6 +51,7 @@ import androidx.compose.material.icons.filled.FolderSpecial
 import androidx.compose.material.icons.filled.FormatColorFill
 import androidx.compose.material.icons.filled.FormatColorReset
 import androidx.compose.material.icons.filled.Gradient
+import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Hd
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.HourglassFull
@@ -74,6 +75,7 @@ import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material.icons.filled.ShuffleOn
 import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.material.icons.filled.SpaceDashboard
+import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material.icons.filled.Subtitles
 import androidx.compose.material.icons.filled.Swipe
 import androidx.compose.material.icons.filled.Sync
@@ -748,6 +750,35 @@ private val NowPlaying =
                 options = QueueDensityPreference.entries,
                 value = { it.queueDensity },
                 onSetValue = { preferences, new -> preferences.copy(queueDensity = new) },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_smooth_progress_bar_animation] },
+                subtitle = {
+                    if (it)
+                        Strings[R.string.preferences_enable_squiggly_progress_bar_subtitle]
+                    else Strings[R.string.preferences_smooth_progress_bar_animation_subtitle]
+                },
+                icon = Icons.Filled.StackedBarChart,
+                value = { it.smoothProgressBarAnimation || it.enableSquigglyProgressBar },
+                onSetValue = { preferences, new ->
+                    preferences.copy(
+                        smoothProgressBarAnimation =
+                            if (preferences.enableSquigglyProgressBar) true else new
+                    )
+                },
+            ),
+            Item.Toggle(
+                title = { Strings[R.string.preferences_enable_squiggly_progress_bar] },
+                subtitle = { Strings[R.string.preferences_enable_squiggly_progress_bar_subtitle] },
+                icon = Icons.Filled.GraphicEq,
+                value = { it.enableSquigglyProgressBar },
+                onSetValue = { preferences, new ->
+                    preferences.copy(
+                        enableSquigglyProgressBar = new,
+                        smoothProgressBarAnimation =
+                            if (new) true else preferences.smoothProgressBarAnimation,
+                    )
+                },
             ),
             Item.SingleChoice(
                 title = { Strings[R.string.preferences_lyrics_display] },
