@@ -61,7 +61,7 @@
     <string name="player_speed_and_pitch_speed">Geschwindigkeit</string>
     <string name="player_speed_and_pitch_speed_number">{0, number, ::.00}×</string>
     <string name="player_timer">Ruhemodus-Timer</string>
-    <string name="player_timer_cancel">Abbruchs-Timer</string>
+    <string name="player_timer_cancel">Timer abbrechen</string>
     <string name="player_timer_finish_last_track">Letzten Titel beenden</string>
     <string name="player_timer_set">Einstellen</string>
     <string name="player_up_next">Als nächstes dran</string>
