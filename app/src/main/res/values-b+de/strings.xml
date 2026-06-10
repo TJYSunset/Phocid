@@ -185,7 +185,7 @@
     <string name="preferences_indexing_help_artist_separators_title">Interpreten Trennzeichen</string>
     <string name="preferences_indexing_help_blacklist_body">Titel welche mit der Sperrliste übereinstimmen werden versteckt.</string>
     <string name="preferences_indexing_help_blacklist_title">Sperrliste</string>
-    <string name="preferences_indexing_help_syntax_body">Filter rules are case-insensitive regexes (regular expressions) that match on absolute track paths partially.\n\nTo view a track’s absolute path, press the “Details” button in its menu.\n\nExamples:\n\n• Match all files in folder “Example”:\n/Example/\n\n• Match all MP3 files:\n.mp3$\n\n• Match all MP3 files in folder “Example”:\n/Example/.*.mp3$\n\n• Match all files in folder “Example” but not “example” (case-sensitive):\n(?-i)/Example/</string>
+    <string name="preferences_indexing_help_syntax_body">Filter-Regeln sind von Groß- und Kleinschreibung unabhängige regexes (Reguläre Ausdrücke), welche teilweise auf absolute Pfade von Tracks angewandt werden.\n\nDie „Details“-Schaltfläche kann betätigt werden, um den absoluten Pfad eines Tracks zu sehen,\n\nBeispiele:\n\n• Übereinstimmung mit allen Dateien im Ordner „Beispiele“:\n/Beispiele/\n\n• Übereinstimmung mit allen MP3-Dateien:\n.mp3$\n\n• Übereinstimmung mit allen MP3-Dateien im Ordner „Beispiele“:\n/Beispiele/.*.mp3$\n\n• Übereinstimmung mit allen Dateien im Ordner „Beispiele“, aber nicht „beispiele“ (Groß- und Kleinschreibung beachtend):\n(?-i)/Beispiele/</string>
     <string name="preferences_indexing_help_syntax_title">Sperrliste/Zulassungsliste Syntax</string>
     <string name="preferences_indexing_help_whitelist_body">Titel welche sowohl in der Sperr- als auch Zulassungsliste vorkommen werden nicht versteckt.\n\nUm nur Titel aus der Zulassungsliste anzuzeigen, bitte eine allumfassende Regel zur Sperrliste hinzufügen</string>
     <string name="preferences_indexing_help_whitelist_title">Zulassungsliste</string>
@@ -209,6 +209,7 @@
     <string name="preferences_notification_button_repeat">Wiederholen</string>
     <string name="preferences_notification_button_shuffle">Zufällig</string>
     <string name="preferences_notification_buttons">Schaltflächen im Miniplayer</string>
+    <string name="preferences_notification_buttons_none">Keine</string>
     <!-- "Aktueller Titel" wäre die akkuratere Übersetzung, ist aber ziemlich vage. -->
     <string name="preferences_now_playing">Wiedergabebildschirm</string>
     <string name="preferences_pause_on_focus_loss">Bei Fokusverlust pausieren</string>
