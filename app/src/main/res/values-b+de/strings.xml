@@ -38,6 +38,7 @@
     <string name="permission_dialog_grant">Erlauben</string>
     <string name="permission_dialog_title">Berechtigung erforderlich</string>
     <string name="player_clear_queue">Warteschlange leeren</string>
+    <string name="player_close_lyrics">Lyrics schließen</string>
     <string name="player_lyrics">Lyrics</string>
     <string name="player_lyrics_auto_scroll">Lyrics automatisch scrollen</string>
     <string name="player_next">Nächster</string>
@@ -66,6 +67,7 @@
     <string name="player_timer_set">Einstellen</string>
     <string name="player_up_next">Als nächstes dran</string>
     <string name="playlist_add_to">Zu Playlist hinzufügen</string>
+    <string name="playlist_create_shortcut">Shortcut erstellen</string>
     <string name="playlist_delete">Playlist löschen</string>
     <string name="playlist_delete_multiple_dialog_body">{0, plural, one {# Playlist} other {# Playlisten}} wird/werden dauerhaft gelöscht</string>
     <string name="playlist_delete_multiple_dialog_title">{0, plural, one {# Playlist} other {# Playlisten}} entfernen?</string>
@@ -82,7 +84,7 @@
     <string name="playlist_io_select_folder">Ordner auswählen</string>
     <string name="playlist_io_sync">Playlist synchronisieren</string>
     <string name="playlist_io_sync_help">Playlist synchronisieren Hilfe</string>
-    <string name="playlist_io_sync_help_body">DATEN AN EINEN ANDEREN SPEICHERORT SICHERN UND DIE DOKUMENTATION VOR DEM FORTFAHREN VORSICHTIG DURCHLESEN!\n\nYou can view logs of the last sync from the top bar to debug problems.\n\nSync settings are independent of manual import/export settings, and can be set from the top bar. Modified sync settings will not take effect until the next time both sides have different timestamps, and modifying settings with sync enabled might corrupt your data. Backup and manually rewrite the older side before doing so.\n\nDue to Android limitations, Phocid will not create missing files on your behalf. You can export the playlists to create corresponding files.\n\n“Syncing” overwrites the older side with contents from the newer side, which means:\n• Creating a new playlist to sync from an existing file may overwrite the file with nothing, and vice versa. To add new mappings, use import/export instead to generate playlists and files that have matching “last modified” timestamps and contents.\n• Syncing relies on your files to have a correct “last modified” timestamp. Expect unexpected behavior if the files are modified externally with incorrect timestamps.\n\nNewly created playlists and playlists updated before Phocid v20250219 have an initial timestamp of 1970-01-01. Exported files will have the timestamp of when exporting happens. Exporting a playlist will also update its timestamp.\n\nPhocid is not aware of M3U comments (and by extension, extended directives), and will strip those when syncing. Do not use syncing if your use case requires M3U comments.\n\nSyncing happens when the app gains focus, a playlist changes, or manually requested.</string>
+    <string name="playlist_io_sync_help_body">DATEN AN EINEN ANDEREN SPEICHERORT SICHERN UND DIE DOKUMENTATION VOR DEM FORTFAHREN VORSICHTIG DURCHLESEN!\n\nLogs der letzten Synchronization können von der oberen Leiste betrachtet werden, um Problemen auf den Grund zu gehen.\n\nSynchronisationseinstellungen sind unabhängig vom den manuellen Import-/Export-Einstellungen und können in der oberen Leiste angepasst werden. Geänderte Synchronisationseinstellungen haben keinen Effekt bis beim nächsten Mal beide Seiten verschiedene Zeitstempel haben und das Ändern von Synchronisationseinstellungen mit eingeschalteter Synchronization könnte Daten beschädigen. Sichern und schreiben Sie die ältere Seite, bevor Sie das tun.\n\n„Synchronisieren“ überschreibt die ältere Seite mit den Inhalten der neueren Seite. Das bedeutet:\n• Das Erstellen einer neuer Playlist um von einer bereits existierenden Datei zu synchronisieren könnte die Datei mit nichts überschreiben und umgekehrt. Um neue Zuweisungen hinzuzufügen, benutzen Sie stattdessen Import/Export, um Playlists zu generieren, welche passende „Zuletzt modifiziert“-Zeitstempel und Inhalte haben.\n- Synchronisieren hängt von den korrekten „Zuletzt modifiziert“-Zeitstempel der Dateien ab. Unerwünschtes Verhalten ist zu erwarten, wenn Dateien extern mit inkorrekten Zeitstempeln modifiziert werden.\n\nNeu erstellte Playlists und Playlists, welche vor Phocid v20250219 aktualisiert wurden, haben den anfänglichen Zeitstempel 1970-01-01. Exportierte Dateien werden den Zeitstempel haben, der beim Exportieren zutrifft. Das Exportieren einer Playlist wird ebenfalls den Zeitstempel aktualisieren.\n\nPhocid beachtet keine M3U-Kommentare (sowie erweiterten Direktiven) und wird diese beim Synchronisieren entfernen. Nutzen Sie kein Synchronisieren, wenn ihre Anwendungszweck von M3U-Kommentaren abhängt.\n\nSynchronisieren passiert, wenn die App fokussiert wird, sich eine Playlist ändert oder bei maualler Aufforderung.</string>
     <string name="playlist_io_sync_location">Mit Speicherort {0} synchronisieren</string>
     <string name="playlist_io_sync_location_not_set">Speicherort für Synchronisation: nicht festgelegt</string>
     <string name="playlist_io_sync_log">Playlist Synchronisations-Protokoll</string>
@@ -117,6 +119,7 @@
     <string name="playlist_special_favorites">Favoriten</string>
     <string name="preferences">Einstellungen</string>
     <string name="preferences_about">Über Phocid</string>
+    <string name="preferences_always_show_hint_on_scroll">Daumenregister beim Scrollen immer anzeigen</string>
     <string name="preferences_artwork_color">Farbe aus Coverbild extrahieren</string>
     <string name="preferences_artwork_color_muted_first">Gedämpfte Farben bevorzugen</string>
     <string name="preferences_artwork_color_muted_only">Nur gedämpfte Farben</string>
@@ -126,12 +129,21 @@
     <string name="preferences_colored_cards">Kartenfarben basieren auf Coverbild</string>
     <string name="preferences_colored_global_theme">Farben an Coverbild anpassen</string>
     <string name="preferences_colored_player">Farben des Players an Coverbild anpassen</string>
+    <string name="preferences_colored_player_subtitle">Kann überschrieben werden durch „Benutzeroberfläche › Themenfarbe › Farben an Coverbild anpassen“</string>
     <string name="preferences_colorful_player_background">Bunter Hintergrund für Player</string>
+    <string name="preferences_conjunction_symbol">Metadaten-Trennzeichen</string>
+    <string name="preferences_conjunction_symbol_subtitle">Wird nur auf neu eingereihte Tracks angewandt</string>
     <string name="preferences_dark_theme">Dunkelmodus</string>
     <string name="preferences_dark_theme_dark">Dunkel</string>
     <string name="preferences_dark_theme_light">Hell</string>
     <string name="preferences_dark_theme_system">Systemeinstellungen folgen</string>
+    <string name="preferences_default_shuffle_mode_keep_current">Momentane Einstellung beibehalten</string>
+    <string name="preferences_default_shuffle_mode_list">Standardmäßiger Zufallswiedergabemodus (Liste)</string>
+    <string name="preferences_default_shuffle_mode_off">Aus</string>
+    <string name="preferences_default_shuffle_mode_on">An</string>
+    <string name="preferences_default_shuffle_mode_track">Standardmäßiger Zufallswiedergabemodus (Track)</string>
     <string name="preferences_dump_logcat">Logcat-Protokoll erstellen</string>
+    <string name="preferences_dump_logcat_subtitle">Speicherort: {0}</string>
     <string name="preferences_example_ellipsis">, …</string>
     <string name="preferences_example_separator">", "</string>
     <string name="preferences_export">Einstellungen exportieren</string>
@@ -193,7 +205,7 @@
     <string name="preferences_lyrics_scaling">Lyrics-Skalierung</string>
     <string name="preferences_miscellaneous">Diverses</string>
     <string name="preferences_multiplier_number">{0, number, ::.00}×</string>
-    <string name="preferences_notification_button_favorite">Favouriten</string>
+    <string name="preferences_notification_button_favorite">Favoriten</string>
     <string name="preferences_notification_button_repeat">Wiederholen</string>
     <string name="preferences_notification_button_shuffle">Zufällig</string>
     <string name="preferences_notification_buttons">Schaltflächen im Miniplayer</string>
@@ -281,6 +293,7 @@
     <string name="sorting_file_name">Dateiname</string>
     <string name="sorting_name">Name</string>
     <string name="sorting_number">Titelnummer</string>
+    <string name="sorting_original_release_year">Urprüngliches Veröffentlichungsjahr</string>
     <string name="sorting_title">Titel</string>
     <string name="sorting_track_count">Titelanzahl</string>
     <string name="sorting_year">Jahr</string>
@@ -305,6 +318,7 @@
     <string name="toast_preferences_export_success">Einstellungen erfolgreich exportiert</string>
     <string name="toast_preferences_import_failed">Einstellungs-Import fehlgeschlagen: {0}</string>
     <string name="toast_preferences_import_success">Einstellungen erfolgreich importiert</string>
+    <string name="toast_shortcut_playlist_not_found">Playlist nicht gefunden</string>
     <string name="toast_timer_canceled">Ruhemodus-Timer abgebrochen</string>
     <string name="toast_timer_set">Wiedergabe nach ~{0, plural, one {# Minute} other {# Minuten}} pausieren</string>
     <string name="toast_track_queued">{0, plural, one {# Titel} other {# Titel}} eingereiht</string>
@@ -321,6 +335,7 @@
     <string name="track_details_date_modified">Datum geändert</string>
     <string name="track_details_format">Format</string>
     <string name="track_details_genre">Genre</string>
+    <string name="track_details_original_release_year">Urprüngliches Veröffentlichungsjahr</string>
     <string name="track_details_path">Pfad</string>
     <string name="track_details_sample_rate">Abtastrate</string>
     <string name="track_details_size">Größe</string>
