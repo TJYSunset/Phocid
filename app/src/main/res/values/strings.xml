@@ -3,7 +3,7 @@
     <string name="app_copyright" translatable="false">Phocid\nCopyright (C) tjysunset &lt;tjysunset@outlook.com&gt;\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</string>
     <string name="app_license_name" translatable="false">GNU General Public License v3.0 or later</string>
     <string name="app_name" translatable="false">Music</string>
-    <string name="app_url" translatable="false">https://github.com/tjysunset/phocid</string>
+    <string name="app_url" translatable="false">https://github.com/cpuoff/music-player</string>
     <string name="commons_add">Add</string>
     <string name="commons_automatic">Automatic</string>
     <string name="commons_back">Back</string>
@@ -274,6 +274,15 @@
     <string name="preferences_treat_embedded_lyrics_as_lrc">Treat embedded lyrics as LRC</string>
     <string name="preferences_ui_scaling">UI scaling</string>
     <string name="preferences_version">Version</string>
+    <string name="preferences_check_update">Check Update</string>
+    <string name="preferences_checking_update">Checking for updates...</string>
+    <string name="preferences_update_available">New version available</string>
+    <string name="preferences_update_available_message">A new version {0} is available. Would you like to update?</string>
+    <string name="preferences_no_update_available">No updates available</string>
+    <string name="preferences_no_update_available_message">You are already using the latest version {0}.</string>
+    <string name="preferences_update_error">Error checking for updates</string>
+    <string name="preferences_update_error_message">Could not check for updates: {0}</string>
+    <string name="preferences_update_button">Update</string>
     <string name="preferences_website">Website</string>
     <string name="preferences_widget_accent_background">Colored background</string>
     <string name="preferences_widget_artwork_background">Artwork background</string>
@@ -394,6 +403,8 @@
     <string name="track_edit_tags_disc_number_field">Disc number</string>
     <string name="track_edit_tags_comment_field">Comment</string>
     <string name="track_edit_tags_lyrics_field">Lyrics</string>
+    <string name="track_edit_tags_cover_art">Cover art</string>
+    <string name="track_edit_tags_change_cover">Change Cover Art</string>
     <string name="track_edit_tags_save">Save</string>
     <string name="toast_track_tags_saved">Tags saved successfully</string>
     <string name="toast_track_tags_save_failed">Failed to save tags: {0}</string>

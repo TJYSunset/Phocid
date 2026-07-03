@@ -16,8 +16,10 @@ import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -350,6 +352,23 @@ private class PreferencesSubscreen(private val page: Page) : TopLevelScreen() {
                                                 item.onSetValue(it, checked)
                                             }
                                         },
+                                    )
+                                }
+                            }
+                        }
+                        if (page == About) {
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 32.dp, horizontal = 16.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = "This is a modified version of https://github.com/tjysunset/phocid",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        textAlign = TextAlign.Center,
                                     )
                                 }
                             }
@@ -1037,6 +1056,12 @@ private val About =
                 icon = Icons.Filled.Commit,
             ),
             Item.Clickable(
+                title = { Strings[R.string.preferences_check_update] },
+                subtitle = { null },
+                icon = Icons.Filled.Sync,
+                onClick = { checkUpdate() },
+            ),
+            Item.Clickable(
                 title = { Strings[R.string.preferences_website] },
                 subtitle = { Strings[R.string.app_url] },
                 icon = Icons.Filled.Link,
@@ -1266,4 +1291,55 @@ private sealed class Item {
             )
         }
     }
+}
+
+private fun PreferencesScreenContext.checkUpdate() {
+    uiManager.toast(Strings[R.string.preferences_checking_update])
+    coroutineScope.launch {
+        try {
+            val latestTag = withContext(Dispatchers.IO) {
+                val url = java.net.URL("https://api.github.com/repos/cpuoff/music-player/releases/latest")
+                val connection = url.openConnection() as java.net.HttpURLConnection
+                connection.requestMethod = "GET"
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0")
+                connection.connectTimeout = 10000
+                connection.readTimeout = 10000
+                val responseCode = connection.responseCode
+                if (responseCode == 200) {
+                    val json = connection.inputStream.bufferedReader().use { it.readText() }
+                    val regex = Regex("\"tag_name\"\\s*:\\s*\"([^\"]+)\"")
+                    val matchResult = regex.find(json)
+                    matchResult?.groupValues?.get(1) ?: throw Exception("Could not parse tag_name")
+                } else {
+                    throw Exception("HTTP $responseCode")
+                }
+            }
+
+            val currentVersion = BuildConfig.VERSION_NAME
+            val isUpdateAvailable = isNewVersionAvailable(currentVersion, latestTag)
+            uiManager.openDialog(CheckUpdateDialog(latestTag, isUpdateAvailable))
+        } catch (e: Exception) {
+            Log.e("Phocid", "Check update failed", e)
+            uiManager.openDialog(CheckUpdateDialog(null, false, e.localizedMessage ?: e.message ?: "Unknown error"))
+        }
+    }
+}
+
+private fun isNewVersionAvailable(current: String, latest: String): Boolean {
+    val currentClean = current.removePrefix("v").trim()
+    val latestClean = latest.removePrefix("v").trim()
+    if (currentClean == latestClean) return false
+
+    val currentParts = currentClean.split('.').mapNotNull { it.toIntOrNull() }
+    val latestParts = latestClean.split('.').mapNotNull { it.toIntOrNull() }
+
+    val minLength = kotlin.math.min(currentParts.size, latestParts.size)
+    for (i in 0 until minLength) {
+        if (latestParts[i] > currentParts[i]) return true
+        if (latestParts[i] < currentParts[i]) return false
+    }
+    if (latestParts.size > currentParts.size) {
+        return latestParts.subList(currentParts.size, latestParts.size).any { it > 0 }
+    }
+    return latestClean > currentClean
 }

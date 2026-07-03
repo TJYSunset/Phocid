@@ -4,26 +4,40 @@ package org.sunsetware.phocid.ui.views
 
 import android.app.Activity
 import android.content.ContentValues
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +45,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -47,6 +63,7 @@ import org.sunsetware.phocid.Dialog
 import org.sunsetware.phocid.MainViewModel
 import org.sunsetware.phocid.R
 import org.sunsetware.phocid.data.Track
+import org.sunsetware.phocid.data.loadArtwork
 import org.sunsetware.phocid.globals.Strings
 import org.sunsetware.phocid.ui.components.DialogBase
 import org.sunsetware.phocid.utils.icuFormat
@@ -93,6 +110,38 @@ class EditTagsDialog(private val track: Track) : Dialog() {
 
         var isSaving by remember { mutableStateOf(false) }
 
+        val originalArtwork = remember(track) {
+            loadArtwork(context, track.id, track.path, sizeLimit = 256)
+        }
+
+        var selectedImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+        var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+        var selectedImageMimeType by rememberSaveable { mutableStateOf<String?>(null) }
+
+        LaunchedEffect(selectedImageUri) {
+            selectedImageUri?.let { uri ->
+                withContext(Dispatchers.IO) {
+                    try {
+                        val source = ImageDecoder.createSource(context.contentResolver, uri)
+                        selectedImageBitmap = ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
+                            decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+                        }
+                        selectedImageMimeType = context.contentResolver.getType(uri)
+                    } catch (e: Exception) {
+                        Log.e("EditTagsDialog", "Failed to load selected image", e)
+                    }
+                }
+            }
+        }
+
+        val imagePickerLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent()
+        ) { uri: Uri? ->
+            if (uri != null) {
+                selectedImageUri = uri
+            }
+        }
+
         // Check if format is supported
         val isSupportedFormat = remember(track.path) {
             val extension = FilenameUtils.getExtension(track.path).lowercase()
@@ -127,6 +176,16 @@ class EditTagsDialog(private val track: Track) : Dialog() {
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 coroutineScope.launch {
+                    val imageBytes = selectedImageUri?.let { uri ->
+                        withContext(Dispatchers.IO) {
+                            try {
+                                context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                            } catch (e: Exception) {
+                                Log.e("EditTagsDialog", "Failed to read image bytes", e)
+                                null
+                            }
+                        }
+                    }
                     val saveResult = withContext(Dispatchers.IO) {
                         saveTagsToFile(
                             track.path,
@@ -139,17 +198,19 @@ class EditTagsDialog(private val track: Track) : Dialog() {
                             trackNumber,
                             discNumber,
                             comment,
-                            lyrics
+                            lyrics,
+                            imageBytes,
+                            selectedImageMimeType
                         )
                     }
-                    
+
                     // Try to rename file if title changed
                     if (saveResult is EditTagsSaveResult.Success && needsRename) {
                         withContext(Dispatchers.IO) {
                             tryRenameFile(context, track, title.trim())
                         }
                     }
-                    
+
                     handleSaveResult(saveResult, null)
                 }
             } else {
@@ -177,6 +238,14 @@ class EditTagsDialog(private val track: Track) : Dialog() {
                 } else {
                     // For older Android versions, try direct write
                     val saveResult = withContext(Dispatchers.IO) {
+                        val imageBytes = selectedImageUri?.let { uri ->
+                            try {
+                                context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                            } catch (e: Exception) {
+                                Log.e("EditTagsDialog", "Failed to read image bytes", e)
+                                null
+                            }
+                        }
                         saveTagsToFile(
                             track.path,
                             title,
@@ -188,17 +257,19 @@ class EditTagsDialog(private val track: Track) : Dialog() {
                             trackNumber,
                             discNumber,
                             comment,
-                            lyrics
+                            lyrics,
+                            imageBytes,
+                            selectedImageMimeType
                         )
                     }
-                    
+
                     // Try to rename file if title changed
                     if (saveResult is EditTagsSaveResult.Success && needsRename) {
                         withContext(Dispatchers.IO) {
                             tryRenameFile(context, track, title.trim())
                         }
                     }
-                    
+
                     handleSaveResult(saveResult, null)
                 }
             }
@@ -223,6 +294,52 @@ class EditTagsDialog(private val track: Track) : Dialog() {
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
+                }
+
+                if (isSupportedFormat) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = Strings[R.string.track_edit_tags_cover_art],
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val bitmapToDisplay = selectedImageBitmap ?: originalArtwork
+                        if (bitmapToDisplay != null) {
+                            Image(
+                                bitmap = bitmapToDisplay.asImageBitmap(),
+                                contentDescription = Strings[R.string.track_edit_tags_cover_art],
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .padding(end = 16.dp)
+                            )
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .padding(end = 16.dp)
+                                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Image,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        Button(
+                            onClick = { imagePickerLauncher.launch("image/*") },
+                            modifier = Modifier.wrapContentWidth()
+                        ) {
+                            Text(text = Strings[R.string.track_edit_tags_change_cover])
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
 
                 OutlinedTextField(
@@ -345,7 +462,9 @@ private fun saveTagsToFile(
     trackNumber: String,
     discNumber: String,
     comment: String,
-    lyrics: String
+    lyrics: String,
+    imageBytes: ByteArray? = null,
+    mimeType: String? = null
 ): EditTagsSaveResult {
     return try {
         val file = File(path)
@@ -400,6 +519,21 @@ private fun saveTagsToFile(
         setOrDeleteField(FieldKey.COMMENT, comment)
         setOrDeleteField(FieldKey.LYRICS, lyrics)
 
+        if (imageBytes != null) {
+            try {
+                tag.deleteArtworkField()
+                val artwork = org.jaudiotagger.tag.images.ArtworkFactory.getNewArtwork()
+                artwork.binaryData = imageBytes
+                if (mimeType != null) {
+                    artwork.mimeType = mimeType
+                }
+                artwork.pictureType = 3 // Front Cover
+                tag.setField(artwork)
+            } catch (e: Exception) {
+                Log.e("EditTagsDialog", "Failed to set artwork in tag", e)
+            }
+        }
+
         audioFile.commit()
         EditTagsSaveResult.Success
     } catch (e: Exception) {
@@ -413,15 +547,15 @@ private fun tryRenameFile(context: android.content.Context, track: Track, newTit
         val extension = FilenameUtils.getExtension(track.path)
         // Sanitize the new title for use as filename
         val sanitizedTitle = newTitle.replace(INVALID_FILENAME_CHARS_REGEX, "_")
-        
+
         // Skip if sanitized title is empty or only underscores
         if (sanitizedTitle.isBlank() || sanitizedTitle.all { it == '_' }) {
             Log.d("EditTagsDialog", "Skipping rename: sanitized title is invalid")
             return
         }
-        
+
         val newFileName = "$sanitizedTitle.$extension"
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // On Android 11+, use MediaStore to rename
             val values = ContentValues().apply {
